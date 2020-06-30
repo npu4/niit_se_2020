@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.util.Scanner;
 
 import static java.lang.Integer.MAX_VALUE;
@@ -35,8 +36,8 @@ class Task1 {
         }
     }
 
-    private static void showSum(Integer numberOne, Integer numberTwo) {
-        int sum = numberOne + numberTwo;
+    private static void showSum(int numberOne, int numberTwo) {
+        BigInteger sum = BigInteger.valueOf(numberOne).add(BigInteger.valueOf(numberTwo));
 
         System.out.println("Сумма чисел: " + sum);
     }
