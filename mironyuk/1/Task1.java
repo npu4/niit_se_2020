@@ -22,12 +22,20 @@ class Task1 {
             }
         }
 
+        showBigger(numberOne, numberTwo);
+
+        showSum(numberOne, numberTwo);
+    }
+
+    private static void showBigger(Integer numberOne, Integer numberTwo) {
         if (numberOne > numberTwo) {
             System.out.printf("Число %s больше %s\n", numberOne, numberTwo);
         } else {
             System.out.printf("Число %s меньше %s\n", numberTwo, numberOne);
         }
+    }
 
+    private static void showSum(Integer numberOne, Integer numberTwo) {
         int sum = numberOne + numberTwo;
 
         System.out.println("Сумма чисел: " + sum);
