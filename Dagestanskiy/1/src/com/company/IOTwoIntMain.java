@@ -6,7 +6,7 @@ public class IOTwoIntMain {
 
     public static void main(String[] args) {
 
-               Scanner read = new Scanner(System.in);
+        Scanner read = new Scanner(System.in);
         System.out.print("Введите первое целое число: ");
         int a = read.nextInt();
         System.out.print("Введите второе целое число: ");
