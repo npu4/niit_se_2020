@@ -6,7 +6,6 @@ public class IOTwoIntMain {
 
     public static void main(String[] args) {
 
-        int c = 0;
         Scanner read = new Scanner(System.in);
         System.out.print("Введите первое целое число: ");
         int a = read.nextInt();
@@ -19,7 +18,7 @@ public class IOTwoIntMain {
         if(a < b ) {
             System.out.println( "Число " + a + " меньше " +b );
         }
-        c = a + b;
+        int c = a + b;
         System.out.print( "Сумма чисел: " + c );
 
     }
