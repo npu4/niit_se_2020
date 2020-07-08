@@ -34,9 +34,9 @@ public class Main {
     for (FixPriceShop shop : shops) {
       System.out.printf("--------------------\nЗайду-ка я в магазин \"%s\"\n", shop.getName());
 
-      String[] shopProducts = shop.getItems();
+      String[] shopItems = shop.getItems();
 
-      String itemToBuy = shopProducts[0];
+      String itemToBuy = shopItems[0];
 
       float lastPrice = 0;
 
