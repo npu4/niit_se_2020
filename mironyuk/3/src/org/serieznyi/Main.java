@@ -46,7 +46,7 @@ public class Main {
         float price = shop.checkItemPrice(itemToBuy, hour);
 
         if (-1 == price) {
-          System.out.printf("Хм... Я хотел купить товар \"%s\", а его нет в продаже\n", itemToBuy);
+          System.out.printf("Хм... Я хотел купить товар \"%s\", а его больше нет в продаже\n", itemToBuy);
           break;
         }
 
@@ -60,6 +60,7 @@ public class Main {
         boolean lastPriceLower = price > lastPrice;
         if (newPriceLower || lastPriceLower) {
           if (lastPriceLower) {
+            System.out.printf("Сейчас %02d:00 и товар \"%s\" стоит %s у.е.\n", hour, itemToBuy, price);
             System.out.printf(
                 "А вот теперь уже интересно. Похоже в %02d:00 был счастливый час и товар \"%s\" стоил %s у.е. В следующий раз приду в %02d:00 и возьму два!! \n",
                 --hour, itemToBuy, lastPrice, hour);
