@@ -4,45 +4,53 @@ import java.util.Arrays;
 
 public class FixPriceShop {
 
-    String[] items = {"coffee", "tea", "chocolate", "mint", "bread", "pens", "socks", "cat's food"};
-    int itemPrice = 100;
+    public static String[] defaultItems = {"coffee", "tea", "chocolate", "mint", "bread", "pens", "socks", "cat's food"};
+    String[] items;
+    public static final int ITEM_PRICE = 100;
+    public static final int DEFAULT_HAPPY_HOUR = 14;
     int happyHour;
+
+    public FixPriceShop(String[] items) {
+        this(items, DEFAULT_HAPPY_HOUR);
+    }
+
+    public FixPriceShop() {
+        this(defaultItems, DEFAULT_HAPPY_HOUR);
+    }
+
+    public FixPriceShop(int happyHour) {
+        this(defaultItems, happyHour);
+    }
 
     public FixPriceShop(String[] items, int happyHour) {
         this.items = items;
         this.happyHour = happyHour;
     }
 
-    public FixPriceShop(String[] items) {
-        this.items = items;
-        happyHour = 14;
-    }
-
-    public FixPriceShop() {
-        happyHour = 14;
-    }
-
-    public FixPriceShop(int happyHour) {
-        this.happyHour = happyHour;
+    boolean productAvailability(String[] items, String item) {
+        return Arrays.asList(items).contains(item);
     }
 
     int checkItemPrice(String item, int hour) {
-        int findItems = Arrays.asList(items).indexOf(item);
-        if (findItems == -1) {
+        if (!productAvailability(items, item)) {
             return -1;
         } else if (hour == happyHour) {
-            return itemPrice / 2;
+            return ITEM_PRICE / 2;
         } else {
-            return itemPrice;
+            return ITEM_PRICE;
         }
 
     }
 
     void bestBuyTime(String item, int hour) {
-        if (hour == happyHour) {
-            System.out.println("Now is the best time to buy. Prise is " + checkItemPrice(item, hour) + " rubles");
+        if (productAvailability(items, item)) {
+            if (hour == happyHour) {
+                System.out.println("Now is the best time to buy. Prise is " + checkItemPrice(item, hour) + " rubles");
+            } else {
+                System.out.println("Better time to buy this item is " + happyHour + " hour. Now it's prise " + checkItemPrice(item, hour) + " rubles");
+            }
         } else {
-            System.out.println("Better time to buy this item is " + happyHour + " hour. Now it's prise " + checkItemPrice(item, hour) + " rubles");
+            System.out.println("Item " + item + " is out of stock");
         }
     }
 
@@ -57,7 +65,7 @@ public class FixPriceShop {
             System.out.println("Goods " + item + " sold at a price " + checkItemPrice(item, hour));
             String[] remainingItem = new String[items.length - 1];
             for (int i = 0; i < items.length; i++) {
-                if (items[i] == item) {
+                if (items[i].equals(item)) {
                     for (; i < items.length - 1; i++) {
                         items[i] = items[i + 1];
                     }
