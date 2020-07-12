@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
   private static final int SCENE_SIZE = 10;
+  private static final NamesPool namesPool = new NamesPool();
 
   public static void main(String[] args) {
     Scene scene = buildScene();
@@ -25,8 +26,9 @@ public class Main {
   }
 
   private static Character createMonster() {
-    int monsterNumber = ThreadLocalRandom.current().nextInt(1, 1000);
-
-    return new Monster("Monster " + monsterNumber, 100);
+    return new Monster(
+            namesPool.extractMonsterName(),
+            ThreadLocalRandom.current().nextInt(50, 100)
+    );
   }
 }

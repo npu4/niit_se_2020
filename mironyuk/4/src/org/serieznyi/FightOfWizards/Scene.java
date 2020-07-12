@@ -2,13 +2,12 @@ package org.serieznyi.FightOfWizards;
 
 import org.serieznyi.FightOfWizards.character.Character;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Scene {
-    public final int MAX_SCENE_SIZE = 100;
+    public final int MAX_SCENE_SIZE = 20;
 
     private final int size;
 
@@ -52,8 +51,8 @@ public class Scene {
             return;
         }
 
-        for (Map.Entry<Integer, Character> character: characters.entrySet()) {
-            System.out.println(character);
+        for (Map.Entry<Integer, Character> entry: characters.entrySet()) {
+            System.out.println(entry.getValue());
         }
     }
 }
