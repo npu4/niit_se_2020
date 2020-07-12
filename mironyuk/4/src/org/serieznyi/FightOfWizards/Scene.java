@@ -2,9 +2,9 @@ package org.serieznyi.FightOfWizards;
 
 import org.serieznyi.FightOfWizards.character.Character;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class Scene {
     public final int MAX_SCENE_SIZE = 20;
@@ -12,6 +12,7 @@ public class Scene {
     private final int size;
 
     private final Map<Integer, Character> characters = new HashMap<>();
+    private final List<Character> deadCharacters = new ArrayList<>();
 
     public Scene(int size) {
         if (size > MAX_SCENE_SIZE) {
@@ -28,8 +29,7 @@ public class Scene {
 
         boolean successfulAppend = false;
         for (int i = 0 ; i < MAX_SCENE_SIZE ; i++) {
-            int potentialPosition = ThreadLocalRandom.current().nextInt(0, this.size);
-
+            int potentialPosition = ThreadLocalRandom.current().nextInt(0, this.size - 1);
             if (!characters.containsKey(potentialPosition)) {
                 characters.put (potentialPosition, character);
                 successfulAppend = true;
@@ -38,8 +38,27 @@ public class Scene {
         }
 
         if (!successfulAppend) {
+            for (int i = 0 ; i < MAX_SCENE_SIZE ; i++) {
+                if (!characters.containsKey(i)) {
+                    characters.put (i, character);
+                    successfulAppend = true;
+                    break;
+                }
+            }
+        }
+
+        if (!successfulAppend) {
             throw new RuntimeException("Не удалось найти свободную позицию на сцене для " + character);
         }
+    }
+
+    public Map<Integer, Character> getOpponentsFor(Character character) {
+        return characters
+                .entrySet()
+                .stream()
+                .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
+                .filter((Map.Entry<Integer, Character> item) -> !item.getValue().equals(character))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public void run()
@@ -51,8 +70,73 @@ public class Scene {
             return;
         }
 
-        for (Map.Entry<Integer, Character> entry: characters.entrySet()) {
-            System.out.println(entry.getValue());
+        int step = 1;
+        while (getAliveCharacters().size() > 1) {
+            System.out.println("Шаг: " + step);
+            for (Character character: getShuffledCharacters()) {
+                if (!hasAnyOpponents()) {
+                    break;
+                }
+
+                character.action(getOpponentsFor(character));
+
+                checkBodies();
+            }
+
+            step++;
+            System.out.println();
         }
+
+        showWinner();
+    }
+
+    private void showWinner() {
+        List<Character> alive = getAliveCharacters();
+
+        if (alive.size() != 0) {
+            throw new RuntimeException("Что-то пошло не так");
+        }
+
+        Character winner = alive.get(0);
+
+        System.out.println("На поле боя остался только " + winner.getName());
+    }
+
+    private List<Character> getAliveCharacters() {
+        return characters
+                .values()
+                .stream()
+                .filter(character -> !character.isDead())
+                .collect(Collectors.toList());
+    }
+
+    private void checkBodies() {
+        for (Map.Entry<Integer, Character> entry : characters.entrySet()) {
+            Character character = entry.getValue();
+
+            if (character.isDead() && !deadCharacters.contains(character)) {
+                deadCharacters.add(character);
+                System.out.println(character + " погибает");
+            }
+        }
+    }
+
+    private List<Character> getShuffledCharacters() {
+        return characters
+                .entrySet()
+                .stream()
+                .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
+                .sorted((Map.Entry<Integer, Character> a, Map.Entry<Integer, Character> b) -> ThreadLocalRandom.current().nextInt(-1, 1))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+    }
+
+    private boolean hasAnyOpponents() {
+        return characters
+                .entrySet()
+                .stream()
+                .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                .size() > 1;
     }
 }

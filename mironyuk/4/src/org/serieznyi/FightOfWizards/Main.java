@@ -28,7 +28,8 @@ public class Main {
   private static Character createMonster() {
     return new Monster(
             namesPool.extractMonsterName(),
-            ThreadLocalRandom.current().nextInt(50, 100)
+            ThreadLocalRandom.current().nextInt(50, 100),
+            ThreadLocalRandom.current().nextInt(10, 20)
     );
   }
 }
