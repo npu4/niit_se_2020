@@ -7,6 +7,6 @@ public class Apple extends Fruit{
 
     @Override
     public String toString() {
-        return Apple.class.getSimpleName() + "weights " + fruitWeight + "grams and has color "+color;
+        return Apple.class.getSimpleName() + " weights " + fruitWeight + " grams and has color "+color;
     }
 }

@@ -6,7 +6,7 @@ public class Orange extends Fruit {
 
     @Override
     public String toString() {
-        return Orange.class.getSimpleName() + "weights " + fruitWeight + "grams and has skin thickness "+skinThickness;
+        return Orange.class.getSimpleName() + " weights " + fruitWeight + " grams and has skin thickness "+skinThickness;
     }
 
 }
