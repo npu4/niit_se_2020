@@ -29,7 +29,7 @@ final public class Monster extends Character {
 
         Character opponent = null;
         do {
-            int potentialOpponentKey = ThreadLocalRandom.current().nextInt(0, opponents.size());
+            int potentialOpponentKey = ThreadLocalRandom.current().nextInt(0, opponents.size() + 1);
 
             if (opponents.containsKey(potentialOpponentKey)) {
                 opponent = opponents.get(potentialOpponentKey);
