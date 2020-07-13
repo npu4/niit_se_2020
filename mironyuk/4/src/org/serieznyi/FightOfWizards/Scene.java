@@ -71,7 +71,7 @@ public class Scene {
             return;
         }
 
-        System.out.printf("На поле боя столкнутся %s бойцов:\n\n", characters.size());
+        System.out.printf("На поле боя находится бойцов: %s\n\n", characters.size());
 
         int step = 0;
         while (getAliveCharacters().size() > 1) {
@@ -96,7 +96,7 @@ public class Scene {
     private void showWinner() {
         List<Character> alive = getAliveCharacters();
 
-        if (alive.size() != 0) {
+        if (alive.size() != 1) {
             throw new RuntimeException("Что-то пошло не так");
         }
 
