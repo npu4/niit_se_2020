@@ -6,7 +6,8 @@ import org.serieznyi.FightOfWizards.character.Monster;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
-  private static final int SCENE_SIZE = 10;
+  private static final int SCENE_SIZE = 2;
+  private static final int COUNT_CHARACTER = 2;
   private static final NamesPool namesPool = new NamesPool();
 
   public static void main(String[] args) {
@@ -16,9 +17,13 @@ public class Main {
   }
 
   private static Scene buildScene() {
+    if (SCENE_SIZE < COUNT_CHARACTER) {
+      throw new RuntimeException("Количество свободных мест на сцене меньше количества персонажей");
+    }
+
     Scene scene = new Scene(SCENE_SIZE);
 
-    for (int i = 0; i < SCENE_SIZE; i++) {
+    for (int i = 0; i < COUNT_CHARACTER; i++) {
       scene.appendCharacterToRandomPosition(createMonster());
     }
 
