@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class Scene {
+    public final int MIN_SCENE_SIZE = 2;
     public final int MAX_SCENE_SIZE = 20;
 
     private final int size;
@@ -15,8 +16,8 @@ public class Scene {
     private final List<Character> deadCharacters = new ArrayList<>();
 
     public Scene(int size) {
-        if (size > MAX_SCENE_SIZE) {
-            throw new IllegalArgumentException("Максимальный размер сцены: " + MAX_SCENE_SIZE);
+        if (size > MAX_SCENE_SIZE || size < MIN_SCENE_SIZE) {
+            throw new IllegalArgumentException("Размер сцены должен быть не меньше " + MIN_SCENE_SIZE + " и не больше " + MAX_SCENE_SIZE);
         }
         this.size = size;
     }
@@ -63,15 +64,18 @@ public class Scene {
 
     public void run()
     {
-        System.out.println("Начинается могучая битва");
+        System.out.println("Начинается великая битва!");
 
         if (characters.isEmpty()) {
-            System.out.println("Но кажется на нее ни кто не пришел");
+            System.out.println("Но похоже на нее ни кто не пришел");
             return;
         }
 
-        int step = 1;
+        System.out.printf("На поле боя столкнутся %s бойцов:\n\n", characters.size());
+
+        int step = 0;
         while (getAliveCharacters().size() > 1) {
+            step++;
             System.out.println("Шаг: " + step);
             for (Character character: getShuffledCharacters()) {
                 if (!hasAnyOpponents()) {
@@ -83,7 +87,6 @@ public class Scene {
                 checkBodies();
             }
 
-            step++;
             System.out.println();
         }
 
