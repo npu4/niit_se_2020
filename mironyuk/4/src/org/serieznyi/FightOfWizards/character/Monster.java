@@ -1,5 +1,7 @@
 package org.serieznyi.FightOfWizards.character;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -27,12 +29,20 @@ final public class Monster extends Character {
         // TODO выбирать ближайшего противника
         // TODO выбирать противника и сражаться только с ним
 
+        List<Character> opponentsList = new ArrayList<>(opponents.values());
         Character opponent = null;
+        int countAttempt = 0;
         do {
-            int potentialOpponentKey = ThreadLocalRandom.current().nextInt(0, opponents.size() + 1);
+            int potentialOpponentKey = ThreadLocalRandom.current().nextInt(0, opponentsList.size() + 1);
 
-            if (opponents.containsKey(potentialOpponentKey)) {
-                opponent = opponents.get(potentialOpponentKey);
+            try {
+                opponent = opponentsList.get(potentialOpponentKey);
+            } catch (IndexOutOfBoundsException e) {
+                countAttempt++;
+            }
+
+            if (countAttempt > 5) {
+                throw new RuntimeException("Что-то пошло не так");
             }
         } while (null == opponent);
 

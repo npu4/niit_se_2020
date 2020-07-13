@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 final public class SceneOptions {
     private static final Logger LOG = Logger.getLogger(SceneOptions.class.getName());
 
-    public final static int DEFAULT_SCENE_SIZE = 2;
+    public final static int DEFAULT_SCENE_SIZE = 10;
 
-    public final static int DEFAULT_CHARACTER_COUNT = 2;
+    public final static int DEFAULT_CHARACTER_COUNT = 10;
 
     private int sceneSize = DEFAULT_SCENE_SIZE;
 
