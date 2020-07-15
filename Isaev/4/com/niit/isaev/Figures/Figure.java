@@ -1,14 +1,13 @@
 package com.niit.isaev.Figures;
 
+import java.util.Random;
+
 public class Figure {
 
-    int x;
-    int y;
+    Random random = new Random();
 
-
-    void square(){
-
-    }
+    int x = - 50 + random.nextInt(101);
+    int y = - 50 + random.nextInt(101);
 
     int getQuadrant(){
 
@@ -18,10 +17,20 @@ public class Figure {
             return 4;
         } else if (x<0 && y>0){
             return 2;
-        } else {
+        } else if(x<0 && y<0){
             return 3;
+        } else {
+            return 01;
         }
 
+    }
+
+    double square(){
+        return 0;
+    }
+
+    String getName(){
+        return this.getClass().getSimpleName();
     }
 
 }
