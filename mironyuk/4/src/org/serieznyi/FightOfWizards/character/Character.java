@@ -37,4 +37,9 @@ public abstract class Character {
     {
         return health <= 0;
     }
+
+    public enum Type {
+        MONSTER,
+        WIZARD
+    }
 }

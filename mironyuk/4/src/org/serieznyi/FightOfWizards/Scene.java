@@ -102,7 +102,7 @@ public class Scene {
 
         Character winner = alive.get(0);
 
-        System.out.println("На поле боя остался только " + winner.getName());
+        System.out.printf("На поле боя остался только \"%s\"", winner.getName());
     }
 
     private List<Character> getAliveCharacters() {
@@ -119,7 +119,7 @@ public class Scene {
 
             if (character.isDead() && !deadCharacters.contains(character)) {
                 deadCharacters.add(character);
-                System.out.println(character + " погибает");
+                System.out.printf("\"%s\" погибает\n", character);
             }
         }
     }
