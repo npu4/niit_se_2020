@@ -36,7 +36,7 @@ final public class Lightning extends Spell {
 
         opponent.decreaseHealth(damage);
 
-        System.out.printf("\tМаг \"%s\" наносит урон молнией \"%s\" в \"%s\" единиц урона\n", wizard.getName(), opponent.getName(), damage);
+        System.out.printf("\tМаг \"%s\" наносит урон молнией персонажу \"%s\" в размере \"%s\" единиц\n", wizard.getName(), opponent.getName(), damage);
 
         strengthenSpell(wizard);
     }
