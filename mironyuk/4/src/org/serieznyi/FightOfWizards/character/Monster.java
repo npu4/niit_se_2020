@@ -1,51 +1,49 @@
 package org.serieznyi.FightOfWizards.character;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
+import org.serieznyi.FightOfWizards.util.FightHelper;
 
+import java.util.Map;
+
+/**
+ *  - Монстры восстанавливают немного здоровья после своего действия
+ */
 final public class Monster extends Character {
+    private static final double REGENERATION_FACTOR = 0.2;
     private final int damageSize;
+    private int regenerationSize;
 
     public Monster(String name, int health, int damage) {
         super(name, health);
+
+        regenerationSize = (int) (health * REGENERATION_FACTOR);
 
         damageSize = damage;
     }
 
     @Override
     public void action(Map<Integer, Character> opponents) {
-        Character opponent = getRandomOpponentFrom(opponents);
+        Character opponent = FightHelper.getRandomOpponentFrom(opponents);
 
-        opponent.takeDamage(damageSize);
+        opponent.decreaseHealth(damageSize);
 
-    System.out.println(
-        String.format(
-            "Монстр \"%s\" атакует \"%s\" на %s единиц урона", name, opponent.name, damageSize));
+        System.out.printf("Монстр \"%s\" атакует \"%s\" на %s единиц урона\n", name, opponent.name, damageSize);
+
+        regenerate();
     }
 
-    private Character getRandomOpponentFrom(Map<Integer, Character> opponents) {
-        // TODO выбирать ближайшего противника
-        // TODO выбирать противника и сражаться только с ним
+    private void regenerate() {
+        if (regenerationSize <= 0) {
+            return;
+        }
 
-        List<Character> opponentsList = new ArrayList<>(opponents.values());
-        Character opponent = null;
-        int countAttempt = 0;
-        do {
-            int potentialOpponentKey = ThreadLocalRandom.current().nextInt(0, opponentsList.size() + 1);
+        int healthBefore = getHealth();
+        int newHealth = increaseHealth(regenerationSize);
 
-            try {
-                opponent = opponentsList.get(potentialOpponentKey);
-            } catch (IndexOutOfBoundsException e) {
-                countAttempt++;
-            }
+        if (healthBefore != newHealth) {
+            System.out.printf("\tМонстр \"%s\" восстановил свое здоровье на \"%s\". Теперь у него \"%s\" здоровья\n", getName(), regenerationSize, newHealth);
 
-            if (countAttempt > 5) {
-                throw new RuntimeException("Что-то пошло не так");
-            }
-        } while (null == opponent);
-
-        return opponent;
+            regenerationSize--;
+            System.out.printf("\tРегенерация у монстра \"%s\" ослабла\n", name);
+        }
     }
 }

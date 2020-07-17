@@ -1,20 +1,25 @@
 package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
-import org.serieznyi.FightOfWizards.character.wizard.spell.YouWillNotPath;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * - Заклинания наносящие урон постепенно усиливаются
+ * - Заклинания восстанавливающие жизни после каждого успешного применения ослабевают
+ */
 final public class Wizard extends Character {
-    private List<Spell> spells;
+    private static final int SPELLS_BAG_SIZE = 3;
+
+    private final List<Spell> spells;
 
     public Wizard(String name, int health, Spell[] spells) {
         super(name, health);
 
-        if (spells.length > 3) {
+        if (spells.length > SPELLS_BAG_SIZE) {
             throw new IllegalArgumentException("Истинный волшебник использует не более 3х заклинаний");
         }
 
@@ -22,19 +27,17 @@ final public class Wizard extends Character {
     }
 
     public Spell takeSomeSpell() {
-        Optional<Spell> someSpell = spells.stream().findAny();
+        int index = ThreadLocalRandom.current().nextInt(0, spells.size());
 
-        if (!someSpell.isPresent()) {
-            throw new RuntimeException("Что-то пошло не так");
-        }
-
-        return someSpell.get();
+        return spells.get(index);
     }
 
     @Override
     public void action(Map<Integer, Character> opponents) {
         Spell spell = takeSomeSpell();
 
-    System.out.printf("Маг \"%s\" читает заклинание \"%s\"\n", name, spell.getName());
+        System.out.printf("Маг \"%s\" читает заклинание \"%s\"\n", name, spell.getName());
+
+        spell.cast(this, opponents);
     }
 }

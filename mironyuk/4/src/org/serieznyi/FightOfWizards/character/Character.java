@@ -5,16 +5,19 @@ import org.serieznyi.FightOfWizards.util.Assert;
 import java.util.Map;
 
 public abstract class Character {
-    protected String name;
+    private final Health health;
 
-    protected int health;
+    protected String name;
 
     public Character(String name, int health) {
         Assert.requireNotEmptyString(name);
         this.name = name;
 
-        Assert.greaterThan(health, 1);
-        this.health = health;
+        this.health = new Health(health);
+    }
+
+    public int getHealth() {
+        return health.getHealth();
     }
 
     public abstract void action(final Map<Integer, Character> opponents);
@@ -28,18 +31,66 @@ public abstract class Character {
         return name;
     }
 
-    protected void takeDamage(int damage)
-    {
-        health -= damage;
-    }
-
     public boolean isDead()
     {
-        return health <= 0;
+        return health.isDead();
+    }
+
+    public void decreaseHealth(int value)
+    {
+        health.decreaseHealth(value);
+    }
+
+    public int increaseHealth(int value)
+    {
+        return health.increaseHealth(value);
     }
 
     public enum Type {
         MONSTER,
         WIZARD
+    }
+
+    private static class Health {
+        protected int health;
+
+        protected final int initialHealth;
+
+        private Health(int health) {
+            Assert.greaterThan(health, 1);
+            this.health = initialHealth = health;
+        }
+
+        public void decreaseHealth(int health)
+        {
+            this.health -= health;
+        }
+
+        /**
+         * @param health value to increase health
+         * @return new health value
+         */
+        public int increaseHealth(int health)
+        {
+            if (isHealthLowerInitialHealth()) {
+                this.health += health;
+            }
+
+            return this.health;
+        }
+
+        private boolean isHealthLowerInitialHealth() {
+            return this.health < initialHealth;
+        }
+
+        public int getHealth()
+        {
+            return health;
+        }
+
+        public boolean isDead()
+        {
+            return health <= 0;
+        }
     }
 }
