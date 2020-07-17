@@ -63,7 +63,7 @@ final public class SceneOptions {
                 break;
             }
             case "characterCount": {
-                options.sceneSize = Integer.parseInt(value);
+                options.characterCount = Integer.parseInt(value);
                 break;
             }
             default: {
