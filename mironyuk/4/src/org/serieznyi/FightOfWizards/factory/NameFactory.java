@@ -18,7 +18,7 @@ final public class NameFactory {
             }
 
             String[] namesForType = Arrays.stream(item.getValue())
-                    .sorted((String s1, String s2) -> ThreadLocalRandom.current().nextInt(-1, 1))
+                    .sorted((String s1, String s2) -> ThreadLocalRandom.current().nextInt(-1, 2))
                     .toArray(String[]::new);
 
             namesPool.put(item.getKey(), namesForType);

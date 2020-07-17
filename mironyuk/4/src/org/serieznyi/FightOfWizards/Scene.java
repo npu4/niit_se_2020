@@ -30,7 +30,7 @@ public class Scene {
 
         boolean successfulAppend = false;
         for (int i = 0 ; i < MAX_SCENE_SIZE ; i++) {
-            int potentialPosition = ThreadLocalRandom.current().nextInt(0, this.size - 1);
+            int potentialPosition = ThreadLocalRandom.current().nextInt(0, this.size);
             if (!characters.containsKey(potentialPosition)) {
                 characters.put (potentialPosition, character);
                 successfulAppend = true;
@@ -129,7 +129,7 @@ public class Scene {
                 .entrySet()
                 .stream()
                 .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
-                .sorted((Map.Entry<Integer, Character> a, Map.Entry<Integer, Character> b) -> ThreadLocalRandom.current().nextInt(-1, 1))
+                .sorted((Map.Entry<Integer, Character> a, Map.Entry<Integer, Character> b) -> ThreadLocalRandom.current().nextInt(-1, 2))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
     }

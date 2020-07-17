@@ -49,7 +49,7 @@ final public class BanishingMonsters extends Spell {
 
         String opponentNames = String.join(", ", damagedOpponentNames);
 
-        System.out.printf("\tЦепная молния ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n", opponentNames, damage);
+        System.out.printf("\t%s наносит урон монстрам \"%s\". Каждый получает \"%s\" единиц урона.\n", name, opponentNames, damage);
 
         strengthenSpell(wizard);
     }

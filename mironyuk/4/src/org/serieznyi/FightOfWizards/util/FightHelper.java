@@ -16,7 +16,7 @@ public class FightHelper {
         Character opponent = null;
         int countAttempt = 0;
         do {
-            int potentialOpponentKey = ThreadLocalRandom.current().nextInt(0, opponentsList.size() + 1);
+            int potentialOpponentKey = ThreadLocalRandom.current().nextInt(0, opponentsList.size());
 
             try {
                 opponent = opponentsList.get(potentialOpponentKey);

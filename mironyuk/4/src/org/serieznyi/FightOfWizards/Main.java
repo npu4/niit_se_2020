@@ -1,13 +1,20 @@
 package org.serieznyi.FightOfWizards;
 
 import org.serieznyi.FightOfWizards.character.Character;
+import org.serieznyi.FightOfWizards.character.wizard.Spell;
+import org.serieznyi.FightOfWizards.character.wizard.spell.BanishingMonsters;
+import org.serieznyi.FightOfWizards.character.wizard.spell.ChainLighting;
+import org.serieznyi.FightOfWizards.character.wizard.spell.Healing;
+import org.serieznyi.FightOfWizards.character.wizard.spell.Lightning;
 import org.serieznyi.FightOfWizards.factory.NameFactory;
+import org.serieznyi.FightOfWizards.factory.SpellBagFactory;
 import org.serieznyi.FightOfWizards.factory.character.CharacterFactory;
 import org.serieznyi.FightOfWizards.factory.character.MonsterFactory;
 import org.serieznyi.FightOfWizards.factory.character.RandomCharacterFactory;
 import org.serieznyi.FightOfWizards.factory.character.WizardFactory;
 
 import java.util.HashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
   public static void main(String[] args) {
@@ -63,7 +70,24 @@ public class Main {
 
     return new RandomCharacterFactory(new CharacterFactory[] {
             new MonsterFactory(nameFactory),
-            new WizardFactory(nameFactory)
+            new WizardFactory(nameFactory, getSpellBagFactory())
+    });
+  }
+
+  private static SpellBagFactory getSpellBagFactory()
+  {
+    ThreadLocalRandom random = ThreadLocalRandom.current();
+
+    final int MIN_HEALING = 25;
+    final int MAX_HEALING = 50;
+    final int MIN_SPELL_DAMAGE = 50;
+    final int MAX_SPELL_DAMAGE = 75;
+
+    return new SpellBagFactory(new Spell[]{
+            new Healing(random.nextInt(MIN_HEALING, MAX_HEALING + 1)),
+            new Lightning(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
+            new BanishingMonsters(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
+            new ChainLighting(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1))
     });
   }
 }

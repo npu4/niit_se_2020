@@ -10,7 +10,7 @@ public class SpellBagFactory {
 
     private final Spell[] allowedSpells;
 
-    SpellBagFactory(Spell[] allowedSpells)
+    public SpellBagFactory(Spell[] allowedSpells)
     {
         if (allowedSpells.length == 0) {
             throw new IllegalArgumentException("Массив доступных заклинаний не может быть пустым");
@@ -26,7 +26,7 @@ public class SpellBagFactory {
     public Spell[] create(int count) {
 
         return Arrays.stream(allowedSpells)
-                .sorted((Spell s1, Spell s2) -> ThreadLocalRandom.current().nextInt(0, -1))
+                .sorted((Spell s1, Spell s2) -> ThreadLocalRandom.current().nextInt(-1, 2))
                 .limit(count)
                 .toArray(Spell[]::new);
     }
