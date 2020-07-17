@@ -8,7 +8,8 @@ import java.util.Map;
  *  - Монстры восстанавливают немного здоровья после своего действия
  */
 final public class Monster extends Character {
-    private static final double REGENERATION_FACTOR = 0.2;
+    private static final double REGENERATION_FACTOR = 0.1;
+    private final int REGENERATION_DEGRADATION_SIZE;
     private final int damageSize;
     private int regenerationSize;
 
@@ -16,6 +17,7 @@ final public class Monster extends Character {
         super(name, health);
 
         regenerationSize = (int) (health * REGENERATION_FACTOR);
+        REGENERATION_DEGRADATION_SIZE = (int) (regenerationSize * REGENERATION_FACTOR);
 
         damageSize = damage;
     }
@@ -42,7 +44,7 @@ final public class Monster extends Character {
         if (healthBefore != newHealth) {
             System.out.printf("\tМонстр \"%s\" восстановил свое здоровье на \"%s\". Теперь у него \"%s\" здоровья\n", getName(), regenerationSize, newHealth);
 
-            regenerationSize--;
+            regenerationSize -= REGENERATION_DEGRADATION_SIZE;
             System.out.printf("\tРегенерация у монстра \"%s\" ослабла\n", name);
         }
     }
