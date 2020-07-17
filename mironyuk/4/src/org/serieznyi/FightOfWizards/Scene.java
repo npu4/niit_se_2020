@@ -78,7 +78,7 @@ public class Scene {
             step++;
             System.out.println("Шаг: " + step);
             for (Character character: getShuffledCharacters()) {
-                if (!hasAnyOpponents()) {
+                if (!hasAnyOpponents() || character.isDead()) {
                     break;
                 }
 
