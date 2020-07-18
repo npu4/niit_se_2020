@@ -73,9 +73,7 @@ public class Scene {
 
         System.out.printf("На поле боя находится бойцов: %s\n\n", characters.size());
 
-        int step = 0;
-        while (getAliveCharacters().size() > 1) {
-            step++;
+        for (int step = 1 ; getAliveCharacters().size() > 1 ; step++) {
             System.out.println("Шаг: " + step);
             for (Character character: getShuffledCharacters()) {
                 if (!hasAnyOpponents() || character.isDead()) {
