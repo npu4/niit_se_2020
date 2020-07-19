@@ -34,47 +34,44 @@ public class Main {
     return scene;
   }
 
-  private static class Dependencies
-  {
-    public static CharacterFactory getCharacterFactory()
-    {
-      NameFactory nameFactory = new NameFactory(new HashMap<Character.Type, String[]>() {{
-        put(Character.Type.MONSTER, new String[]{
-                "Сатана",
-                "Кракен",
-                "Голод",
-                "Голум",
-                "Харрун",
-                "Смерть",
-                "Чума",
-                "Ворон",
-                "Крыса",
-                "Зомби",
-        });
-        put(Character.Type.WIZARD, new String[]{
-                "Мерлин",
-                "Арарат",
-                "Синусин",
-                "Косинусин",
-                "Тангенсин",
-                "Байтум",
-                "Килабайтум",
-                "Мегабайтум",
-                "Гигабайтум",
-                "Терабайтум",
-                "Гендальф",
-                "Тирисиум",
-        });
-      }});
+  private static class Dependencies {
+    public static CharacterFactory getCharacterFactory() {
+      NameFactory nameFactory =
+          new NameFactory(
+              new HashMap<Character.Type, String[]>() {
+                {
+                  put(
+                      Character.Type.MONSTER,
+                      new String[] {
+                        "Сатана", "Кракен", "Голод", "Голум", "Харрун", "Смерть", "Чума", "Ворон",
+                        "Крыса", "Зомби",
+                      });
+                  put(
+                      Character.Type.WIZARD,
+                      new String[] {
+                        "Мерлин",
+                        "Арарат",
+                        "Синусин",
+                        "Косинусин",
+                        "Тангенсин",
+                        "Байтум",
+                        "Килабайтум",
+                        "Мегабайтум",
+                        "Гигабайтум",
+                        "Терабайтум",
+                        "Гендальф",
+                        "Тирисиум",
+                      });
+                }
+              });
 
-      return new RandomCharacterFactory(new CharacterFactory[] {
-              new MonsterFactory(nameFactory),
-              new WizardFactory(nameFactory, getSpellBagFactory())
-      });
+      return new RandomCharacterFactory(
+          new CharacterFactory[] {
+            new MonsterFactory(nameFactory), new WizardFactory(nameFactory, getSpellBagFactory())
+          });
     }
 
-    public static SpellBagFactory getSpellBagFactory()
-    {
+    public static SpellBagFactory getSpellBagFactory() {
       ThreadLocalRandom random = ThreadLocalRandom.current();
 
       final int MIN_HEALING = 25;
@@ -82,15 +79,16 @@ public class Main {
       final int MIN_SPELL_DAMAGE = 50;
       final int MAX_SPELL_DAMAGE = 75;
 
-      return new SpellBagFactory(new Spell[]{
-              new Healing(random.nextInt(MIN_HEALING, MAX_HEALING + 1)),
-              new Lightning(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
-              new BanishingMonsters(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
-              new ChainLighting(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
-              new FireTouch(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
-              new Migraine(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
-              new WallOfFire(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1))
-      });
+      return new SpellBagFactory(
+          new Spell[] {
+            new Healing(random.nextInt(MIN_HEALING, MAX_HEALING + 1)),
+            new Lightning(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
+            new BanishingMonsters(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
+            new ChainLighting(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
+            new FireTouch(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
+            new Migraine(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
+            new WallOfFire(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1))
+          });
     }
   }
 }

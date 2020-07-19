@@ -8,36 +8,36 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * - Заклинания наносящие урон постепенно усиливаются
- * - Заклинания восстанавливающие жизни после каждого успешного применения ослабевают
+ * - Заклинания наносящие урон постепенно усиливаются - Заклинания восстанавливающие жизни после
+ * каждого успешного применения ослабевают
  */
-final public class Wizard extends Character {
-    private static final int SPELLS_BAG_SIZE = 3;
+public final class Wizard extends Character {
+  private static final int SPELLS_BAG_SIZE = 3;
 
-    private final List<Spell> spells;
+  private final List<Spell> spells;
 
-    public Wizard(String name, int health, Spell[] spells) {
-        super(name, health);
+  public Wizard(String name, int health, Spell[] spells) {
+    super(name, health);
 
-        if (spells.length > SPELLS_BAG_SIZE) {
-            throw new IllegalArgumentException("Истинный волшебник использует не более 3х заклинаний");
-        }
-
-        this.spells = Arrays.asList(spells);
+    if (spells.length > SPELLS_BAG_SIZE) {
+      throw new IllegalArgumentException("Истинный волшебник использует не более 3х заклинаний");
     }
 
-    public Spell takeSomeSpell() {
-        int index = ThreadLocalRandom.current().nextInt(0, spells.size());
+    this.spells = Arrays.asList(spells);
+  }
 
-        return spells.get(index);
-    }
+  public Spell takeSomeSpell() {
+    int index = ThreadLocalRandom.current().nextInt(0, spells.size());
 
-    @Override
-    public void action(Scene scene) {
-        Spell spell = takeSomeSpell();
+    return spells.get(index);
+  }
 
-        System.out.printf("Маг \"%s\" читает заклинание \"%s\"\n", name, spell.getName());
+  @Override
+  public void action(Scene scene) {
+    Spell spell = takeSomeSpell();
 
-        spell.cast(this, scene);
-    }
+    System.out.printf("Маг \"%s\" читает заклинание \"%s\"\n", name, spell.getName());
+
+    spell.cast(this, scene);
+  }
 }

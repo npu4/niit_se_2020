@@ -3,72 +3,73 @@ package org.serieznyi.FightOfWizards;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-final public class SceneOptions {
-    private static final Logger LOG = Logger.getLogger(SceneOptions.class.getName());
+public final class SceneOptions {
+  public static final int DEFAULT_SCENE_SIZE = 10;
+  public static final int DEFAULT_CHARACTER_COUNT = 10;
+  private static final Logger LOG = Logger.getLogger(SceneOptions.class.getName());
+  private int sceneSize = DEFAULT_SCENE_SIZE;
 
-    public final static int DEFAULT_SCENE_SIZE = 10;
+  private int characterCount = DEFAULT_CHARACTER_COUNT;
 
-    public final static int DEFAULT_CHARACTER_COUNT = 10;
+  private SceneOptions() {}
 
-    private int sceneSize = DEFAULT_SCENE_SIZE;
+  public static SceneOptions fromDefault() {
+    return new SceneOptions();
+  }
 
-    private int characterCount = DEFAULT_CHARACTER_COUNT;
+  public static SceneOptions fromDialog() {
+    SceneOptions options = new SceneOptions();
 
-    private SceneOptions() {}
+    Scanner scanner = new Scanner(System.in);
 
-    public int getSceneSize() {
-        return sceneSize;
+    System.out.printf("Укажите размер сцены (По умолчанию %s):", DEFAULT_SCENE_SIZE);
+    String sceneSize = scanner.nextLine();
+    if (sceneSize.equals("")) {
+      options.sceneSize = DEFAULT_SCENE_SIZE;
+    } else {
+      options.sceneSize = Integer.parseInt(sceneSize);
     }
 
-    public int getCharacterCount() {
-        return characterCount;
+    System.out.printf(
+        "Укажите количество персонажей на сцене (По умолчанию %s):", DEFAULT_CHARACTER_COUNT);
+    String characterCount = scanner.nextLine();
+    if (sceneSize.equals("")) {
+      options.characterCount = DEFAULT_CHARACTER_COUNT;
+    } else {
+      options.characterCount = Integer.parseInt(characterCount);
     }
 
-    public static SceneOptions fromDefault() {
-        return new SceneOptions();
+    if (options.characterCount > options.sceneSize) {
+      throw new RuntimeException("Количество свободных мест на сцене меньше количества персонажей");
     }
 
-    public static SceneOptions fromDialog() {
-        SceneOptions options = new SceneOptions();
+    return options;
+  }
 
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.printf("Укажите размер сцены (По умолчанию %s):", DEFAULT_SCENE_SIZE);
-        String sceneSize = scanner.nextLine();
-        if (sceneSize.equals("")) {
-            options.sceneSize = DEFAULT_SCENE_SIZE;
-        } else {
-            options.sceneSize = Integer.parseInt(sceneSize);
+  private static void initOption(SceneOptions options, String optionName, String value) {
+    switch (optionName) {
+      case "sceneSize":
+        {
+          options.sceneSize = Integer.parseInt(value);
+          break;
         }
-
-        System.out.printf("Укажите количество персонажей на сцене (По умолчанию %s):", DEFAULT_CHARACTER_COUNT);
-        String characterCount = scanner.nextLine();
-        if (sceneSize.equals("")) {
-            options.characterCount = DEFAULT_CHARACTER_COUNT;
-        } else {
-            options.characterCount = Integer.parseInt(characterCount);
+      case "characterCount":
+        {
+          options.characterCount = Integer.parseInt(value);
+          break;
         }
-
-        if (options.characterCount > options.sceneSize) {
-            throw new RuntimeException("Количество свободных мест на сцене меньше количества персонажей");
-        }
-
-        return options;
-    }
-
-    private static void initOption(SceneOptions options, String optionName, String value) {
-        switch (optionName) {
-            case "sceneSize": {
-                options.sceneSize = Integer.parseInt(value);
-                break;
-            }
-            case "characterCount": {
-                options.characterCount = Integer.parseInt(value);
-                break;
-            }
-            default: {
-                LOG.warning("Неизвестная опция: " + optionName);
-            }
+      default:
+        {
+          LOG.warning("Неизвестная опция: " + optionName);
         }
     }
+  }
+
+  public int getSceneSize() {
+    return sceneSize;
+  }
+
+  public int getCharacterCount() {
+    return characterCount;
+  }
 }

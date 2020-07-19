@@ -9,41 +9,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-final public class ChainLighting implements Spell {
-    /**
-     * Количество урона наносимое заклинанием
-     */
-    private final int damage;
+public final class ChainLighting implements Spell {
+  /** Количество урона наносимое заклинанием */
+  private final int damage;
 
-    public ChainLighting(int damage) {
-        Assert.greaterThan(damage, 1);
-        this.damage = damage;
+  public ChainLighting(int damage) {
+    Assert.greaterThan(damage, 1);
+    this.damage = damage;
+  }
+
+  @Override
+  public String getName() {
+    return "Цепная молния";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание";
+  }
+
+  @Override
+  public void cast(Character wizard, Scene scene) {
+
+    Map<Integer, Character> opponents = scene.getOpponentsFor(wizard);
+
+    List<String> damagedOpponentNames = new ArrayList<>();
+
+    for (Character character : opponents.values()) {
+      character.decreaseHealth(damage);
+      damagedOpponentNames.add(character.getName());
     }
 
-    @Override
-    public String getName() {
-        return "Цепная молния";
-    }
+    String opponentNames = String.join(", ", damagedOpponentNames);
 
-    @Override
-    public String getDescription() {
-        return "Наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание";
-    }
-
-    @Override
-    public void cast(Character wizard, Scene scene) {
-
-        Map<Integer, Character> opponents = scene.getOpponentsFor(wizard);
-
-        List<String> damagedOpponentNames = new ArrayList<>();
-
-        for (Character character : opponents.values()) {
-            character.decreaseHealth(damage);
-            damagedOpponentNames.add(character.getName());
-        }
-
-        String opponentNames = String.join(", ", damagedOpponentNames);
-
-        System.out.printf("\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n", getName(), opponentNames, damage);
-    }
+    System.out.printf(
+        "\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n",
+        getName(), opponentNames, damage);
+  }
 }

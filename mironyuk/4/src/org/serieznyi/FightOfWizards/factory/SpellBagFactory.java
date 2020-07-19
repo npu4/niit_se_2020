@@ -4,31 +4,29 @@ import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Functions;
 
 import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SpellBagFactory {
-    private final static int DEFAULT_SIZE_OF_SPELLS_BAG = 3;
+  private static final int DEFAULT_SIZE_OF_SPELLS_BAG = 3;
 
-    private final Spell[] allowedSpells;
+  private final Spell[] allowedSpells;
 
-    public SpellBagFactory(Spell[] allowedSpells)
-    {
-        if (allowedSpells.length == 0) {
-            throw new IllegalArgumentException("Массив доступных заклинаний не может быть пустым");
-        }
-
-        this.allowedSpells = allowedSpells;
+  public SpellBagFactory(Spell[] allowedSpells) {
+    if (allowedSpells.length == 0) {
+      throw new IllegalArgumentException("Массив доступных заклинаний не может быть пустым");
     }
 
-    public Spell[] create() {
-        return create(DEFAULT_SIZE_OF_SPELLS_BAG);
-    }
+    this.allowedSpells = allowedSpells;
+  }
 
-    public Spell[] create(int count) {
+  public Spell[] create() {
+    return create(DEFAULT_SIZE_OF_SPELLS_BAG);
+  }
 
-        return Arrays.stream(allowedSpells)
-                .sorted(Functions::randomComparator)
-                .limit(count)
-                .toArray(Spell[]::new);
-    }
+  public Spell[] create(int count) {
+
+    return Arrays.stream(allowedSpells)
+        .sorted(Functions::randomComparator)
+        .limit(count)
+        .toArray(Spell[]::new);
+  }
 }

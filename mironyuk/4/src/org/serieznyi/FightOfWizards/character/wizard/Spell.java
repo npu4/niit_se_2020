@@ -4,9 +4,9 @@ import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.character.Character;
 
 public interface Spell {
-    String getName();
+  String getName();
 
-    String getDescription();
+  String getDescription();
 
-    void cast(Character wizard, Scene scene);
+  void cast(Character wizard, Scene scene);
 }
