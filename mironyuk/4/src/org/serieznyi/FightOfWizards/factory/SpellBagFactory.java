@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.factory;
 
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
+import org.serieznyi.FightOfWizards.util.Functions;
 
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
@@ -26,7 +27,7 @@ public class SpellBagFactory {
     public Spell[] create(int count) {
 
         return Arrays.stream(allowedSpells)
-                .sorted((Spell s1, Spell s2) -> ThreadLocalRandom.current().nextInt(-1, 2))
+                .sorted(Functions::randomComparator)
                 .limit(count)
                 .toArray(Spell[]::new);
     }

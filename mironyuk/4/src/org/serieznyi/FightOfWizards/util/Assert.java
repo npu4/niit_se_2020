@@ -3,6 +3,8 @@ package org.serieznyi.FightOfWizards.util;
 import java.util.Objects;
 
 final public class Assert {
+    private Assert() {}
+
     public static void requireNotEmptyString(String str) {
         Objects.requireNonNull(str);
 

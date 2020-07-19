@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.factory;
 
 import org.serieznyi.FightOfWizards.character.Character;
+import org.serieznyi.FightOfWizards.util.Functions;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ final public class NameFactory {
             }
 
             String[] namesForType = Arrays.stream(item.getValue())
-                    .sorted((String s1, String s2) -> ThreadLocalRandom.current().nextInt(-1, 2))
+                    .sorted(Functions::randomComparator)
                     .toArray(String[]::new);
 
             namesPool.put(item.getKey(), namesForType);

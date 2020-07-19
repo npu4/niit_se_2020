@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards;
 
 import org.serieznyi.FightOfWizards.character.Character;
+import org.serieznyi.FightOfWizards.util.Functions;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -151,7 +152,7 @@ public class Scene {
                 .entrySet()
                 .stream()
                 .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
-                .sorted((Map.Entry<Integer, Character> a, Map.Entry<Integer, Character> b) -> ThreadLocalRandom.current().nextInt(-1, 2))
+                .sorted(Functions::randomComparator)
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
     }
