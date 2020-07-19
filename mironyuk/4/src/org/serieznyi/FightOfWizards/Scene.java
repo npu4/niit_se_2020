@@ -1,7 +1,6 @@
 package org.serieznyi.FightOfWizards;
 
 import org.serieznyi.FightOfWizards.character.Character;
-import org.serieznyi.FightOfWizards.util.FightHelper;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -56,9 +55,26 @@ public class Scene {
 
     public Character getRandomOpponentFor(Character character)
     {
-        Map<Integer, Character> opponentsFor = getOpponentsFor(character);
+        Map<Integer, Character> opponents = getOpponentsFor(character);
 
-        return FightHelper.getRandomOpponentFrom(opponentsFor);
+        List<Character> opponentsList = new ArrayList<>(opponents.values());
+        Character opponent = null;
+        int countAttempt = 0;
+        do {
+            int potentialOpponentKey = ThreadLocalRandom.current().nextInt(0, opponentsList.size());
+
+            try {
+                opponent = opponentsList.get(potentialOpponentKey);
+            } catch (IndexOutOfBoundsException e) {
+                countAttempt++;
+            }
+
+            if (countAttempt > 10) {
+                throw new RuntimeException("Что-то пошло не так");
+            }
+        } while (null == opponent);
+
+        return opponent;
     }
 
     public Map<Integer, Character> getOpponentsFor(Character character) {

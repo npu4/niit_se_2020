@@ -1,7 +1,6 @@
 package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.Scene;
-import org.serieznyi.FightOfWizards.util.FightHelper;
 
 /**
  *  - Монстры восстанавливают немного здоровья после своего действия
@@ -23,7 +22,7 @@ final public class Monster extends Character {
 
     @Override
     public void action(Scene scene) {
-        Character opponent = FightHelper.getRandomOpponentFrom(scene.getOpponentsFor(this));
+        Character opponent = scene.getRandomOpponentFor(this);
 
         opponent.decreaseHealth(damageSize);
 
