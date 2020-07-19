@@ -1,8 +1,7 @@
 package org.serieznyi.FightOfWizards.character;
 
+import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.util.Assert;
-
-import java.util.Map;
 
 public abstract class Character {
     private final Health health;
@@ -20,7 +19,7 @@ public abstract class Character {
         return health.getHealth();
     }
 
-    public abstract void action(final Map<Integer, Character> opponents);
+    public abstract void action(Scene scene);
 
     public String toString() {
         return name;

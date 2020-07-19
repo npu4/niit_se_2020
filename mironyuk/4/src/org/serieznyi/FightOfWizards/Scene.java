@@ -80,7 +80,7 @@ public class Scene {
                     break;
                 }
 
-                character.action(getOpponentsFor(character));
+                character.action(this);
 
                 checkBodies();
             }

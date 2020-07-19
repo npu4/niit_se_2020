@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class FightHelper {
+final public class FightHelper {
     public static Character getRandomOpponentFrom(Map<Integer, Character> opponents) {
         // TODO выбирать ближайшего противника
         // TODO выбирать противника и сражаться только с ним

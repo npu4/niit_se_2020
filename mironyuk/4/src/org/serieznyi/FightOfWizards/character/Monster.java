@@ -1,8 +1,7 @@
 package org.serieznyi.FightOfWizards.character;
 
+import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.util.FightHelper;
-
-import java.util.Map;
 
 /**
  *  - Монстры восстанавливают немного здоровья после своего действия
@@ -23,8 +22,8 @@ final public class Monster extends Character {
     }
 
     @Override
-    public void action(Map<Integer, Character> opponents) {
-        Character opponent = FightHelper.getRandomOpponentFrom(opponents);
+    public void action(Scene scene) {
+        Character opponent = FightHelper.getRandomOpponentFrom(scene.getOpponentsFor(this));
 
         opponent.decreaseHealth(damageSize);
 

@@ -1,10 +1,10 @@
 package org.serieznyi.FightOfWizards.character;
 
+import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -33,11 +33,11 @@ final public class Wizard extends Character {
     }
 
     @Override
-    public void action(Map<Integer, Character> opponents) {
+    public void action(Scene scene) {
         Spell spell = takeSomeSpell();
 
         System.out.printf("Маг \"%s\" читает заклинание \"%s\"\n", name, spell.getName());
 
-        spell.cast(this, opponents);
+        spell.cast(this, scene.getOpponentsFor(this));
     }
 }
