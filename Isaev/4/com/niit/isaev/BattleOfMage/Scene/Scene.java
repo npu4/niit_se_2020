@@ -1,7 +1,12 @@
 package com.niit.isaev.BattleOfMage.Scene;
 
+import java.util.ArrayList;
+
 public class Scene {
 
-    int[] positions = new int[10];
+    ArrayList<Character> positions = new ArrayList<Character>();
+    int turn = 0;
+
+
 
 }
