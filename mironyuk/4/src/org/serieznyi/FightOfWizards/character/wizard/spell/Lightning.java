@@ -1,9 +1,9 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
+import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
-import org.serieznyi.FightOfWizards.util.FightHelper;
 
 import java.util.Map;
 
@@ -31,8 +31,8 @@ final public class Lightning extends Spell {
     }
 
     @Override
-    public void cast(Character wizard, Map<Integer, Character> opponents) {
-        Character opponent = FightHelper.getRandomOpponentFrom(opponents);
+    public void cast(Character wizard, Scene scene) {
+        Character opponent = scene.getRandomOpponentFor(wizard);
 
         opponent.decreaseHealth(damage);
 

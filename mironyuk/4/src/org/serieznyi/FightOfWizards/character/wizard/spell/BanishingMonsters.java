@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 
+import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.Monster;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
@@ -34,9 +35,11 @@ final public class BanishingMonsters extends Spell {
     }
 
     @Override
-    public void cast(Character wizard, Map<Integer, Character> opponents) {
+    public void cast(Character wizard, Scene scene) {
 
         List<String> damagedOpponentNames = new ArrayList<>();
+
+        Map<Integer, Character> opponents = scene.getOpponentsFor(wizard);
 
         for (Map.Entry<Integer, Character> entry: opponents.entrySet()) {
             Character opponent = entry.getValue();

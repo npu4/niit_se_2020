@@ -1,10 +1,9 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
+import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
-
-import java.util.Map;
 
 /**
  * Исцеление - добавляет очков здоровья магу, произнесшему заклинание. 
@@ -30,7 +29,7 @@ final public class Healing extends Spell {
     }
 
     @Override
-    public void cast(Character wizard, Map<Integer, Character> opponents) {
+    public void cast(Character wizard, Scene scene) {
         int healthBefore = wizard.getHealth();
         int newHealth = wizard.increaseHealth(healingStrength);
 

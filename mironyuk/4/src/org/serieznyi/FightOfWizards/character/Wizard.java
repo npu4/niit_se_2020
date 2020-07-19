@@ -38,6 +38,6 @@ final public class Wizard extends Character {
 
         System.out.printf("Маг \"%s\" читает заклинание \"%s\"\n", name, spell.getName());
 
-        spell.cast(this, scene.getOpponentsFor(this));
+        spell.cast(this, scene);
     }
 }

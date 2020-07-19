@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards;
 
 import org.serieznyi.FightOfWizards.character.Character;
+import org.serieznyi.FightOfWizards.util.FightHelper;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -51,6 +52,13 @@ public class Scene {
         if (!successfulAppend) {
             throw new RuntimeException("Не удалось найти свободную позицию на сцене для " + character);
         }
+    }
+
+    public Character getRandomOpponentFor(Character character)
+    {
+        Map<Integer, Character> opponentsFor = getOpponentsFor(character);
+
+        return FightHelper.getRandomOpponentFrom(opponentsFor);
     }
 
     public Map<Integer, Character> getOpponentsFor(Character character) {

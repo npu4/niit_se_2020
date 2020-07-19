@@ -1,5 +1,6 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
+import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
@@ -32,7 +33,9 @@ final public class ChainLighting extends Spell {
     }
 
     @Override
-    public void cast(Character wizard, Map<Integer, Character> opponents) {
+    public void cast(Character wizard, Scene scene) {
+
+        Map<Integer, Character> opponents = scene.getOpponentsFor(wizard);
 
         List<String> damagedOpponentNames = new ArrayList<>();
 

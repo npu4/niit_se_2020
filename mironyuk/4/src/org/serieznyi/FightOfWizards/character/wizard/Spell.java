@@ -1,9 +1,8 @@
 package org.serieznyi.FightOfWizards.character.wizard;
 
+import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.util.Assert;
-
-import java.util.Map;
 
 abstract public class Spell {
     protected final String name;
@@ -18,5 +17,5 @@ abstract public class Spell {
         return name;
     }
 
-    abstract public void cast(Character wizard, Map<Integer, Character> opponents);
+    abstract public void cast(Character wizard, Scene scene);
 }
