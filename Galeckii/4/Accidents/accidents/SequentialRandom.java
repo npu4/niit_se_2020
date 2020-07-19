@@ -9,8 +9,7 @@ public class SequentialRandom {
     public SequentialRandom() {
         if (isNumberSet) {
             number++;
-        }
-        if (!isNumberSet) {
+        } else {
             number = new Random().nextInt();
             isNumberSet = true;
         }
