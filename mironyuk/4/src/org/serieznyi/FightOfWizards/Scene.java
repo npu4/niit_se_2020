@@ -148,4 +148,31 @@ public class Scene {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
                 .size() > 1;
     }
+
+    public int getIndexFor(Character character) {
+        for (Map.Entry<Integer, Character> entry: characters.entrySet()) {
+            if (entry.getValue().equals(character)) {
+                return entry.getKey();
+            }
+        }
+
+        throw new RuntimeException("Cant find index for " + character);
+    }
+
+    public Optional<Character> findNeighboredOpponentFor(Character character)
+    {
+        int characterIndex = getIndexFor(character);
+
+        Map<Integer, Character> opponents = getOpponentsFor(character);
+
+        int[] allowedNeighborIndexes = new int[] {characterIndex - 1, characterIndex + 1};
+
+        for (int index : allowedNeighborIndexes) {
+            if (opponents.containsKey(index)) {
+                return Optional.of(opponents.get(index));
+            }
+        }
+
+        return Optional.empty();
+    }
 }
