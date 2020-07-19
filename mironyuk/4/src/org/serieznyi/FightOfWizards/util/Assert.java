@@ -11,6 +11,10 @@ final public class Assert {
         }
     }
 
+    public static void requireNotNull(Object str) {
+        Objects.requireNonNull(str);
+    }
+
     public static void greaterThan(int value, int minValue) {
         if (value < minValue) {
             throw new IllegalArgumentException("Значение должно быть больше " + minValue);

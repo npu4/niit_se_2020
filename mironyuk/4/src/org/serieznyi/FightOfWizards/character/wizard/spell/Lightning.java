@@ -5,10 +5,7 @@ import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
 
-/**
- * Молния - наносит урон любому персонажу.
- */
-final public class Lightning extends Spell {
+final public class Lightning implements Spell {
     /**
      * Количество урона наносимое заклинанием
      */
@@ -20,12 +17,20 @@ final public class Lightning extends Spell {
     private final int maxDamage;
 
     public Lightning(int damage) {
-        super("Молния");
-
         Assert.greaterThan(damage, 1);
         this.damage = damage;
 
         maxDamage = (int) (damage * 1.5F);
+    }
+
+    @Override
+    public String getName() {
+        return "Молния";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Наносит урон любому персонажу";
     }
 
     @Override
@@ -47,7 +52,7 @@ final public class Lightning extends Spell {
         if (damage < maxDamage) {
             damage+=5;
 
-      System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", name, wizard.getName());
+      System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", getName(), wizard.getName());
         }
     }
 }

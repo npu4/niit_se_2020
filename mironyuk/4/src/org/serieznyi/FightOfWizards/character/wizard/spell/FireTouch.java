@@ -11,7 +11,7 @@ import java.util.Optional;
  * Огненное касание - наносит урон персонажу, стоящему на соседней с магом позиции.
  * Если на соседних позициях персонажей нет - никому урон не наносится. 
  */
-final public class FireTouch extends Spell {
+final public class FireTouch implements Spell {
 
     /**
      * Количество урона наносимое заклинанием
@@ -24,12 +24,21 @@ final public class FireTouch extends Spell {
     private final int maxDamage;
 
     public FireTouch(int damage) {
-        super("Огненное касание");
-
         Assert.greaterThan(damage, 1);
         this.damage = damage;
 
         maxDamage = (int) (damage * 1.5F);
+    }
+
+    @Override
+    public String getName() {
+        return "Огненное касание";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Наносит урон персонажу, стоящему на соседней с магом позиции.\n"
+            + " Если на соседних позициях персонажей нет - никому урон не наносится. ";
     }
 
     @Override
@@ -57,7 +66,7 @@ final public class FireTouch extends Spell {
         if (damage < maxDamage) {
             damage+=5;
 
-            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", name, wizard.getName());
+            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", getName(), wizard.getName());
         }
     }
 }

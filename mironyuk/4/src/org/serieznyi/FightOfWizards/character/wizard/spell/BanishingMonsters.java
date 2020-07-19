@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Изгнание монстров - наносит урон всем монстрам.
- */
-final public class BanishingMonsters extends Spell {
+final public class BanishingMonsters implements Spell {
     /**
      * Количество урона наносимое заклинанием
      */
@@ -26,12 +23,20 @@ final public class BanishingMonsters extends Spell {
     private final int maxDamage;
 
     public BanishingMonsters(int damage) {
-        super("Изгнание монстров");
-
         Assert.greaterThan(damage, 1);
         this.damage = damage;
 
         maxDamage = (int) (damage * 1.5F);
+    }
+
+    @Override
+    public String getName() {
+        return "Изгнание монстров";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Наносит урон всем монстрам";
     }
 
     @Override
@@ -52,7 +57,7 @@ final public class BanishingMonsters extends Spell {
 
         String opponentNames = String.join(", ", damagedOpponentNames);
 
-        System.out.printf("\t%s наносит урон монстрам \"%s\". Каждый получает \"%s\" единиц урона.\n", name, opponentNames, damage);
+        System.out.printf("\t%s наносит урон монстрам \"%s\". Каждый получает \"%s\" единиц урона.\n", getName(), opponentNames, damage);
 
         strengthenSpell(wizard);
     }
@@ -65,7 +70,7 @@ final public class BanishingMonsters extends Spell {
         if (damage < maxDamage) {
             damage+=5;
 
-            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", name, wizard.getName());
+            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", getName(), wizard.getName());
         }
     }
 }

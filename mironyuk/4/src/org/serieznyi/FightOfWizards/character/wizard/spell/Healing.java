@@ -5,10 +5,7 @@ import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
 
-/**
- * Исцеление - добавляет очков здоровья магу, произнесшему заклинание. 
- */
-final public class Healing extends Spell {
+final public class Healing implements Spell {
     /**
      * Значение до которого может ослабиться сила лечения
      */
@@ -20,12 +17,20 @@ final public class Healing extends Spell {
     private int healingStrength;
 
     public Healing(int healingStrength) {
-        super("Исцеление");
-
         Assert.greaterThan(healingStrength, 1);
         this.healingStrength = healingStrength;
 
         this.minHealingStrength = (int) (healingStrength * 0.5F);
+    }
+
+    @Override
+    public String getName() {
+        return "Исцеление";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Добавляет очков здоровья магу, произнесшему заклинание";
     }
 
     @Override
@@ -48,7 +53,7 @@ final public class Healing extends Spell {
         if (healingStrength > minHealingStrength) {
             healingStrength-=2;
 
-            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" ослабло\n", name, wizard.getName());
+            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" ослабло\n", getName(), wizard.getName());
         }
     }
 }

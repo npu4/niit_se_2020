@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Стена огня - наносит урон всем персонажам на четных позициях. 
- */
-final public class WallOfFire extends Spell {
+final public class WallOfFire implements Spell {
     /**
      * Количество урона наносимое заклинанием
      */
@@ -24,12 +21,20 @@ final public class WallOfFire extends Spell {
     private final int maxDamage;
 
     public WallOfFire(int damage) {
-        super("Стена огня");
-
         Assert.greaterThan(damage, 1);
         this.damage = damage;
 
         maxDamage = (int) (damage * 1.5F);
+    }
+
+    @Override
+    public String getName() {
+        return "Стена огня";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Наносит урон всем персонажам на четных позициях";
     }
 
     @Override
@@ -50,7 +55,7 @@ final public class WallOfFire extends Spell {
 
         String opponentNames = String.join(", ", damagedOpponentNames);
 
-        System.out.printf("\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n", name, opponentNames, damage);
+        System.out.printf("\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n", getName(), opponentNames, damage);
 
         strengthenSpell(wizard);
     }
@@ -67,7 +72,7 @@ final public class WallOfFire extends Spell {
         if (damage < maxDamage) {
             damage+=5;
 
-            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", name, wizard.getName());
+            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", getName(), wizard.getName());
         }
     }
 }

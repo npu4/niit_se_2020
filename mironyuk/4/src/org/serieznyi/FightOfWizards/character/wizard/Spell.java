@@ -2,20 +2,11 @@ package org.serieznyi.FightOfWizards.character.wizard;
 
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.character.Character;
-import org.serieznyi.FightOfWizards.util.Assert;
 
-abstract public class Spell {
-    protected final String name;
+public interface Spell {
+    String getName();
 
-    public Spell(String name) {
-        Assert.requireNotEmptyString(name);
+    String getDescription();
 
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    abstract public void cast(Character wizard, Scene scene);
+    void cast(Character wizard, Scene scene);
 }

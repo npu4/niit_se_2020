@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Цепная молния - наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание.
- */
-final public class ChainLighting extends Spell {
+final public class ChainLighting implements Spell {
     /**
      * Количество урона наносимое заклинанием
      */
@@ -24,12 +21,20 @@ final public class ChainLighting extends Spell {
     private final int maxDamage;
 
     public ChainLighting(int damage) {
-        super("Цепная молния");
-
         Assert.greaterThan(damage, 1);
         this.damage = damage;
 
         maxDamage = (int) (damage * 1.5F);
+    }
+
+    @Override
+    public String getName() {
+        return "Цепная молния";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание";
     }
 
     @Override
@@ -46,7 +51,7 @@ final public class ChainLighting extends Spell {
 
         String opponentNames = String.join(", ", damagedOpponentNames);
 
-        System.out.printf("\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n", name, opponentNames, damage);
+        System.out.printf("\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n", getName(), opponentNames, damage);
 
         strengthenSpell(wizard);
     }
@@ -59,7 +64,7 @@ final public class ChainLighting extends Spell {
         if (damage < maxDamage) {
             damage+=5;
 
-            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", name, wizard.getName());
+            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", getName(), wizard.getName());
         }
     }
 }
