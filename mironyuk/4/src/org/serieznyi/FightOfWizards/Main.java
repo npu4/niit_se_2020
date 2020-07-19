@@ -87,7 +87,8 @@ public class Main {
               new Lightning(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
               new BanishingMonsters(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
               new ChainLighting(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
-              new FireTouch(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1))
+              new FireTouch(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1)),
+              new Migraine(random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1))
       });
     }
   }

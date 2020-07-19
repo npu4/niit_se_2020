@@ -5,8 +5,6 @@ import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
 
-import java.util.Map;
-
 /**
  * Молния - наносит урон любому персонажу.
  */
