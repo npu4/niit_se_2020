@@ -16,18 +16,11 @@ final public class FireTouch implements Spell {
     /**
      * Количество урона наносимое заклинанием
      */
-    private int damage;
-
-    /**
-     * Максимальное значение урона, до которого может усилиться заклинание
-     */
-    private final int maxDamage;
+    private final int damage;
 
     public FireTouch(int damage) {
         Assert.greaterThan(damage, 1);
         this.damage = damage;
-
-        maxDamage = (int) (damage * 1.5F);
     }
 
     @Override
@@ -51,22 +44,8 @@ final public class FireTouch implements Spell {
 
             c.increaseHealth(damage);
             System.out.printf("\t%s наносит урон по \"%s\" в размере \"%s\" единиц.\n", wizard.getName(), c.getName(), damage);
-
-            strengthenSpell(wizard);
         } else {
             System.out.println("\tРадом не оказалось противников и заклинания ничего не сделало");
-        }
-    }
-
-    /**
-     * С каждым применение заклинания растет его мощь
-     */
-    private void strengthenSpell(Character wizard)
-    {
-        if (damage < maxDamage) {
-            damage+=5;
-
-            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", getName(), wizard.getName());
         }
     }
 }

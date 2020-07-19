@@ -13,18 +13,11 @@ final public class WallOfFire implements Spell {
     /**
      * Количество урона наносимое заклинанием
      */
-    private int damage;
-
-    /**
-     * Максимальное значение урона, до которого может усилиться заклинание
-     */
-    private final int maxDamage;
+    private final int damage;
 
     public WallOfFire(int damage) {
         Assert.greaterThan(damage, 1);
         this.damage = damage;
-
-        maxDamage = (int) (damage * 1.5F);
     }
 
     @Override
@@ -56,23 +49,9 @@ final public class WallOfFire implements Spell {
         String opponentNames = String.join(", ", damagedOpponentNames);
 
         System.out.printf("\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n", getName(), opponentNames, damage);
-
-        strengthenSpell(wizard);
     }
 
     private boolean isOdd(Integer number) {
         return number % 2 != 0;
-    }
-
-    /**
-     * С каждым применение заклинания растет его мощь
-     */
-    private void strengthenSpell(Character wizard)
-    {
-        if (damage < maxDamage) {
-            damage+=5;
-
-            System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" усилилось\n", getName(), wizard.getName());
-        }
     }
 }

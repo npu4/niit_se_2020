@@ -6,11 +6,8 @@ import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 final public class Healing implements Spell {
-    /**
-     * Значение до которого может ослабиться сила лечения
-     */
-    private final int minHealingStrength;
-
+    private static final int MIN_HEALING_STRENGTH = 1;
+    private static final int HEALING_STRENGTH_WEAKEN_STEP = 2;
     /**
      * Текущая сила лечения заклинания
      */
@@ -19,8 +16,6 @@ final public class Healing implements Spell {
     public Healing(int healingStrength) {
         Assert.greaterThan(healingStrength, 1);
         this.healingStrength = healingStrength;
-
-        this.minHealingStrength = (int) (healingStrength * 0.5F);
     }
 
     @Override
@@ -50,8 +45,8 @@ final public class Healing implements Spell {
      */
     private void weakenSpell(Character wizard)
     {
-        if (healingStrength > minHealingStrength) {
-            healingStrength-=2;
+        if (healingStrength - HEALING_STRENGTH_WEAKEN_STEP > MIN_HEALING_STRENGTH) {
+            healingStrength -= HEALING_STRENGTH_WEAKEN_STEP;
 
             System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" ослабло\n", getName(), wizard.getName());
         }
