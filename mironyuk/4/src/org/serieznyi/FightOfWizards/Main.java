@@ -13,17 +13,16 @@ import org.serieznyi.FightOfWizards.factory.character.CharacterFactory;
 import org.serieznyi.FightOfWizards.factory.character.MonsterFactory;
 import org.serieznyi.FightOfWizards.factory.character.RandomCharacterFactory;
 import org.serieznyi.FightOfWizards.factory.character.WizardFactory;
+import org.serieznyi.FightOfWizards.factory.name.NameRule;
 import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.logging.handler.OutputHandler;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
 public class Main {
-  final static Logger LOGGER = Logger.create();
+  static final Logger LOGGER = Logger.create();
 
   public static void main(String[] args) {
     SceneOptions sceneOptions = SceneOptions.fromDefault();
@@ -48,35 +47,38 @@ public class Main {
   }
 
   private static class Dependencies {
+    public static NameFactory getNamesFactory() {
+
+      List<NameRule> nameRules = new ArrayList<>();
+
+      nameRules.add(new NameRule(
+          Character.Type.MONSTER,
+          new String[] {"Сатана", "Кракен", "Голод", "Голум", "Харрун", "Ворон", "Зомби"},
+          new String[] {"Мерзкий", "Коварный", "Подлый", "Злобный", "Отвратительный", "Раздирающий", "Кровавый"}
+      ));
+
+      nameRules.add(new NameRule(
+          Character.Type.MONSTER,
+          new String[]{"Смерть", "Чума", "Крыса"},
+          new String[]{"Мерзкая", "Коварная", "Подлая", "Злобная", "Отвратительная", "Раздирающая", "Кровавая"}
+      ));
+
+      nameRules.add(new NameRule(
+        Character.Type.WIZARD,
+        new String[] {
+          "Арарат", "Байтум", "Гендальф", "Гигабайтум", "Килабайтум", "Косинусин",
+          "Мегабайтум", "Мерлин", "Синусин", "Тангенсин", "Терабайтум", "Тирисиум"
+        },
+        new String[] {
+          "Светлый", "Темный", "Одинокий", "Лесной", "Синий", "Дряхлый", "Свирепый"
+        }
+      ));
+
+      return new NameFactory(nameRules);
+    }
+
     public static CharacterFactory getCharacterFactory() {
-      NameFactory nameFactory =
-          new NameFactory(
-              new HashMap<Character.Type, String[]>() {
-                {
-                  put(
-                      Character.Type.MONSTER,
-                      new String[] {
-                        "Сатана", "Кракен", "Голод", "Голум", "Харрун", "Смерть", "Чума", "Ворон",
-                        "Крыса", "Зомби",
-                      });
-                  put(
-                      Character.Type.WIZARD,
-                      new String[] {
-                        "Мерлин",
-                        "Арарат",
-                        "Синусин",
-                        "Косинусин",
-                        "Тангенсин",
-                        "Байтум",
-                        "Килабайтум",
-                        "Мегабайтум",
-                        "Гигабайтум",
-                        "Терабайтум",
-                        "Гендальф",
-                        "Тирисиум",
-                      });
-                }
-              });
+      NameFactory nameFactory = getNamesFactory();
 
       return new RandomCharacterFactory(
           new CharacterFactory[] {
@@ -106,11 +108,14 @@ public class Main {
       Spell chainLightingSpell =
           UniversalSpell.builder()
               .withName("Цепная молния")
-              .withDescription("Наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание.")
+              .withDescription(
+                  "Наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание.")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c))
               .withValue(damageGenerator.get())
-              .withActionCreator((character, value) -> CausingDamageAction.causeLightingDamage(value.intValue()))
-              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withActionCreator(
+                  (character, value) -> CausingDamageAction.causeLightingDamage(value.intValue()))
+              .withSuccessfulCallback(
+                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(chainLightingSpell);
@@ -121,8 +126,10 @@ public class Main {
               .withDescription("Наносит урон всем монстрам")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
               .withValue(damageGenerator.get())
-              .withActionCreator((character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
-              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withActionCreator(
+                  (character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
+              .withSuccessfulCallback(
+                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(banishingMonstersSpell);
@@ -133,8 +140,10 @@ public class Main {
               .withDescription("Наносит урон всем магам")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.WIZARD))
               .withValue(damageGenerator.get())
-              .withActionCreator((character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
-              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withActionCreator(
+                  (character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
+              .withSuccessfulCallback(
+                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(migraineSpell);
@@ -145,8 +154,10 @@ public class Main {
               .withDescription("Наносит урон всем персонажам на четных позициях")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
               .withValue(damageGenerator.get())
-              .withActionCreator((character, value) -> CausingDamageAction.causeFireDamage(value.intValue()))
-              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withActionCreator(
+                  (character, value) -> CausingDamageAction.causeFireDamage(value.intValue()))
+              .withSuccessfulCallback(
+                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(wallOfFireSpell);

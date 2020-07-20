@@ -1,41 +1,86 @@
 package org.serieznyi.FightOfWizards.factory;
 
 import org.serieznyi.FightOfWizards.character.Character;
-import org.serieznyi.FightOfWizards.util.Functions;
+import org.serieznyi.FightOfWizards.factory.name.NameRule;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public final class NameFactory {
-  private final Map<Character.Type, String[]> namesPool;
+  private final List<NameRule> nameRules;
 
-  public NameFactory(Map<Character.Type, String[]> namesPool) {
-    for (Map.Entry<Character.Type, String[]> item : namesPool.entrySet()) {
-      if (item.getValue().length == 0) {
-        throw new IllegalArgumentException(
-            "Для группы персонажей " + item.getKey() + " не заданы имена");
-      }
+  private final Set<String> usedNames = new HashSet<>();
 
-      String[] namesForType =
-          Arrays.stream(item.getValue()).sorted(Functions::randomComparator).toArray(String[]::new);
-
-      namesPool.put(item.getKey(), namesForType);
-    }
-
-    this.namesPool = namesPool;
+  public NameFactory(List<NameRule> nameRules) {
+    this.nameRules = nameRules;
   }
 
-  public String nextName(Character.Type nameFor) {
-    String[] namesPool = this.namesPool.get(nameFor);
+  public String nextName(Character.Type nameForType) {
 
-    if (0 == namesPool.length) {
-      throw new RuntimeException("Не осталось доступных имен"); // TODO используй модификаторы
-    }
+    ThreadLocalRandom random = ThreadLocalRandom.current();
 
-    String selectedName = namesPool[0];
+    String selectedName = null;
 
-    this.namesPool.replace(nameFor, Arrays.copyOfRange(namesPool, 1, namesPool.length));
+    int attempts = 0;
+    int maxAttempts = 100;
+
+    do {
+      attempts++;
+
+      if (attempts > maxAttempts) {
+        return randomName(nameForType);
+      }
+
+      int index = random.nextInt(0, nameRules.size());
+      NameRule nameRule = nameRules.get(index);
+
+      if (!nameRule.getType().equals(nameForType)) {
+        continue;
+      }
+
+      String[] names = nameRule.getNames();
+      index = random.nextInt(0, names.length);
+      String name = names[index];
+
+      String[] modifiers = nameRule.getModifiers();
+      index = random.nextInt(0, modifiers.length);
+      String modifier = modifiers[index];
+
+      String potentialName = name + " " + modifier;
+
+      if (isNameReserved(potentialName)) {
+        continue;
+      }
+
+      selectedName = potentialName;
+
+      reserveName(selectedName);
+    } while (selectedName == null);
 
     return selectedName;
+  }
+
+  private String randomName(Character.Type nameForType) {
+    String randomName = nameForType + " №" + usedNames.size();
+
+    reserveName(randomName);
+
+    return randomName;
+  }
+
+  public void reserveName(String name)
+  {
+    if (usedNames.contains(name)) {
+      throw new RuntimeException("Имя уже занято: " + name);
+    }
+
+    usedNames.add(name);
+  }
+
+  public boolean isNameReserved(String name)
+  {
+    return usedNames.contains(name);
   }
 }

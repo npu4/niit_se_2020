@@ -77,13 +77,10 @@ final public class Logger {
     }
 
     public void takeDamageTo(Character character, Character opponent, int damage) {
-        String message = format(
-                "%s \"%s\" нанес \"%s\" единиц урона персонажу %s",
-                character.getType(),
-                character.getName(),
-                damage,
-                opponent.getName()
-        );
+    String message =
+        format(
+            "%s \"%s\" нанес \"%s\" единиц урона персонажу \"%s\"",
+            character.getType(), character.getName(), damage, opponent.getName());
 
         handler.warning(message);
     }

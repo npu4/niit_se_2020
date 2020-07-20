@@ -1,5 +1,7 @@
 package org.serieznyi.FightOfWizards.util;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 public final class Assert {
@@ -20,6 +22,22 @@ public final class Assert {
   public static void greaterThan(int value, int minValue) {
     if (value < minValue) {
       throw new IllegalArgumentException("Значение должно быть больше " + minValue);
+    }
+  }
+
+  public static <T> void requireNotEmptyArray(T[] array) {
+    Objects.requireNonNull(array);
+
+    if (array.length == 0) {
+      throw new IllegalArgumentException("Массив не может быть пустым");
+    }
+  }
+
+  public static void requireNotEmptyCollection(Collection<?> collection) {
+    Objects.requireNonNull(collection);
+
+    if (collection.isEmpty()) {
+      throw new IllegalArgumentException("Коллекция не может быть пустой");
     }
   }
 }
