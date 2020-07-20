@@ -5,10 +5,8 @@ import java.util.logging.Logger;
 
 public final class SceneOptions {
   public static final int DEFAULT_SCENE_SIZE = 10;
-  public static final int DEFAULT_CHARACTER_COUNT = 10;
-  private static final Logger LOG = Logger.getLogger(SceneOptions.class.getName());
+  public static final int DEFAULT_CHARACTER_COUNT = 10; // TODO использовать
   private int sceneSize = DEFAULT_SCENE_SIZE;
-
   private int characterCount = DEFAULT_CHARACTER_COUNT;
 
   private SceneOptions() {}
@@ -20,49 +18,21 @@ public final class SceneOptions {
   public static SceneOptions fromDialog() {
     SceneOptions options = new SceneOptions();
 
-    Scanner scanner = new Scanner(System.in);
+    while (true) {
+      DialogOptions dialogOptions = new DialogOptions();
 
-    System.out.printf("Укажите размер сцены (По умолчанию %s):", DEFAULT_SCENE_SIZE);
-    String sceneSize = scanner.nextLine();
-    if (sceneSize.equals("")) {
-      options.sceneSize = DEFAULT_SCENE_SIZE;
-    } else {
-      options.sceneSize = Integer.parseInt(sceneSize);
-    }
+      options.sceneSize = dialogOptions.parseSceneSize();
+      options.characterCount = dialogOptions.parseCharacterCount();
 
-    System.out.printf(
-        "Укажите количество персонажей на сцене (По умолчанию %s):", DEFAULT_CHARACTER_COUNT);
-    String characterCount = scanner.nextLine();
-    if (sceneSize.equals("")) {
-      options.characterCount = DEFAULT_CHARACTER_COUNT;
-    } else {
-      options.characterCount = Integer.parseInt(characterCount);
-    }
+      if (options.characterCount > options.sceneSize) {
+        System.out.println("Количество свободных мест на сцене меньше количества персонажей. \nПопробуйте снова");
+        continue;
+      }
 
-    if (options.characterCount > options.sceneSize) {
-      throw new RuntimeException("Количество свободных мест на сцене меньше количества персонажей");
+      break;
     }
 
     return options;
-  }
-
-  private static void initOption(SceneOptions options, String optionName, String value) {
-    switch (optionName) {
-      case "sceneSize":
-        {
-          options.sceneSize = Integer.parseInt(value);
-          break;
-        }
-      case "characterCount":
-        {
-          options.characterCount = Integer.parseInt(value);
-          break;
-        }
-      default:
-        {
-          LOG.warning("Неизвестная опция: " + optionName);
-        }
-    }
   }
 
   public int getSceneSize() {
@@ -71,5 +41,41 @@ public final class SceneOptions {
 
   public int getCharacterCount() {
     return characterCount;
+  }
+
+  private static class DialogOptions {
+    private final Scanner scanner;
+
+    DialogOptions() {
+      scanner = new Scanner(System.in);
+    }
+
+    private int parseSceneSize() {
+      while(true) {
+        System.out.printf("Укажите размер сцены (По умолчанию %s):", DEFAULT_SCENE_SIZE);
+
+        try {
+          String sceneSize = scanner.nextLine();
+
+          return sceneSize.equals("") ? DEFAULT_SCENE_SIZE : Integer.parseInt(sceneSize);
+        } catch (Throwable e) {
+          System.out.println("Неверное значение. Попробуйте еще.");
+        }
+      }
+    }
+
+    private int parseCharacterCount() {
+      while(true) {
+        System.out.printf("Укажите количество персонажей на сцене (По умолчанию %s): ", DEFAULT_CHARACTER_COUNT);
+
+        try {
+          String characterCount = scanner.nextLine();
+
+          return characterCount.equals("") ? DEFAULT_SCENE_SIZE : Integer.parseInt(characterCount);
+        } catch (Throwable e) {
+          System.out.println("Неверное значение. Попробуйте еще.");
+        }
+      }
+    }
   }
 }
