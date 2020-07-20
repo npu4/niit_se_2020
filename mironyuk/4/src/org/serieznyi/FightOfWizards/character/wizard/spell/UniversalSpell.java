@@ -4,6 +4,7 @@ import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
+import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 import java.util.*;
@@ -16,6 +17,8 @@ import java.util.function.Function;
  * создать заклинание применимое к группе противников
  */
 public final class UniversalSpell implements Spell {
+  final static Logger LOGGER = Logger.create();
+
   private final String name;
   private final String description;
   private final Number value;
@@ -58,6 +61,10 @@ public final class UniversalSpell implements Spell {
 
     if (null != successMessage && damagedOpponents.size() > 0) {
       successMessage.apply(wizard).apply(this).apply(damagedOpponents).accept(value);
+    }
+
+    if (damagedOpponents.size() == 0) {
+      LOGGER.debug("Заклинание не подействовало");
     }
   }
 

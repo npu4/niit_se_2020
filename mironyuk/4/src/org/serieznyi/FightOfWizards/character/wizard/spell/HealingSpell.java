@@ -37,6 +37,8 @@ public final class HealingSpell implements Spell {
       LOGGER.healing(wizard, healingStrength, wizard.getHealth());
 
       weakenSpell(wizard);
+    } else {
+      LOGGER.debug("Заклинание не подействовало");
     }
   }
 
