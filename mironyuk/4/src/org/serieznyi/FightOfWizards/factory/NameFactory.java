@@ -36,7 +36,7 @@ public final class NameFactory {
       int index = random.nextInt(0, nameRules.size());
       NameRule nameRule = nameRules.get(index);
 
-      if (!nameRule.getType().equals(nameForType)) {
+      if (nameRule.getType() != nameForType) {
         continue;
       }
 

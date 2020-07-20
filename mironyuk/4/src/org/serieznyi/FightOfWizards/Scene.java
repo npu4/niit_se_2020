@@ -32,7 +32,7 @@ public class Scene {
   }
 
   public void appendCharacterToRandomPosition(Character character) {
-    if (!state.equals(State.INITIALIZED)) {
+    if (state != State.INITIALIZED) {
       throw new RuntimeException("Невозможно добавить новых персонажей т.к. сцена уже запущена");
     }
 
@@ -94,7 +94,7 @@ public class Scene {
 
   public Map<Integer, Character> getOpponentsFor(Character character, Character.Type type) {
     return getOpponentsForInternal(
-        character, (Map.Entry<Integer, Character> entry) -> entry.getValue().isType(type));
+        character, (Map.Entry<Integer, Character> entry) -> entry.getValue().getType() == type);
   }
 
   private Map<Integer, Character> getOpponentsForInternal(

@@ -52,11 +52,6 @@ public abstract class Character {
     return health.increaseHealth(value);
   }
 
-  public boolean isType(Type type)
-  {
-    return this.type.equals(type);
-  }
-
   /**
    * @param action Действие применяемое к персонажу
    * @return boolean возвращает True если действие повлияло на персонажа
