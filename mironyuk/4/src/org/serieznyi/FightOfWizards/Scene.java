@@ -121,12 +121,13 @@ public class Scene {
     for (int step = 1; getAliveCharacters().size() > 1; step++) {
       LOGGER.info("Шаг: " + step);
       for (Character character : getShuffledCharacters()) {
-        LOGGER.info(
-            "--------------------- Ходит %s \"%s\" ---------------------",
-            character.getType().toString().toLowerCase(), character.getName());
         if (!hasAnyOpponents() || character.isDead()) {
           break;
         }
+
+        LOGGER.info(
+                "--------------------- Ходит %s \"%s\" ---------------------",
+                character.getType().toString().toLowerCase(), character.getName());
 
         character.action(this);
 
@@ -150,7 +151,7 @@ public class Scene {
 
     Character winner = alive.get(0);
 
-    LOGGER.info(String.format("На поле боя остался только \"%s\"", winner.getName()));
+    LOGGER.winner(winner);
   }
 
   private List<Character> getAliveCharacters() {

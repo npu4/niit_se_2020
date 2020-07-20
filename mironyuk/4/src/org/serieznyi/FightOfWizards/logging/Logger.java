@@ -137,4 +137,8 @@ final public class Logger {
 
         handler.debug(message);
     }
+
+    public void winner(Character winner) {
+        handler.success(String.format("На поле боя остался только \"%s\"", winner.getName()));
+    }
 }
