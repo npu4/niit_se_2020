@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 public abstract class Character {
@@ -8,15 +9,23 @@ public abstract class Character {
 
   protected String name;
 
-  public Character(String name, int health) {
+  protected Type type;
+
+  public Character(Type type, String name, int health) {
     Assert.requireNotEmptyString(name);
     this.name = name;
+
+    this.type = type;
 
     this.health = new Health(health);
   }
 
   public int getHealth() {
     return health.getHealth();
+  }
+
+  public Type getType() {
+    return type;
   }
 
   public abstract void action(Scene scene);
@@ -40,6 +49,13 @@ public abstract class Character {
   public int increaseHealth(int value) {
     return health.increaseHealth(value);
   }
+
+  public boolean isType(Type type)
+  {
+    return this.type.equals(type);
+  }
+
+  abstract public boolean reactOnAction(Action action);
 
   public enum Type {
     MONSTER,

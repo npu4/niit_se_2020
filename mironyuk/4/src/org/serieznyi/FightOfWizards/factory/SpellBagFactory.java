@@ -3,15 +3,16 @@ package org.serieznyi.FightOfWizards.factory;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Functions;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class SpellBagFactory {
   private static final int DEFAULT_SIZE_OF_SPELLS_BAG = 3;
 
-  private final Spell[] allowedSpells;
+  private final Set<Spell> allowedSpells;
 
-  public SpellBagFactory(Spell[] allowedSpells) {
-    if (allowedSpells.length == 0) {
+  public SpellBagFactory(Set<Spell> allowedSpells) {
+    if (allowedSpells.size() == 0) {
       throw new IllegalArgumentException("Массив доступных заклинаний не может быть пустым");
     }
 
@@ -24,7 +25,7 @@ public class SpellBagFactory {
 
   public Spell[] create(int count) {
 
-    return Arrays.stream(allowedSpells)
+    return allowedSpells.stream()
         .sorted(Functions::randomComparator)
         .limit(count)
         .toArray(Spell[]::new);

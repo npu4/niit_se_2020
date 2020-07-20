@@ -1,6 +1,9 @@
 package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.Action;
+import org.serieznyi.FightOfWizards.action.CausingDamage;
+import org.serieznyi.FightOfWizards.action.Healing;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 
 import java.util.Arrays;
@@ -17,7 +20,7 @@ public final class Wizard extends Character {
   private final List<Spell> spells;
 
   public Wizard(String name, int health, Spell[] spells) {
-    super(name, health);
+    super(Type.WIZARD, name, health);
 
     if (spells.length > SPELLS_BAG_SIZE) {
       throw new IllegalArgumentException("Истинный волшебник использует не более 3х заклинаний");
@@ -39,5 +42,24 @@ public final class Wizard extends Character {
     System.out.printf("Маг \"%s\" читает заклинание \"%s\"\n", name, spell.getName());
 
     spell.cast(this, scene);
+  }
+
+  @Override
+  public boolean reactOnAction(Action action) {
+    if (action instanceof CausingDamage) {
+      CausingDamage causingDamage = (CausingDamage) action;
+
+      decreaseHealth(causingDamage.getDamage());
+
+      return true;
+    } else if (action instanceof Healing) {
+      Healing healing = (Healing) action;
+
+      increaseHealth(healing.getValue());
+
+      return true;
+    }
+
+    return false;
   }
 }

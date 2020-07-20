@@ -87,6 +87,14 @@ public class Scene {
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
+  public Map<Integer, Character> getOpponentsFor(Character character, Character.Type type) {
+    return characters.entrySet().stream()
+        .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
+        .filter((Map.Entry<Integer, Character> item) -> !item.getValue().equals(character))
+        .filter((entry) -> entry.getValue().isType(type))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+  }
+
   public void run() {
     System.out.println("Начинается великая битва!");
 

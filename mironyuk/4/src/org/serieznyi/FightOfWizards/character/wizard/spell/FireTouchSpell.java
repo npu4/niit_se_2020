@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.CausingDamage;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
@@ -11,12 +12,12 @@ import java.util.Optional;
  * Огненное касание - наносит урон персонажу, стоящему на соседней с магом позиции. Если на соседних
  * позициях персонажей нет - никому урон не наносится.
  */
-public final class FireTouch implements Spell {
+public final class FireTouchSpell implements Spell {
 
   /** Количество урона наносимое заклинанием */
   private final int damage;
 
-  public FireTouch(int damage) {
+  public FireTouchSpell(int damage) {
     Assert.greaterThan(damage, 1);
     this.damage = damage;
   }
@@ -40,7 +41,8 @@ public final class FireTouch implements Spell {
     if (opponent.isPresent()) {
       Character c = opponent.get();
 
-      c.increaseHealth(damage);
+      c.reactOnAction(CausingDamage.causeFireDamage(damage));
+
       System.out.printf(
           "\t%s наносит урон по \"%s\" в размере \"%s\" единиц.\n",
           wizard.getName(), c.getName(), damage);

@@ -1,17 +1,18 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.Healing;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
 
-public final class Healing implements Spell {
+public final class HealingSpell implements Spell {
   private static final int MIN_HEALING_STRENGTH = 1;
   private static final int HEALING_STRENGTH_WEAKEN_STEP = 2;
   /** Текущая сила лечения заклинания */
   private int healingStrength;
 
-  public Healing(int healingStrength) {
+  public HealingSpell(int healingStrength) {
     Assert.greaterThan(healingStrength, 1);
     this.healingStrength = healingStrength;
   }
@@ -28,13 +29,12 @@ public final class Healing implements Spell {
 
   @Override
   public void cast(Character wizard, Scene scene) {
-    int healthBefore = wizard.getHealth();
-    int newHealth = wizard.increaseHealth(healingStrength);
-
-    if (healthBefore != newHealth) {
+    if (wizard.reactOnAction(Healing.of(healingStrength))) {
       System.out.printf(
-          "\tМаг \"%s\" исцелен на \"%s\". Теперь у него \"%s\" здоровья\n",
-          wizard.getName(), healingStrength, newHealth);
+          "\tМаг \"%s\" исцелен на \"%s\"\n",
+          wizard.getName(),
+          healingStrength
+      );
 
       weakenSpell(wizard);
     }
