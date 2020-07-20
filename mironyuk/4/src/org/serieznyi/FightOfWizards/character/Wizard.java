@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.action.HealingAction;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.logging.Logger;
@@ -9,6 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * - Может использовать заклинания
+ * - Магический урон наносит только половину урона
+ */
 public final class Wizard extends Character {
   static final Logger LOGGER = Logger.create();
 
@@ -47,5 +52,20 @@ public final class Wizard extends Character {
     int newHealth = increaseHealth(action.getValue());
 
     return newHealth != oldHealth;
+  }
+
+  @Override
+  public boolean reactOnCausingDamageAction(CausingDamageAction action) {
+    int oldHealth = getHealth();
+    int damage = action.getDamage();
+
+    // Магический урон наносит только половину урона
+    if (action.getDamageType() == CausingDamageAction.Type.MAGICAL) {
+      damage /= 2;
+    }
+
+    int newHealth = decreaseHealth(damage);
+
+    return oldHealth != newHealth;
   }
 }
