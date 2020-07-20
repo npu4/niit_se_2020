@@ -3,13 +3,12 @@ package org.serieznyi.FightOfWizards.character.wizard.spell;
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.HealingAction;
 import org.serieznyi.FightOfWizards.character.Character;
-import org.serieznyi.FightOfWizards.character.Wizard;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 public final class HealingSpell implements Spell {
-  private final static Logger LOGGER = Logger.create();
+  private static final Logger LOGGER = Logger.create();
 
   private static final int MIN_HEALING_STRENGTH = 1;
   private static final int HEALING_STRENGTH_WEAKEN_STEP = 2;

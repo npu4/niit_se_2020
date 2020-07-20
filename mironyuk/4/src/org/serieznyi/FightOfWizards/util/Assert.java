@@ -1,7 +1,6 @@
 package org.serieznyi.FightOfWizards.util;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 public final class Assert {

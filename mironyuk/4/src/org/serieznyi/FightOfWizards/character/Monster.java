@@ -4,9 +4,8 @@ import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.logging.Logger;
 
-/** - Монстры восстанавливают немного здоровья после своего действия */
 public final class Monster extends Character {
-  final static Logger LOGGER = Logger.create();
+  static final Logger LOGGER = Logger.create();
 
   private final int damageSize;
 
@@ -22,7 +21,7 @@ public final class Monster extends Character {
 
     LOGGER.characterAttack(this, opponent);
 
-    boolean damaged = opponent.reactOnAction(CausingDamageAction.of(CausingDamageAction.Type.PHYSICAL, damageSize));
+    boolean damaged = opponent.reactOnAction(CausingDamageAction.causePhysicalDamage(damageSize));
 
     if (damaged) {
       LOGGER.takeDamageTo(this, opponent, damageSize);

@@ -1,10 +1,10 @@
 package org.serieznyi.FightOfWizards.action;
 
 public interface Action {
-    enum Type {
-        DAMAGE,
-        HEALING,
-    }
+  Type getType();
 
-    Type getType();
+  enum Type {
+    DAMAGE,
+    HEALING,
+  }
 }

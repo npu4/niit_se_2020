@@ -1,7 +1,6 @@
 package org.serieznyi.FightOfWizards;
 
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public final class SceneOptions {
   public static final int DEFAULT_SCENE_SIZE = 10;
@@ -25,7 +24,8 @@ public final class SceneOptions {
       options.characterCount = dialogOptions.parseCharacterCount();
 
       if (options.characterCount > options.sceneSize) {
-        System.out.println("Количество свободных мест на сцене меньше количества персонажей. \nПопробуйте снова");
+        System.out.println(
+            "Количество свободных мест на сцене меньше количества персонажей. \nПопробуйте снова");
         continue;
       }
 
@@ -51,7 +51,7 @@ public final class SceneOptions {
     }
 
     private int parseSceneSize() {
-      while(true) {
+      while (true) {
         System.out.printf("Укажите размер сцены (По умолчанию %s):", DEFAULT_SCENE_SIZE);
 
         try {
@@ -65,8 +65,9 @@ public final class SceneOptions {
     }
 
     private int parseCharacterCount() {
-      while(true) {
-        System.out.printf("Укажите количество персонажей на сцене (По умолчанию %s): ", DEFAULT_CHARACTER_COUNT);
+      while (true) {
+        System.out.printf(
+            "Укажите количество персонажей на сцене (По умолчанию %s): ", DEFAULT_CHARACTER_COUNT);
 
         try {
           String characterCount = scanner.nextLine();

@@ -9,12 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * - Заклинания наносящие урон постепенно усиливаются - Заклинания восстанавливающие жизни после
- * каждого успешного применения ослабевают
- */
 public final class Wizard extends Character {
-  final static Logger LOGGER = Logger.create();
+  static final Logger LOGGER = Logger.create();
 
   private static final int SPELLS_BAG_SIZE = 3;
 

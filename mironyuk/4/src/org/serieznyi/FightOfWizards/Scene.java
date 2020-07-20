@@ -126,8 +126,8 @@ public class Scene {
         }
 
         LOGGER.info(
-                "--------------------- Ходит %s \"%s\" ---------------------",
-                character.getType().toString().toLowerCase(), character.getName());
+            "--------------------- Ходит %s \"%s\" ---------------------",
+            character.getType().toString().toLowerCase(), character.getName());
 
         character.action(this);
 

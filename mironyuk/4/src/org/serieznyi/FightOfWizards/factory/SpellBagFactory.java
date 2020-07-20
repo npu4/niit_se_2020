@@ -3,7 +3,6 @@ package org.serieznyi.FightOfWizards.factory;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Functions;
 
-import java.util.List;
 import java.util.Set;
 
 public class SpellBagFactory {

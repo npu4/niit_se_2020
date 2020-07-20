@@ -70,8 +70,7 @@ public final class NameFactory {
     return randomName;
   }
 
-  public void reserveName(String name)
-  {
+  public void reserveName(String name) {
     if (usedNames.contains(name)) {
       throw new RuntimeException("Имя уже занято: " + name);
     }
@@ -79,8 +78,7 @@ public final class NameFactory {
     usedNames.add(name);
   }
 
-  public boolean isNameReserved(String name)
-  {
+  public boolean isNameReserved(String name) {
     return usedNames.contains(name);
   }
 }

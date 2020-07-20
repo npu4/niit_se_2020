@@ -17,7 +17,10 @@ import org.serieznyi.FightOfWizards.factory.name.NameRule;
 import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.logging.handler.OutputHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
@@ -51,28 +54,44 @@ public class Main {
 
       List<NameRule> nameRules = new ArrayList<>();
 
-      nameRules.add(new NameRule(
-          Character.Type.MONSTER,
-          new String[] {"Сатана", "Кракен", "Голод", "Голум", "Харрун", "Ворон", "Зомби"},
-          new String[] {"Мерзкий", "Коварный", "Подлый", "Злобный", "Отвратительный", "Раздирающий", "Кровавый"}
-      ));
+      nameRules.add(
+          new NameRule(
+              Character.Type.MONSTER,
+              new String[] {"Сатана", "Кракен", "Голод", "Голум", "Харрун", "Ворон", "Зомби"},
+              new String[] {
+                "Мерзкий",
+                "Коварный",
+                "Подлый",
+                "Злобный",
+                "Отвратительный",
+                "Раздирающий",
+                "Кровавый"
+              }));
 
-      nameRules.add(new NameRule(
-          Character.Type.MONSTER,
-          new String[]{"Смерть", "Чума", "Крыса"},
-          new String[]{"Мерзкая", "Коварная", "Подлая", "Злобная", "Отвратительная", "Раздирающая", "Кровавая"}
-      ));
+      nameRules.add(
+          new NameRule(
+              Character.Type.MONSTER,
+              new String[] {"Смерть", "Чума", "Крыса"},
+              new String[] {
+                "Мерзкая",
+                "Коварная",
+                "Подлая",
+                "Злобная",
+                "Отвратительная",
+                "Раздирающая",
+                "Кровавая"
+              }));
 
-      nameRules.add(new NameRule(
-        Character.Type.WIZARD,
-        new String[] {
-          "Арарат", "Байтум", "Гендальф", "Гигабайтум", "Килабайтум", "Косинусин",
-          "Мегабайтум", "Мерлин", "Синусин", "Тангенсин", "Терабайтум", "Тирисиум"
-        },
-        new String[] {
-          "Светлый", "Темный", "Одинокий", "Лесной", "Синий", "Дряхлый", "Свирепый"
-        }
-      ));
+      nameRules.add(
+          new NameRule(
+              Character.Type.WIZARD,
+              new String[] {
+                "Арарат", "Байтум", "Гендальф", "Гигабайтум", "Килабайтум", "Косинусин",
+                "Мегабайтум", "Мерлин", "Синусин", "Тангенсин", "Терабайтум", "Тирисиум"
+              },
+              new String[] {
+                "Светлый", "Темный", "Одинокий", "Лесной", "Синий", "Дряхлый", "Свирепый"
+              }));
 
       return new NameFactory(nameRules);
     }

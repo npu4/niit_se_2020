@@ -8,7 +8,7 @@ import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 public final class LightningSpell implements Spell {
-  final static Logger LOGGER = Logger.create();
+  static final Logger LOGGER = Logger.create();
 
   /** Количество урона наносимое заклинанием */
   private final int damage;

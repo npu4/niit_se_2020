@@ -14,7 +14,7 @@ import java.util.Optional;
  * позициях персонажей нет - никому урон не наносится.
  */
 public final class FireTouchSpell implements Spell {
-  final static Logger LOGGER = Logger.create();
+  static final Logger LOGGER = Logger.create();
 
   /** Количество урона наносимое заклинанием */
   private final int damage;

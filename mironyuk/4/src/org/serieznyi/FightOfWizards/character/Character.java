@@ -56,8 +56,7 @@ public abstract class Character {
    * @param action Действие применяемое к персонажу
    * @return boolean возвращает True если действие повлияло на персонажа
    */
-  public boolean reactOnAction(Action action)
-  {
+  public boolean reactOnAction(Action action) {
     if (action instanceof HealingAction) {
       return reactOnHealingAction((HealingAction) action);
     } else if (action instanceof CausingDamageAction) {
@@ -71,8 +70,7 @@ public abstract class Character {
    * @param action Действие применяемое к персонажу
    * @return boolean возвращает True если действие повлияло на персонажа
    */
-  public boolean reactOnHealingAction(HealingAction action)
-  {
+  public boolean reactOnHealingAction(HealingAction action) {
     return false;
   }
 
@@ -80,8 +78,7 @@ public abstract class Character {
    * @param action Действие применяемое к персонажу
    * @return boolean возвращает True если действие повлияло на персонажа
    */
-  public boolean reactOnCausingDamageAction(CausingDamageAction action)
-  {
+  public boolean reactOnCausingDamageAction(CausingDamageAction action) {
     int oldHealth = getHealth();
     int newHealth = decreaseHealth(action.getDamage());
 

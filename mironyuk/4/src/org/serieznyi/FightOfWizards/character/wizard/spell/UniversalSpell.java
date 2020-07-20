@@ -7,24 +7,28 @@ import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Универсальное заклинание собирается с помощью builder и позволяет
- * создать заклинание применимое к группе противников
+ * Универсальное заклинание собирается с помощью builder и позволяет создать заклинание применимое к
+ * группе противников
  */
 public final class UniversalSpell implements Spell {
-  final static Logger LOGGER = Logger.create();
+  static final Logger LOGGER = Logger.create();
 
   private final String name;
   private final String description;
   private final Number value;
   private final BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
   private final BiFunction<Character, Number, Action> actionCreator;
-  private final Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> successMessage;
+  private final Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>>
+      successMessage;
 
   private UniversalSpell(Builder builder) {
     name = builder.name;
@@ -33,6 +37,10 @@ public final class UniversalSpell implements Spell {
     actionCreator = builder.actionCreator;
     targetsFinder = builder.targetsFinder;
     successMessage = builder.successMessage;
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   @Override
@@ -50,7 +58,7 @@ public final class UniversalSpell implements Spell {
     Map<Integer, Character> opponents = targetsFinder.apply(wizard, scene);
     Set<Character> damagedOpponents = new HashSet<>();
 
-    for (Map.Entry<Integer, Character> opponent: opponents.entrySet()) {
+    for (Map.Entry<Integer, Character> opponent : opponents.entrySet()) {
       Action action = actionCreator.apply(opponent.getValue(), value);
       Character character = opponent.getValue();
 
@@ -68,8 +76,22 @@ public final class UniversalSpell implements Spell {
     }
   }
 
-  public static Builder builder() {
-    return new Builder();
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    UniversalSpell that = (UniversalSpell) o;
+    return name.equals(that.name)
+        && description.equals(that.description)
+        && value.equals(that.value)
+        && targetsFinder.equals(that.targetsFinder)
+        && actionCreator.equals(that.actionCreator)
+        && Objects.equals(successMessage, that.successMessage);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, description, value, targetsFinder, actionCreator, successMessage);
   }
 
   public static class Builder {
@@ -78,7 +100,8 @@ public final class UniversalSpell implements Spell {
     private Number value;
     private BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
     private BiFunction<Character, Number, Action> actionCreator;
-    private Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> successMessage;
+    private Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>>
+        successMessage;
 
     private Builder() {}
 
@@ -122,28 +145,11 @@ public final class UniversalSpell implements Spell {
       return this;
     }
 
-    public Builder withSuccessfulCallback(Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> consumer) {
+    public Builder withSuccessfulCallback(
+        Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> consumer) {
       this.successMessage = consumer;
 
       return this;
     }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    UniversalSpell that = (UniversalSpell) o;
-    return name.equals(that.name) &&
-            description.equals(that.description) &&
-            value.equals(that.value) &&
-            targetsFinder.equals(that.targetsFinder) &&
-            actionCreator.equals(that.actionCreator) &&
-            Objects.equals(successMessage, that.successMessage);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name, description, value, targetsFinder, actionCreator, successMessage);
   }
 }
