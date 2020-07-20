@@ -57,6 +57,10 @@ public abstract class Character {
     return this.type.equals(type);
   }
 
+  /**
+   * @param action Действие применяемое к персонажу
+   * @return boolean возвращает True если действие повлияло на персонажа
+   */
   public boolean reactOnAction(Action action)
   {
     if (action instanceof HealingAction) {
@@ -68,11 +72,19 @@ public abstract class Character {
     return false;
   }
 
+  /**
+   * @param action Действие применяемое к персонажу
+   * @return boolean возвращает True если действие повлияло на персонажа
+   */
   public boolean reactOnHealingAction(HealingAction action)
   {
     return false;
   }
 
+  /**
+   * @param action Действие применяемое к персонажу
+   * @return boolean возвращает True если действие повлияло на персонажа
+   */
   public boolean reactOnCausingDamageAction(CausingDamageAction action)
   {
     int oldHealth = getHealth();
@@ -82,8 +94,18 @@ public abstract class Character {
   }
 
   public enum Type {
-    MONSTER,
-    WIZARD
+    MONSTER {
+      @Override
+      public String toString() {
+        return "Монстр";
+      }
+    },
+    WIZARD {
+      @Override
+      public String toString() {
+        return "Маг";
+      }
+    }
   }
 
   private static class Health {

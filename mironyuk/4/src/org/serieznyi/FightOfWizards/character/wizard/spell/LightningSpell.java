@@ -4,9 +4,12 @@ import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
+import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 public final class LightningSpell implements Spell {
+  final static Logger LOGGER = Logger.create();
+
   /** Количество урона наносимое заклинанием */
   private final int damage;
 
@@ -31,8 +34,6 @@ public final class LightningSpell implements Spell {
 
     opponent.reactOnAction(CausingDamageAction.causeLightingDamage(damage));
 
-    System.out.printf(
-        "\tМаг \"%s\" наносит урон молнией персонажу \"%s\" в размере \"%s\" единиц\n",
-        wizard.getName(), opponent.getName(), damage);
+    LOGGER.takeDamageTo(wizard, this, opponent, damage);
   }
 }

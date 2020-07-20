@@ -4,6 +4,7 @@ import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
+import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 import java.util.Optional;
@@ -13,6 +14,7 @@ import java.util.Optional;
  * позициях персонажей нет - никому урон не наносится.
  */
 public final class FireTouchSpell implements Spell {
+  final static Logger LOGGER = Logger.create();
 
   /** Количество урона наносимое заклинанием */
   private final int damage;
@@ -43,11 +45,9 @@ public final class FireTouchSpell implements Spell {
 
       c.reactOnAction(CausingDamageAction.causeFireDamage(damage));
 
-      System.out.printf(
-          "\t%s наносит урон по \"%s\" в размере \"%s\" единиц.\n",
-          wizard.getName(), c.getName(), damage);
+      LOGGER.takeDamageTo(wizard, this, c, damage);
     } else {
-      System.out.println("\tРадом не оказалось противников и заклинания ничего не сделало");
+      LOGGER.debug("Рядом не оказалось противников и заклинания ничего не сделало");
     }
   }
 }

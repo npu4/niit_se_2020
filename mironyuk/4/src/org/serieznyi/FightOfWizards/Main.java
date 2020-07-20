@@ -13,6 +13,8 @@ import org.serieznyi.FightOfWizards.factory.character.CharacterFactory;
 import org.serieznyi.FightOfWizards.factory.character.MonsterFactory;
 import org.serieznyi.FightOfWizards.factory.character.RandomCharacterFactory;
 import org.serieznyi.FightOfWizards.factory.character.WizardFactory;
+import org.serieznyi.FightOfWizards.logging.Logger;
+import org.serieznyi.FightOfWizards.logging.handler.OutputHandler;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,10 +23,14 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
 public class Main {
+  final static Logger LOGGER = Logger.create();
+
   public static void main(String[] args) {
     SceneOptions sceneOptions = SceneOptions.fromDefault();
 
     Scene scene = buildScene(sceneOptions);
+
+    LOGGER.setHandler(new OutputHandler());
 
     scene.run();
   }
@@ -104,13 +110,7 @@ public class Main {
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c))
               .withValue(damageGenerator.get())
               .withActionCreator((character, value) -> CausingDamageAction.causeLightingDamage(value.intValue()))
-              .withMessageAfter(
-                  spell ->
-                      characters ->
-                          value ->
-                              System.out.printf(
-                                  "\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n",
-                                  spell.getName(), toNamesListAsString(characters), value))
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(chainLightingSpell);
@@ -122,13 +122,7 @@ public class Main {
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
               .withValue(damageGenerator.get())
               .withActionCreator((character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
-              .withMessageAfter(
-                  spell ->
-                      characters ->
-                          value ->
-                              System.out.printf(
-                                  "\t%s наносит урон монстрам \"%s\". Каждый получает \"%s\" единиц урона.\n",
-                                  spell.getName(), toNamesListAsString(characters), value))
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(banishingMonstersSpell);
@@ -140,13 +134,7 @@ public class Main {
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.WIZARD))
               .withValue(damageGenerator.get())
               .withActionCreator((character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
-              .withMessageAfter(
-                  spell ->
-                      characters ->
-                          value ->
-                              System.out.printf(
-                                  "\t%s наносит урон магам \"%s\". Каждый получает \"%s\" единиц урона.\n",
-                                  spell.getName(), toNamesListAsString(characters), value))
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(migraineSpell);
@@ -158,21 +146,12 @@ public class Main {
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
               .withValue(damageGenerator.get())
               .withActionCreator((character, value) -> CausingDamageAction.causeFireDamage(value.intValue()))
-              .withMessageAfter(
-                  spell ->
-                      characters ->
-                          value -> System.out.printf(
-                              "\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n",
-                              spell.getName(), toNamesListAsString(characters), value))
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(wallOfFireSpell);
 
       return new SpellBagFactory(spells);
-    }
-
-    private static String toNamesListAsString(Set<Character> characters) {
-      return String.join(", ", characters.stream().map(Character::toString).toArray(String[]::new));
     }
   }
 }

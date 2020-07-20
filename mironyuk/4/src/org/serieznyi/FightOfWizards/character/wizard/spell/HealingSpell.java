@@ -3,10 +3,14 @@ package org.serieznyi.FightOfWizards.character.wizard.spell;
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.HealingAction;
 import org.serieznyi.FightOfWizards.character.Character;
+import org.serieznyi.FightOfWizards.character.Wizard;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
+import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 public final class HealingSpell implements Spell {
+  private final static Logger LOGGER = Logger.create();
+
   private static final int MIN_HEALING_STRENGTH = 1;
   private static final int HEALING_STRENGTH_WEAKEN_STEP = 2;
   /** Текущая сила лечения заклинания */
@@ -30,12 +34,7 @@ public final class HealingSpell implements Spell {
   @Override
   public void cast(Character wizard, Scene scene) {
     if (wizard.reactOnAction(HealingAction.of(healingStrength))) {
-      System.out.printf(
-          "\tМаг \"%s\" исцелен на \"%s\". Теперь у него %s здоровья\n",
-          wizard.getName(),
-          healingStrength,
-              wizard.getHealth()
-      );
+      LOGGER.healing(wizard, healingStrength, wizard.getHealth());
 
       weakenSpell(wizard);
     }
@@ -46,7 +45,7 @@ public final class HealingSpell implements Spell {
     if (healingStrength - HEALING_STRENGTH_WEAKEN_STEP > MIN_HEALING_STRENGTH) {
       healingStrength -= HEALING_STRENGTH_WEAKEN_STEP;
 
-      System.out.printf("\tЗаклинание \"%s\" у мага \"%s\" ослабло\n", getName(), wizard.getName());
+      LOGGER.spellWeaken(this, wizard);
     }
   }
 }

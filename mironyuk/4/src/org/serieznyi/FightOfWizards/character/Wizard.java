@@ -3,6 +3,7 @@ package org.serieznyi.FightOfWizards.character;
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.HealingAction;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
+import org.serieznyi.FightOfWizards.logging.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * каждого успешного применения ослабевают
  */
 public final class Wizard extends Character {
+  final static Logger LOGGER = Logger.create();
+
   private static final int SPELLS_BAG_SIZE = 3;
 
   private final List<Spell> spells;
@@ -37,7 +40,7 @@ public final class Wizard extends Character {
   public void action(Scene scene) {
     Spell spell = takeSomeSpell();
 
-    System.out.printf("Маг \"%s\" читает заклинание \"%s\"\n", name, spell.getName());
+    LOGGER.readSpell(this, spell);
 
     spell.cast(this, scene);
   }

@@ -17,7 +17,7 @@ public final class UniversalSpell implements Spell {
   private final Number value;
   private final BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
   private final BiFunction<Character, Number, Action> actionCreator;
-  private final Function<Spell, Function<Set<Character>, Consumer<Number>>> successMessage;
+  private final Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> successMessage;
 
   private UniversalSpell(Builder builder) {
     name = builder.name;
@@ -41,19 +41,19 @@ public final class UniversalSpell implements Spell {
   @Override
   public void cast(Character wizard, Scene scene) {
     Map<Integer, Character> opponents = targetsFinder.apply(wizard, scene);
-    Set<Character> processed = new HashSet<>();
+    Set<Character> damagedOpponents = new HashSet<>();
 
     for (Map.Entry<Integer, Character> opponent: opponents.entrySet()) {
       Action action = actionCreator.apply(opponent.getValue(), value);
       Character character = opponent.getValue();
 
       if (character.reactOnAction(action)) {
-        processed.add(character);
+        damagedOpponents.add(character);
       }
     }
 
-    if (null != successMessage && processed.size() > 0) {
-      successMessage.apply(this).apply(processed).accept(value);
+    if (null != successMessage && damagedOpponents.size() > 0) {
+      successMessage.apply(wizard).apply(this).apply(damagedOpponents).accept(value);
     }
   }
 
@@ -67,7 +67,7 @@ public final class UniversalSpell implements Spell {
     private Number value;
     private BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
     private BiFunction<Character, Number, Action> actionCreator;
-    private Function<Spell, Function<Set<Character>, Consumer<Number>>> successMessage;
+    private Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> successMessage;
 
     private Builder() {}
 
@@ -111,7 +111,7 @@ public final class UniversalSpell implements Spell {
       return this;
     }
 
-    public Builder withMessageAfter(Function<Spell, Function<Set<Character>, Consumer<Number>>> consumer) {
+    public Builder withSuccessfulCallback(Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> consumer) {
       this.successMessage = consumer;
 
       return this;

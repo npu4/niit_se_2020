@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards;
 
 import org.serieznyi.FightOfWizards.character.Character;
+import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Functions;
 
 import java.util.*;
@@ -8,6 +9,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class Scene {
+  final static Logger LOGGER = Logger.create();
+
   public final int MIN_SCENE_SIZE = 2;
   public final int MAX_SCENE_SIZE = 20;
 
@@ -96,18 +99,23 @@ public class Scene {
   }
 
   public void run() {
-    System.out.println("Начинается великая битва!");
+    LOGGER.info("Начинается великая битва!");
 
     if (characters.isEmpty()) {
-      System.out.println("Но похоже на нее ни кто не пришел");
+      LOGGER.info("Но похоже на нее ни кто не пришел");
       return;
     }
 
-    System.out.printf("На поле боя находится бойцов: %s\n\n", characters.size());
+    LOGGER.info(String.format("На поле боя находится бойцов: %s\n", characters.size()));
 
     for (int step = 1; getAliveCharacters().size() > 1; step++) {
-      System.out.println("Шаг: " + step);
+      LOGGER.info("Шаг: " + step);
       for (Character character : getShuffledCharacters()) {
+        LOGGER.info(
+                "--------------------- Ходит %s \"%s\" ---------------------",
+                character.getType().toString().toLowerCase(),
+                character.getName()
+        );
         if (!hasAnyOpponents() || character.isDead()) {
           break;
         }
@@ -117,7 +125,7 @@ public class Scene {
         checkBodies();
       }
 
-      System.out.println();
+      LOGGER.newline();
     }
 
     showWinner();
@@ -132,7 +140,7 @@ public class Scene {
 
     Character winner = alive.get(0);
 
-    System.out.printf("На поле боя остался только \"%s\"", winner.getName());
+    LOGGER.info(String.format("На поле боя остался только \"%s\"", winner.getName()));
   }
 
   private List<Character> getAliveCharacters() {
@@ -147,7 +155,7 @@ public class Scene {
 
       if (character.isDead() && !deadCharacters.contains(character)) {
         deadCharacters.add(character);
-        System.out.printf("\"%s\" погибает\n", character);
+        LOGGER.characterDead(character);
       }
     }
   }
