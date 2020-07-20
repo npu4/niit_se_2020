@@ -2,6 +2,8 @@ package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.Action;
+import org.serieznyi.FightOfWizards.action.CausingDamageAction;
+import org.serieznyi.FightOfWizards.action.HealingAction;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 public abstract class Character {
@@ -42,11 +44,11 @@ public abstract class Character {
     return health.isDead();
   }
 
-  public void decreaseHealth(int value) {
-    health.decreaseHealth(value);
+  protected int decreaseHealth(int value) {
+    return health.decreaseHealth(value);
   }
 
-  public int increaseHealth(int value) {
+  protected int increaseHealth(int value) {
     return health.increaseHealth(value);
   }
 
@@ -55,7 +57,29 @@ public abstract class Character {
     return this.type.equals(type);
   }
 
-  abstract public boolean reactOnAction(Action action);
+  public boolean reactOnAction(Action action)
+  {
+    if (action instanceof HealingAction) {
+      return reactOnHealingAction((HealingAction) action);
+    } else if (action instanceof CausingDamageAction) {
+      return reactOnCausingDamageAction((CausingDamageAction) action);
+    }
+
+    return false;
+  }
+
+  public boolean reactOnHealingAction(HealingAction action)
+  {
+    return false;
+  }
+
+  public boolean reactOnCausingDamageAction(CausingDamageAction action)
+  {
+    int oldHealth = getHealth();
+    int newHealth = decreaseHealth(action.getDamage());
+
+    return oldHealth != newHealth;
+  }
 
   public enum Type {
     MONSTER,
@@ -71,8 +95,10 @@ public abstract class Character {
       this.health = initialHealth = health;
     }
 
-    public void decreaseHealth(int health) {
+    public int decreaseHealth(int health) {
       this.health -= health;
+
+      return this.health;
     }
 
     /**

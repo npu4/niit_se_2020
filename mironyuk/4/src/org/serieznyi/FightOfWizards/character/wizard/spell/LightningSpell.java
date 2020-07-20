@@ -1,7 +1,7 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 import org.serieznyi.FightOfWizards.Scene;
-import org.serieznyi.FightOfWizards.action.CausingDamage;
+import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
@@ -29,7 +29,7 @@ public final class LightningSpell implements Spell {
   public void cast(Character wizard, Scene scene) {
     Character opponent = scene.getRandomOpponentFor(wizard);
 
-    opponent.reactOnAction(CausingDamage.causeLightingDamage(damage));
+    opponent.reactOnAction(CausingDamageAction.causeLightingDamage(damage));
 
     System.out.printf(
         "\tМаг \"%s\" наносит урон молнией персонажу \"%s\" в размере \"%s\" единиц\n",

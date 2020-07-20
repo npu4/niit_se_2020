@@ -1,7 +1,7 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 import org.serieznyi.FightOfWizards.Scene;
-import org.serieznyi.FightOfWizards.action.CausingDamage;
+import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
@@ -41,7 +41,7 @@ public final class FireTouchSpell implements Spell {
     if (opponent.isPresent()) {
       Character c = opponent.get();
 
-      c.reactOnAction(CausingDamage.causeFireDamage(damage));
+      c.reactOnAction(CausingDamageAction.causeFireDamage(damage));
 
       System.out.printf(
           "\t%s наносит урон по \"%s\" в размере \"%s\" единиц.\n",

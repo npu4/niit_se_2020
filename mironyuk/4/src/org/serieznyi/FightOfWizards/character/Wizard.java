@@ -1,9 +1,7 @@
 package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.Scene;
-import org.serieznyi.FightOfWizards.action.Action;
-import org.serieznyi.FightOfWizards.action.CausingDamage;
-import org.serieznyi.FightOfWizards.action.Healing;
+import org.serieznyi.FightOfWizards.action.HealingAction;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 
 import java.util.Arrays;
@@ -45,21 +43,10 @@ public final class Wizard extends Character {
   }
 
   @Override
-  public boolean reactOnAction(Action action) {
-    if (action instanceof CausingDamage) {
-      CausingDamage causingDamage = (CausingDamage) action;
+  public boolean reactOnHealingAction(HealingAction action) {
+    int oldHealth = getHealth();
+    int newHealth = increaseHealth(action.getValue());
 
-      decreaseHealth(causingDamage.getDamage());
-
-      return true;
-    } else if (action instanceof Healing) {
-      Healing healing = (Healing) action;
-
-      increaseHealth(healing.getValue());
-
-      return true;
-    }
-
-    return false;
+    return newHealth != oldHealth;
   }
 }

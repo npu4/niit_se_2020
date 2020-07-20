@@ -17,7 +17,7 @@ public final class UniversalSpell implements Spell {
   private final Number value;
   private final BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
   private final BiFunction<Character, Number, Action> actionCreator;
-  private final Function<Spell, Function<Set<Character>, Consumer<Number>>> messageAfterConsumer;
+  private final Function<Spell, Function<Set<Character>, Consumer<Number>>> successMessage;
 
   private UniversalSpell(Builder builder) {
     name = builder.name;
@@ -25,7 +25,7 @@ public final class UniversalSpell implements Spell {
     value = builder.value;
     actionCreator = builder.actionCreator;
     targetsFinder = builder.targetsFinder;
-    messageAfterConsumer = builder.messageAfterConsumer;
+    successMessage = builder.successMessage;
   }
 
   @Override
@@ -41,18 +41,19 @@ public final class UniversalSpell implements Spell {
   @Override
   public void cast(Character wizard, Scene scene) {
     Map<Integer, Character> opponents = targetsFinder.apply(wizard, scene);
-
     Set<Character> processed = new HashSet<>();
+
     for (Map.Entry<Integer, Character> opponent: opponents.entrySet()) {
       Action action = actionCreator.apply(opponent.getValue(), value);
       Character character = opponent.getValue();
+
       if (character.reactOnAction(action)) {
         processed.add(character);
       }
     }
 
-    if (null != messageAfterConsumer) {
-      messageAfterConsumer.apply(this).apply(processed).accept(value);
+    if (null != successMessage && processed.size() > 0) {
+      successMessage.apply(this).apply(processed).accept(value);
     }
   }
 
@@ -66,7 +67,7 @@ public final class UniversalSpell implements Spell {
     private Number value;
     private BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
     private BiFunction<Character, Number, Action> actionCreator;
-    private Function<Spell, Function<Set<Character>, Consumer<Number>>> messageAfterConsumer;
+    private Function<Spell, Function<Set<Character>, Consumer<Number>>> successMessage;
 
     private Builder() {}
 
@@ -111,7 +112,7 @@ public final class UniversalSpell implements Spell {
     }
 
     public Builder withMessageAfter(Function<Spell, Function<Set<Character>, Consumer<Number>>> consumer) {
-      this.messageAfterConsumer = consumer;
+      this.successMessage = consumer;
 
       return this;
     }
@@ -127,11 +128,11 @@ public final class UniversalSpell implements Spell {
             value.equals(that.value) &&
             targetsFinder.equals(that.targetsFinder) &&
             actionCreator.equals(that.actionCreator) &&
-            Objects.equals(messageAfterConsumer, that.messageAfterConsumer);
+            Objects.equals(successMessage, that.successMessage);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description, value, targetsFinder, actionCreator, messageAfterConsumer);
+    return Objects.hash(name, description, value, targetsFinder, actionCreator, successMessage);
   }
 }

@@ -1,7 +1,7 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 import org.serieznyi.FightOfWizards.Scene;
-import org.serieznyi.FightOfWizards.action.Healing;
+import org.serieznyi.FightOfWizards.action.HealingAction;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
@@ -29,11 +29,12 @@ public final class HealingSpell implements Spell {
 
   @Override
   public void cast(Character wizard, Scene scene) {
-    if (wizard.reactOnAction(Healing.of(healingStrength))) {
+    if (wizard.reactOnAction(HealingAction.of(healingStrength))) {
       System.out.printf(
-          "\tМаг \"%s\" исцелен на \"%s\"\n",
+          "\tМаг \"%s\" исцелен на \"%s\". Теперь у него %s здоровья\n",
           wizard.getName(),
-          healingStrength
+          healingStrength,
+              wizard.getHealth()
       );
 
       weakenSpell(wizard);

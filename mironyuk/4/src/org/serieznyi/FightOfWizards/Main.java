@@ -1,6 +1,6 @@
 package org.serieznyi.FightOfWizards;
 
-import org.serieznyi.FightOfWizards.action.CausingDamage;
+import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.character.wizard.spell.FireTouchSpell;
@@ -103,7 +103,7 @@ public class Main {
               .withDescription("Наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание.")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c))
               .withValue(damageGenerator.get())
-              .withActionCreator((character, value) -> CausingDamage.causeLightingDamage(value.intValue()))
+              .withActionCreator((character, value) -> CausingDamageAction.causeLightingDamage(value.intValue()))
               .withMessageAfter(
                   spell ->
                       characters ->
@@ -121,7 +121,7 @@ public class Main {
               .withDescription("Наносит урон всем монстрам")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
               .withValue(damageGenerator.get())
-              .withActionCreator((character, value) -> CausingDamage.causeMagicalDamage(value.intValue()))
+              .withActionCreator((character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
               .withMessageAfter(
                   spell ->
                       characters ->
@@ -139,7 +139,7 @@ public class Main {
               .withDescription("Наносит урон всем магам")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.WIZARD))
               .withValue(damageGenerator.get())
-              .withActionCreator((character, value) -> CausingDamage.causeMagicalDamage(value.intValue()))
+              .withActionCreator((character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
               .withMessageAfter(
                   spell ->
                       characters ->
@@ -157,15 +157,13 @@ public class Main {
               .withDescription("Наносит урон всем персонажам на четных позициях")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
               .withValue(damageGenerator.get())
-              .withActionCreator((character, value) -> CausingDamage.causeFireDamage(value.intValue()))
+              .withActionCreator((character, value) -> CausingDamageAction.causeFireDamage(value.intValue()))
               .withMessageAfter(
                   spell ->
                       characters ->
-                          value -> {
-                            System.out.printf(
-                                "\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n",
-                                spell.getName(), toNamesListAsString(characters), value);
-                          })
+                          value -> System.out.printf(
+                              "\t%s ударяет по \"%s\". Каждый получает \"%s\" единиц урона.\n",
+                              spell.getName(), toNamesListAsString(characters), value))
               .build();
 
       spells.add(wallOfFireSpell);

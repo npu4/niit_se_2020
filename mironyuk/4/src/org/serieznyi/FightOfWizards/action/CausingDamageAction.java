@@ -2,7 +2,7 @@ package org.serieznyi.FightOfWizards.action;
 
 import org.serieznyi.FightOfWizards.util.Assert;
 
-public final class CausingDamage implements Action {
+public final class CausingDamageAction implements Action {
   public enum Type {
     PHYSICAL,
     FIRE,
@@ -14,7 +14,7 @@ public final class CausingDamage implements Action {
 
   private final int damage;
 
-  public CausingDamage(Type type, int damage) {
+  public CausingDamageAction(Type type, int damage) {
     this.type = type;
 
     Assert.greaterThan(damage, 1);
@@ -23,26 +23,26 @@ public final class CausingDamage implements Action {
 
   public static Action causeFireDamage(int value)
   {
-    return new CausingDamage(Type.FIRE, value);
+    return new CausingDamageAction(Type.FIRE, value);
   }
 
   public static Action causePhysicalDamage(int value)
   {
-    return new CausingDamage(Type.PHYSICAL, value);
+    return new CausingDamageAction(Type.PHYSICAL, value);
   }
 
   public static Action causeMagicalDamage(int value)
   {
-    return new CausingDamage(Type.MAGICAL, value);
+    return new CausingDamageAction(Type.MAGICAL, value);
   }
 
   public static Action causeLightingDamage(int value)
   {
-    return new CausingDamage(Type.LIGHTNING, value);
+    return new CausingDamageAction(Type.LIGHTNING, value);
   }
 
   public static Action of(Type type, int value) {
-    return new CausingDamage(type, value);
+    return new CausingDamageAction(type, value);
   }
 
   public int getDamage() {
