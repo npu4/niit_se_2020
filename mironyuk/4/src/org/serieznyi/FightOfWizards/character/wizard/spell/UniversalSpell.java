@@ -11,6 +11,10 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Универсальное заклинание собирается с помощью builder и позволяет
+ * создать заклинание применимое к группе противников
+ */
 public final class UniversalSpell implements Spell {
   private final String name;
   private final String description;

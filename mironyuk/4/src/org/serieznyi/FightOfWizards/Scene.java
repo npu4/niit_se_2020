@@ -6,18 +6,17 @@ import org.serieznyi.FightOfWizards.util.Functions;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Scene {
-  final static Logger LOGGER = Logger.create();
-
+  static final Logger LOGGER = Logger.create();
   public final int MIN_SCENE_SIZE = 2;
   public final int MAX_SCENE_SIZE = 20;
-
   private final int size;
-
   private final Map<Integer, Character> characters = new HashMap<>();
   private final List<Character> deadCharacters = new ArrayList<>();
+  private State state;
 
   public Scene(int size) {
     if (size > MAX_SCENE_SIZE || size < MIN_SCENE_SIZE) {
@@ -28,9 +27,15 @@ public class Scene {
               + MAX_SCENE_SIZE);
     }
     this.size = size;
+
+    state = State.INITIALIZED;
   }
 
   public void appendCharacterToRandomPosition(Character character) {
+    if (!state.equals(State.INITIALIZED)) {
+      throw new RuntimeException("Невозможно добавить новых персонажей т.к. сцена уже запущена");
+    }
+
     if (characters.containsValue(character)) {
       throw new IllegalArgumentException("Персонаж уже на сцене: " + character);
     }
@@ -84,21 +89,26 @@ public class Scene {
   }
 
   public Map<Integer, Character> getOpponentsFor(Character character) {
-    return characters.entrySet().stream()
-        .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
-        .filter((Map.Entry<Integer, Character> item) -> !item.getValue().equals(character))
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    return getOpponentsForInternal(character, (Map.Entry<Integer, Character> entry) -> true);
   }
 
   public Map<Integer, Character> getOpponentsFor(Character character, Character.Type type) {
+    return getOpponentsForInternal(
+        character, (Map.Entry<Integer, Character> entry) -> entry.getValue().isType(type));
+  }
+
+  private Map<Integer, Character> getOpponentsForInternal(
+      Character character, Predicate<Map.Entry<Integer, Character>> filterByType) {
     return characters.entrySet().stream()
         .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
         .filter((Map.Entry<Integer, Character> item) -> !item.getValue().equals(character))
-        .filter((entry) -> entry.getValue().isType(type))
+        .filter(filterByType)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
   public void run() {
+    state = State.STARTED;
+
     LOGGER.info("Начинается великая битва!");
 
     if (characters.isEmpty()) {
@@ -112,10 +122,8 @@ public class Scene {
       LOGGER.info("Шаг: " + step);
       for (Character character : getShuffledCharacters()) {
         LOGGER.info(
-                "--------------------- Ходит %s \"%s\" ---------------------",
-                character.getType().toString().toLowerCase(),
-                character.getName()
-        );
+            "--------------------- Ходит %s \"%s\" ---------------------",
+            character.getType().toString().toLowerCase(), character.getName());
         if (!hasAnyOpponents() || character.isDead()) {
           break;
         }
@@ -129,6 +137,8 @@ public class Scene {
     }
 
     showWinner();
+
+    state = State.DONE;
   }
 
   private void showWinner() {
@@ -200,5 +210,11 @@ public class Scene {
     }
 
     return Optional.empty();
+  }
+
+  private enum State {
+    INITIALIZED,
+    STARTED,
+    DONE
   }
 }
