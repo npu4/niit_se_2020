@@ -13,6 +13,10 @@ public class Triple<V1, V2, V3> {
     this.third = third;
   }
 
+  public static <V1, V2, V3> Triple<V1, V2, V3> fromArgs(V1 first, V2 second, V3 third) {
+    return new Triple<>(first, second, third);
+  }
+
   public V1 getFirst() {
     return first;
   }
@@ -23,11 +27,6 @@ public class Triple<V1, V2, V3> {
 
   public V3 getThird() {
     return third;
-  }
-
-  public static <V1, V2, V3> Triple<V1, V2, V3> fromArgs(V1 first, V2 second, V3 third)
-  {
-    return new Triple<>(first, second, third);
   }
 
   @Override
@@ -47,10 +46,6 @@ public class Triple<V1, V2, V3> {
 
   @Override
   public String toString() {
-    return "Triple{" +
-            "first=" + first +
-            ", second=" + second +
-            ", third=" + third +
-            '}';
+    return "Triple{" + "first=" + first + ", second=" + second + ", third=" + third + '}';
   }
 }

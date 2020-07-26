@@ -11,6 +11,10 @@ public class Pair<V1, V2> {
     this.second = second;
   }
 
+  public static <V1, V2> Pair<V1, V2> fromArgs(V1 first, V2 second) {
+    return new Pair<>(first, second);
+  }
+
   public V1 getFirst() {
     return first;
   }
@@ -19,17 +23,9 @@ public class Pair<V1, V2> {
     return second;
   }
 
-  public static <V1, V2> Pair<V1, V2> fromArgs(V1 first, V2 second)
-  {
-    return new Pair<>(first, second);
-  }
-
   @Override
   public String toString() {
-    return "Pair{" +
-            "first=" + first +
-            ", second=" + second +
-            '}';
+    return "Pair{" + "first=" + first + ", second=" + second + '}';
   }
 
   @Override
