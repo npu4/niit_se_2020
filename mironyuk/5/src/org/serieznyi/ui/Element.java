@@ -11,19 +11,19 @@ public abstract class Element {
   private boolean enabled = true;
 
   protected Element(int x, int y, int height, int width, String caption) {
-    Assert.zeroOrPositiveNumber(x);
+    Assert.greaterOrEqualsThan(x, 0);
     this.x = x;
 
-    Assert.zeroOrPositiveNumber(y);
+    Assert.greaterOrEqualsThan(y, 0);
     this.y = y;
 
-    Assert.positiveNumber(height);
+    Assert.greaterThan(height, 0);
     this.height = height;
 
-    Assert.positiveNumber(width);
+    Assert.greaterThan(width, 0);
     this.width = width;
 
-    Assert.requireNotEmptyString(caption);
+    Assert.requireNotEmpty(caption);
     this.caption = caption;
   }
 

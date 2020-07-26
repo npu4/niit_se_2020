@@ -3,10 +3,12 @@ package org.serieznyi.ui.util;
 import java.util.Collection;
 import java.util.Objects;
 
+import static java.lang.String.format;
+
 public final class Assert {
   private Assert() {}
 
-  public static void requireNotEmptyString(String str) {
+  public static void requireNotEmpty(String str) {
     Objects.requireNonNull(str);
 
     if (str.isEmpty()) {
@@ -20,35 +22,23 @@ public final class Assert {
 
   public static void greaterThan(int value, int minValue) {
     if (value < minValue) {
-      throw new IllegalArgumentException("Значение должно быть больше " + minValue);
+      String message = format("Значение \"%s\" должно быть больше \"%s\"", value, minValue);
+
+      throw new IllegalArgumentException(message);
     }
   }
 
-  public static <T> void requireNotEmptyArray(T[] array) {
-    Objects.requireNonNull(array);
+  /**
+   * Число должно быть больше или равно init
+   *
+   * @param value значение для проверки
+   * @param min значение для сравнения
+   */
+  public static void greaterOrEqualsThan(int value, int min) {
+    if (value < min) {
+      String message = format("Число \"%s\" должно быть больше или равно \"%s\"", value, min);
 
-    if (array.length == 0) {
-      throw new IllegalArgumentException("Массив не может быть пустым");
-    }
-  }
-
-  public static void requireNotEmptyCollection(Collection<?> collection) {
-    Objects.requireNonNull(collection);
-
-    if (collection.isEmpty()) {
-      throw new IllegalArgumentException("Коллекция не может быть пустой");
-    }
-  }
-
-  public static void zeroOrPositiveNumber(int number) {
-    if (number < 0) {
-      throw new IllegalArgumentException("Число должно быть положительным или нулем");
-    }
-  }
-
-  public static void positiveNumber(int number) {
-    if (number <= 0) {
-      throw new IllegalArgumentException("Число должно быть положительным");
+      throw new IllegalArgumentException(message);
     }
   }
 }
