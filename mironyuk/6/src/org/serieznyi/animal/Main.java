@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static java.lang.String.format;
-
 public class Main {
   public static void main(String[] args) {
     List<Pair<Animal, String>> animalsAndFood = new ArrayList<>();
@@ -27,15 +25,13 @@ public class Main {
     for (Pair<Animal, String> pair : animalsAndFood) {
 
       if (index == luckyAnimalIndex) {
-        System.out.println(
-            format(
-                "Счастливое животное \"%s\" получает двойную порцию \"%s\"",
-                pair.getFirst().getName(), pair.getSecond()));
+        System.out.printf(
+            "Счастливое животное \"%s\" получает двойную порцию \"%s\"\n",
+            pair.getFirst().getName(), pair.getSecond());
       } else {
-        System.out.println(
-            format(
-                "Животное \"%s\" с радостью съедает \"%s\"",
-                pair.getFirst().getName(), pair.getSecond()));
+        System.out.printf(
+            "Животное \"%s\" с радостью съедает \"%s\"\n",
+            pair.getFirst().getName(), pair.getSecond());
       }
 
       index++;

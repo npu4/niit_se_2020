@@ -32,20 +32,21 @@ public class Main {
 
     rating.stream()
         .sorted(Comparator.comparingDouble(Triple::getSecond))
-        .forEach((t) -> System.out.printf("%s, %s, %s\n", t.getFirst(), t.getSecond(), t.getThird()));
+        .forEach(
+            (t) -> System.out.printf("%s, %s, %s\n", t.getFirst(), t.getSecond(), t.getThird()));
   }
 
   private static void showAppWithBestRating(final List<Triple<String, Integer, Double>> rating) {
-    Optional<Triple<String, Integer, Double>> appWithBestRatingOptional =
+    Optional<Triple<String, Integer, Double>> max =
         rating.stream().max(Comparator.comparingDouble(Triple::getThird));
 
-    if (!appWithBestRatingOptional.isPresent()) {
+    if (!max.isPresent()) {
       System.out.println("Приложение с лучшим рейтингом не найдено");
 
       return;
     }
 
-    Triple<String, Integer, Double> appWithBestRating = appWithBestRatingOptional.get();
+    Triple<String, Integer, Double> appWithBestRating = max.get();
 
     System.out.printf(
         "Приложение с лучшим рейтингом: %s (%s)\n",
@@ -53,16 +54,16 @@ public class Main {
   }
 
   private static void showAppWithWorstRating(final List<Triple<String, Integer, Double>> rating) {
-    Optional<Triple<String, Integer, Double>> appWithWorstRatingOptional =
+    Optional<Triple<String, Integer, Double>> min =
         rating.stream().min(Comparator.comparingDouble(Triple::getThird));
 
-    if (!appWithWorstRatingOptional.isPresent()) {
+    if (!min.isPresent()) {
       System.out.println("Приложение с худшим рейтингом не найдено");
 
       return;
     }
 
-    Triple<String, Integer, Double> appWithWorstRating = appWithWorstRatingOptional.get();
+    Triple<String, Integer, Double> appWithWorstRating = min.get();
 
     System.out.printf(
         "Приложение с худшим рейтингом: %s (%s)\n",

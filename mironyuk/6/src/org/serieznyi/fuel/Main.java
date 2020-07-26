@@ -40,14 +40,13 @@ public class Main {
                 });
 
     if (!bestPriceOptional.isPresent()) {
-      System.out.println(String.format("Лучшая цена для %s не найдена", type));
+      System.out.printf("Лучшая цена для %s не найдена\n", type);
       return;
     }
 
     Triple<String, GasolineType, Double> bestPrice = bestPriceOptional.get();
-    System.out.println(
-        String.format(
-            "Лучшая цена для %s находится по адресу \"%s\" и стоит %s",
-            type, bestPrice.getFirst(), bestPrice.getThird()));
+    System.out.printf(
+        "Лучшая цена для %s находится по адресу \"%s\" и стоит %s\n",
+        type, bestPrice.getFirst(), bestPrice.getThird());
   }
 }
