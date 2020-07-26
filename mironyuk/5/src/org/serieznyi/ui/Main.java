@@ -8,7 +8,10 @@ import org.serieznyi.ui.exception.ElementOverlapException;
 import org.serieznyi.ui.exception.ElementOversizeException;
 import org.serieznyi.ui.exception.ReadOnlyException;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static java.lang.String.format;
 
 public final class Main {
   private static final int MAX_X_COORDINATE = 100;
@@ -56,9 +59,11 @@ public final class Main {
       }
     }
 
-    System.out.println("\nВзаимодействуем с элементами интерфейса:\n");
+    List<Element> elements = ui.getAllElements();
 
-    for (Element element : ui.getAllElements()) {
+    System.out.println(format("\nВзаимодействуем с элементами интерфейса. Элементов на сцене: %s:\n", elements.size()));
+
+    for (Element element : elements) {
       System.out.println(element);
 
       if (element instanceof CheckBox) {
