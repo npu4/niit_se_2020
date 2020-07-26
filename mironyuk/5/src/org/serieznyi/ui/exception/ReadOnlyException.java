@@ -5,7 +5,7 @@ import org.serieznyi.ui.element.Element;
 public final class ReadOnlyException extends RuntimeException {
   private final Element element;
 
-  public ReadOnlyException(Element element, String message) {
+  private ReadOnlyException(Element element, String message) {
     super(message);
 
     this.element = element;

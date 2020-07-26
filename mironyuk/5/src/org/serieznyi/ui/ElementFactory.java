@@ -59,7 +59,7 @@ public class ElementFactory {
             getRandomHeight(),
             getRandomWidth(),
             String.format("Кнопка в <%s,%s>", x, y),
-            () -> System.out.println(String.format("Нажата кнопка в <%s, %s>", x, y)));
+            () -> System.out.println(String.format("Нажата кнопка в [%s, %s]", x, y)));
   }
 
   private Supplier<Element> createCheckbox(int x, int y) {
@@ -69,7 +69,7 @@ public class ElementFactory {
             y,
             getRandomHeight(),
             getRandomWidth(),
-            String.format("Галка в <%s,%s>", x, y),
+            String.format("Галка в [%s, %s]", x, y),
             random.nextBoolean());
   }
 
@@ -80,7 +80,7 @@ public class ElementFactory {
             y,
             getRandomHeight(),
             getRandomWidth(),
-            String.format("Текстовое поле в <%s>, %s", x, y),
+            String.format("Текстовое поле в [%s, %s]", x, y),
             Strings.randomString(random.nextInt(2, 10)));
   }
 }

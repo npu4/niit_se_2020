@@ -1,7 +1,8 @@
 package org.serieznyi.ui;
 
 import org.serieznyi.ui.element.Element;
-import org.serieznyi.ui.exception.ElementsOverlapException;
+import org.serieznyi.ui.exception.ElementOversizeException;
+import org.serieznyi.ui.exception.ElementOverlapException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +23,23 @@ public final class UI {
   }
 
   public void addElement(Element newElement) {
+    if (isTooBig(newElement)) {
+      throw ElementOversizeException.fromElement(newElement);
+    }
+
     for (Element element : elements) {
       if (newElement.isCross(element)) {
-        throw ElementsOverlapException.fromRectangles(newElement, element);
+        throw ElementOverlapException.fromElements(newElement, element);
       }
     }
 
     System.out.println("Добавил элемент: " + newElement);
 
     elements.add(newElement);
+  }
+
+  private boolean isTooBig(Element newElement) {
+    return newElement.getX() + newElement.getWidth() > width ||
+            newElement.getY() + newElement.getHeight() > height;
   }
 }

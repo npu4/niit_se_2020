@@ -4,8 +4,10 @@ import org.serieznyi.ui.element.Button;
 import org.serieznyi.ui.element.CheckBox;
 import org.serieznyi.ui.element.Element;
 import org.serieznyi.ui.element.TextField;
-import org.serieznyi.ui.exception.ElementsOverlapException;
+import org.serieznyi.ui.exception.ElementOverlapException;
+import org.serieznyi.ui.exception.ElementOversizeException;
 import org.serieznyi.ui.exception.ReadOnlyException;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class Main {
@@ -35,11 +37,9 @@ public final class Main {
             5,
             "Добавить элемент",
             () -> {
-              Element randomElement =
-                      elementFactory.createRandom(
-                      Integer.parseInt(xCoordinateTextField.getValue()),
-                      Integer.parseInt(yCoordinateTextField.getValue()));
-              ui.addElement(randomElement);
+              int x = Integer.parseInt(xCoordinateTextField.getValue());
+              int y = Integer.parseInt(yCoordinateTextField.getValue());
+              ui.addElement(elementFactory.createRandom(x, y));
             });
     ui.addElement(addElementButton);
 
@@ -51,7 +51,7 @@ public final class Main {
 
       try {
         addElementButton.click();
-      } catch (ElementsOverlapException e) {
+      } catch (ElementOverlapException|ElementOversizeException e) {
         System.out.println("Ошибка: " + e.getMessage());
       }
     }
@@ -61,7 +61,11 @@ public final class Main {
     for (Element element : ui.getAllElements()) {
       System.out.println(element);
 
-      if (element instanceof Clickable && element != addElementButton) {
+      if (element instanceof CheckBox) {
+        System.out.println("\tСостояние: " + ((CheckBox) element).getState());
+      } else if (element instanceof TextField) {
+        System.out.println("\tТекст: " + ((TextField) element).getValue());
+      } else if (element instanceof Clickable && element != addElementButton) {
         try {
           ((Clickable) element).click();
         } catch (ReadOnlyException e) {
@@ -69,23 +73,15 @@ public final class Main {
         }
       }
 
-      if (element instanceof CheckBox) {
-        System.out.println("\tСостояние: " + ((CheckBox) element).getState());
-      }
-
-      if (element instanceof TextField) {
-        System.out.println("\tТекст: " + ((TextField) element).getValue());
-      }
-
       System.out.println();
     }
   }
 
   private static Integer nextRandomXCoordinate() {
-    return ThreadLocalRandom.current().nextInt(0, MAX_X_COORDINATE + 1);
+    return ThreadLocalRandom.current().nextInt(0, MAX_X_COORDINATE);
   }
 
   private static Integer nextRandomYCoordinate() {
-    return ThreadLocalRandom.current().nextInt(0, MAX_Y_COORDINATE + 1);
+    return ThreadLocalRandom.current().nextInt(0, MAX_Y_COORDINATE);
   }
 }
