@@ -3,26 +3,31 @@ package org.serieznyi.tuple;
 import java.util.Objects;
 
 public class Triple<V1, V2, V3> {
-  private final V1 valueOne;
-  private final V2 valueTwo;
-  private final V3 valueThree;
+  private final V1 first;
+  private final V2 second;
+  private final V3 third;
 
-  public Triple(V1 valueOne, V2 valueTwo, V3 valueThree) {
-    this.valueOne = valueOne;
-    this.valueTwo = valueTwo;
-    this.valueThree = valueThree;
+  public Triple(V1 first, V2 second, V3 third) {
+    this.first = first;
+    this.second = second;
+    this.third = third;
   }
 
   public V1 getFirst() {
-    return valueOne;
+    return first;
   }
 
   public V2 getSecond() {
-    return valueTwo;
+    return second;
   }
 
-  public V3 getValueThree() {
-    return valueThree;
+  public V3 getThird() {
+    return third;
+  }
+
+  public static <V1, V2, V3> Triple<V1, V2, V3> fromArgs(V1 first, V2 second, V3 third)
+  {
+    return new Triple<>(first, second, third);
   }
 
   @Override
@@ -30,13 +35,22 @@ public class Triple<V1, V2, V3> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Triple<?, ?, ?> triple = (Triple<?, ?, ?>) o;
-    return Objects.equals(valueOne, triple.valueOne)
-        && Objects.equals(valueTwo, triple.valueTwo)
-        && Objects.equals(valueThree, triple.valueThree);
+    return Objects.equals(first, triple.first)
+        && Objects.equals(second, triple.second)
+        && Objects.equals(third, triple.third);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(valueOne, valueTwo, valueThree);
+    return Objects.hash(first, second, third);
+  }
+
+  @Override
+  public String toString() {
+    return "Triple{" +
+            "first=" + first +
+            ", second=" + second +
+            ", third=" + third +
+            '}';
   }
 }

@@ -3,20 +3,33 @@ package org.serieznyi.tuple;
 import java.util.Objects;
 
 public class Pair<V1, V2> {
-  private final V1 valueOne;
-  private final V2 valueTwo;
+  private final V1 first;
+  private final V2 second;
 
-  public Pair(V1 valueOne, V2 valueTwo) {
-    this.valueOne = valueOne;
-    this.valueTwo = valueTwo;
+  public Pair(V1 first, V2 second) {
+    this.first = first;
+    this.second = second;
   }
 
   public V1 getFirst() {
-    return valueOne;
+    return first;
   }
 
   public V2 getSecond() {
-    return valueTwo;
+    return second;
+  }
+
+  public static <V1, V2> Pair<V1, V2> fromArgs(V1 first, V2 second)
+  {
+    return new Pair<>(first, second);
+  }
+
+  @Override
+  public String toString() {
+    return "Pair{" +
+            "first=" + first +
+            ", second=" + second +
+            '}';
   }
 
   @Override
@@ -24,11 +37,11 @@ public class Pair<V1, V2> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Pair<?, ?> pair = (Pair<?, ?>) o;
-    return Objects.equals(valueOne, pair.valueOne) && Objects.equals(valueTwo, pair.valueTwo);
+    return Objects.equals(first, pair.first) && Objects.equals(second, pair.second);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(valueOne, valueTwo);
+    return Objects.hash(first, second);
   }
 }
