@@ -38,7 +38,7 @@ public final class Main {
             5,
             "Добавить элемент",
             () -> {
-              Rectangle randomElement =
+              Element randomElement =
                   makeRandomElement(
                       Integer.parseInt(xCoordinateTextField.getValue()),
                       Integer.parseInt(yCoordinateTextField.getValue()));
@@ -61,35 +61,35 @@ public final class Main {
 
     System.out.println("\nВзаимодействуем с элементами интерфейса:\n");
 
-    for (Rectangle rectangle : ui.getAllElements()) {
-      System.out.println(rectangle);
+    for (Element element : ui.getAllElements()) {
+      System.out.println(element);
 
-      if (rectangle instanceof Clickable && rectangle != addElementButton) {
+      if (element instanceof Clickable && element != addElementButton) {
         try {
-          ((Clickable) rectangle).click();
+          ((Clickable) element).click();
         } catch (ReadOnlyException e) {
           System.out.println("Ошибка: " + e.getMessage());
         }
       }
 
-      if (rectangle instanceof CheckBox) {
-        System.out.println("\tСостояние: " + ((CheckBox) rectangle).getState());
+      if (element instanceof CheckBox) {
+        System.out.println("\tСостояние: " + ((CheckBox) element).getState());
       }
 
-      if (rectangle instanceof TextField) {
-        System.out.println("\tТекст: " + ((TextField) rectangle).getValue());
+      if (element instanceof TextField) {
+        System.out.println("\tТекст: " + ((TextField) element).getValue());
       }
 
       System.out.println();
     }
   }
 
-  private static Rectangle makeRandomElement(int x, int y) {
+  private static Element makeRandomElement(int x, int y) {
     ThreadLocalRandom random = ThreadLocalRandom.current();
     int width = random.nextInt(1, MAX_X_COORDINATE / 3);
     int height = random.nextInt(1, MAX_Y_COORDINATE / 3);
 
-    List<Supplier<Rectangle>> elementGenerator = new ArrayList<>();
+    List<Supplier<Element>> elementGenerator = new ArrayList<>();
 
     elementGenerator.add(
         () ->
@@ -116,7 +116,7 @@ public final class Main {
                 String.format("Текстовое поле в <%s>, %s", x, y),
                 randomString().substring(0, random.nextInt(2, 10))));
 
-    Rectangle newElement = elementGenerator.get(random.nextInt(0, elementGenerator.size())).get();
+    Element newElement = elementGenerator.get(random.nextInt(0, elementGenerator.size())).get();
 
     if (random.nextBoolean()) {
       newElement.disable();

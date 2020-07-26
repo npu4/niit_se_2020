@@ -1,23 +1,23 @@
 package org.serieznyi.ui.exception;
 
-import org.serieznyi.ui.Rectangle;
+import org.serieznyi.ui.Element;
 
 public final class ReadOnlyException extends RuntimeException {
-  private final Rectangle rectangle;
+  private final Element element;
 
-  public ReadOnlyException(Rectangle rectangle, String message) {
+  public ReadOnlyException(Element element, String message) {
     super(message);
 
-    this.rectangle = rectangle;
+    this.element = element;
   }
 
-  public static ReadOnlyException fromElement(final Rectangle rectangle) {
-    String message = String.format("Элемент только для чтения: \"%s\"", rectangle);
+  public static ReadOnlyException fromElement(final Element element) {
+    String message = String.format("Элемент только для чтения: \"%s\"", element);
 
-    return new ReadOnlyException(rectangle, message);
+    return new ReadOnlyException(element, message);
   }
 
-  public Rectangle getRectangle() {
-    return rectangle;
+  public Element getElement() {
+    return element;
   }
 }

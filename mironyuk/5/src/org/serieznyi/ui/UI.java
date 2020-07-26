@@ -8,7 +8,7 @@ import java.util.List;
 public final class UI {
   private final int width;
   private final int height;
-  List<Rectangle> elements = new ArrayList<>();
+  List<Element> elements = new ArrayList<>();
 
   UI(int width, int height) {
 
@@ -16,19 +16,19 @@ public final class UI {
     this.height = height;
   }
 
-  public List<Rectangle> getAllElements() {
+  public List<Element> getAllElements() {
     return elements;
   }
 
-  public void addElement(Rectangle newRectangle) {
-    for (Rectangle rectangle : elements) {
-      if (newRectangle.isCross(rectangle)) {
-        throw ElementsOverlapException.fromRectangles(newRectangle, rectangle);
+  public void addElement(Element newElement) {
+    for (Element element : elements) {
+      if (newElement.isCross(element)) {
+        throw ElementsOverlapException.fromRectangles(newElement, element);
       }
     }
 
-    System.out.println("Добавил элемент: " + newRectangle);
+    System.out.println("Добавил элемент: " + newElement);
 
-    elements.add(newRectangle);
+    elements.add(newElement);
   }
 }

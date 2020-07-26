@@ -2,7 +2,7 @@ package org.serieznyi.ui;
 
 import org.serieznyi.ui.util.Assert;
 
-public abstract class Rectangle {
+public abstract class Element {
   private final int x;
   private final int y;
   private final int height;
@@ -10,7 +10,7 @@ public abstract class Rectangle {
   private final String caption;
   private boolean enabled = true;
 
-  protected Rectangle(int x, int y, int height, int width, String caption) {
+  protected Element(int x, int y, int height, int width, String caption) {
     Assert.zeroOrPositiveNumber(x);
     this.x = x;
 
@@ -77,13 +77,13 @@ public abstract class Rectangle {
    * <p>- или левый край второго лежит правее правого края первого
    * <p>- или верхний край первого лежит ниже нижнего края второго
    *
-   * @param rectangle фигура с которой проверяем пересечение
+   * @param element фигура с которой проверяем пересечение
    * @return true если пересекается, иначе false
    */
-  public boolean isCross(Rectangle rectangle) {
-    return x <= rectangle.x + rectangle.width
-        && rectangle.x <= x + width
-        && y <= rectangle.y + rectangle.height
-        && rectangle.y <= y + height;
+  public boolean isCross(Element element) {
+    return x <= element.x + element.width
+        && element.x <= x + width
+        && y <= element.y + element.height
+        && element.y <= y + height;
   }
 }

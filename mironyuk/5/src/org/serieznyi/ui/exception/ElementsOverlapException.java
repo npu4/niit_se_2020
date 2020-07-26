@@ -1,12 +1,12 @@
 package org.serieznyi.ui.exception;
 
-import org.serieznyi.ui.Rectangle;
+import org.serieznyi.ui.Element;
 
 public final class ElementsOverlapException extends RuntimeException {
-  private final Rectangle a;
-  private final Rectangle b;
+  private final Element a;
+  private final Element b;
 
-  public ElementsOverlapException(String message, Rectangle a, Rectangle b) {
+  public ElementsOverlapException(String message, Element a, Element b) {
     super(message);
 
     this.a = a;
@@ -14,7 +14,7 @@ public final class ElementsOverlapException extends RuntimeException {
   }
 
   public static ElementsOverlapException fromRectangles(
-      Rectangle newElement, Rectangle crossingWith) {
+          Element newElement, Element crossingWith) {
     String message =
         String.format(
             "Не могу добавить элемент \"%s\" т.к. он пересекает \"%s\"", newElement, crossingWith);
@@ -22,11 +22,11 @@ public final class ElementsOverlapException extends RuntimeException {
     return new ElementsOverlapException(message, newElement, crossingWith);
   }
 
-  public Rectangle getA() {
+  public Element getA() {
     return a;
   }
 
-  public Rectangle getB() {
+  public Element getB() {
     return b;
   }
 }

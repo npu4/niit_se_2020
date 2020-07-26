@@ -1,10 +1,10 @@
 package org.serieznyi.ui.element;
 
 import org.serieznyi.ui.Clickable;
-import org.serieznyi.ui.Rectangle;
+import org.serieznyi.ui.Element;
 import org.serieznyi.ui.exception.ReadOnlyException;
 
-public final class CheckBox extends Rectangle implements Clickable {
+public final class CheckBox extends Element implements Clickable {
   private boolean state = false;
 
   public CheckBox(int x, int y, int height, int width, String caption) {

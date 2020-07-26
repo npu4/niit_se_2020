@@ -1,8 +1,8 @@
 package org.serieznyi.ui.element;
 
-import org.serieznyi.ui.Rectangle;
+import org.serieznyi.ui.Element;
 
-public final class TextField extends Rectangle {
+public final class TextField extends Element {
   private String value;
 
   public TextField(int x, int y, int height, int width, String caption, String value) {
