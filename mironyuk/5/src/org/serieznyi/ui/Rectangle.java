@@ -67,4 +67,23 @@ public abstract class Rectangle {
   }
 
   protected abstract String getTypeName();
+
+  /**
+   * <p>Проверяем пересекается ли текущая фигура с rectangle
+   *
+   * <p>Прямоугольники НЕ пересекаются если:
+   * <p>- верхний край второго лежит ниже нижнего края первого
+   * <p>- или левый край первого лежит правее правого края второго
+   * <p>- или левый край второго лежит правее правого края первого
+   * <p>- или верхний край первого лежит ниже нижнего края второго
+   *
+   * @param rectangle фигура с которой проверяем пересечение
+   * @return true если пересекается, иначе false
+   */
+  public boolean isCross(Rectangle rectangle) {
+    return x <= rectangle.x + rectangle.width
+        && rectangle.x <= x + width
+        && y <= rectangle.y + rectangle.height
+        && rectangle.y <= y + height;
+  }
 }

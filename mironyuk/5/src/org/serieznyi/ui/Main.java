@@ -113,7 +113,7 @@ public final class Main {
                 y,
                 height,
                 width,
-                "Текстовое поле в ",
+                String.format("Текстовое поле в <%s>, %s", x, y),
                 randomString().substring(0, random.nextInt(2, 10))));
 
     Rectangle newElement = elementGenerator.get(random.nextInt(0, elementGenerator.size())).get();
