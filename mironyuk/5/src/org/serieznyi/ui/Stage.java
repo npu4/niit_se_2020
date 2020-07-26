@@ -7,12 +7,12 @@ import org.serieznyi.ui.exception.ElementOverlapException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class UI {
+public final class Stage {
   private final int width;
   private final int height;
   List<Element> elements = new ArrayList<>();
 
-  UI(int width, int height) {
+  Stage(int width, int height) {
 
     this.width = width;
     this.height = height;

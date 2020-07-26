@@ -22,15 +22,15 @@ public final class Main {
 
     System.out.println("\nСоздаем UI c элементами управления:\n");
 
-    UI ui = new UI(MAX_X_COORDINATE, MAX_Y_COORDINATE);
+    Stage stage = new Stage(MAX_X_COORDINATE, MAX_Y_COORDINATE);
 
     TextField xCoordinateTextField =
         new TextField(0, 6, 5, 5, "Координата x для нового элемента", "");
-    ui.addElement(xCoordinateTextField);
+    stage.addElement(xCoordinateTextField);
 
     TextField yCoordinateTextField =
         new TextField(0, 12, 5, 5, "Координата y для нового элемента", "");
-    ui.addElement(yCoordinateTextField);
+    stage.addElement(yCoordinateTextField);
 
     Button addElementButton =
         new Button(
@@ -42,9 +42,9 @@ public final class Main {
             () -> {
               int x = Integer.parseInt(xCoordinateTextField.getValue());
               int y = Integer.parseInt(yCoordinateTextField.getValue());
-              ui.addElement(elementFactory.createRandom(x, y));
+              stage.addElement(elementFactory.createRandom(x, y));
             });
-    ui.addElement(addElementButton);
+    stage.addElement(addElementButton);
 
     System.out.println("\nГенерируем новые элементы:\n");
 
@@ -59,7 +59,7 @@ public final class Main {
       }
     }
 
-    List<Element> elements = ui.getAllElements();
+    List<Element> elements = stage.getAllElements();
 
     System.out.println(format("\nВзаимодействуем с элементами интерфейса. Элементов на сцене: %s:\n", elements.size()));
 
