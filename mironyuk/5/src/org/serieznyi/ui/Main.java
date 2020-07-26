@@ -5,13 +5,12 @@ import org.serieznyi.ui.element.CheckBox;
 import org.serieznyi.ui.element.TextField;
 import org.serieznyi.ui.exception.ElementsOverlapException;
 import org.serieznyi.ui.exception.ReadOnlyException;
+import org.serieznyi.ui.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
-import java.util.stream.Collector;
-import java.util.stream.Stream;
 
 public final class Main {
   private static final int MAX_X_COORDINATE = 100;
@@ -114,7 +113,9 @@ public final class Main {
                 height,
                 width,
                 String.format("Текстовое поле в <%s>, %s", x, y),
-                randomString().substring(0, random.nextInt(2, 10))));
+                Strings.randomString(random.nextInt(2, 10))
+            )
+    );
 
     Element newElement = elementGenerator.get(random.nextInt(0, elementGenerator.size())).get();
 
@@ -123,18 +124,6 @@ public final class Main {
     }
 
     return newElement;
-  }
-
-  private static String randomString() {
-    return Stream.generate(() -> ThreadLocalRandom.current().nextInt(48, 123))
-        .limit(100)
-        .map((a) -> (char) ((int) a))
-        .collect(
-            Collector.of(
-                StringBuilder::new,
-                StringBuilder::append,
-                StringBuilder::append,
-                StringBuilder::toString));
   }
 
   private static Integer nextRandomXCoordinate() {

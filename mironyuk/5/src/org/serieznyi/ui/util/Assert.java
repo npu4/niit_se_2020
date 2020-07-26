@@ -1,6 +1,5 @@
 package org.serieznyi.ui.util;
 
-import java.util.Collection;
 import java.util.Objects;
 
 import static java.lang.String.format;
