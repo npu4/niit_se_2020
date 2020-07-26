@@ -1,7 +1,6 @@
 package org.serieznyi.ui.element;
 
 import org.serieznyi.ui.Clickable;
-import org.serieznyi.ui.Element;
 import org.serieznyi.ui.exception.ReadOnlyException;
 
 public final class CheckBox extends Element implements Clickable {

@@ -2,6 +2,7 @@ package org.serieznyi.ui;
 
 import org.serieznyi.ui.element.Button;
 import org.serieznyi.ui.element.CheckBox;
+import org.serieznyi.ui.element.Element;
 import org.serieznyi.ui.element.TextField;
 import org.serieznyi.ui.util.Assert;
 import org.serieznyi.ui.util.Strings;

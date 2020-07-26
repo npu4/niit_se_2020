@@ -1,5 +1,6 @@
 package org.serieznyi.ui;
 
+import org.serieznyi.ui.element.Element;
 import org.serieznyi.ui.exception.ElementsOverlapException;
 
 import java.util.ArrayList;

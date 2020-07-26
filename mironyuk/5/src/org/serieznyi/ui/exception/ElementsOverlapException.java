@@ -1,6 +1,6 @@
 package org.serieznyi.ui.exception;
 
-import org.serieznyi.ui.Element;
+import org.serieznyi.ui.element.Element;
 
 public final class ElementsOverlapException extends RuntimeException {
   private final Element a;

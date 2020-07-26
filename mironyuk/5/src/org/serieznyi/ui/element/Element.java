@@ -1,4 +1,4 @@
-package org.serieznyi.ui;
+package org.serieznyi.ui.element;
 
 import org.serieznyi.ui.util.Assert;
 

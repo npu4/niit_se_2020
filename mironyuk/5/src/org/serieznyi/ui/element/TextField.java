@@ -1,7 +1,5 @@
 package org.serieznyi.ui.element;
 
-import org.serieznyi.ui.Element;
-
 public final class TextField extends Element {
   private String value;
 
