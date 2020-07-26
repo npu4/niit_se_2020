@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
-final public class Main {
+public final class Main {
   private static final int MAX_X_COORDINATE = 100;
   private static final int MAX_Y_COORDINATE = 100;
 
@@ -22,30 +22,26 @@ final public class Main {
 
     UI ui = new UI(MAX_X_COORDINATE, MAX_Y_COORDINATE);
 
-    TextField xCoordinateTextField = new TextField(0,
-            6,
-            5,
-            5,
-            "Координата x для нового элемента", "");
+    TextField xCoordinateTextField =
+        new TextField(0, 6, 5, 5, "Координата x для нового элемента", "");
     ui.addElement(xCoordinateTextField);
 
-    TextField yCoordinateTextField = new TextField(0,
-            12,
-            5,
-            5,
-            "Координата y для нового элемента", "");
+    TextField yCoordinateTextField =
+        new TextField(0, 12, 5, 5, "Координата y для нового элемента", "");
     ui.addElement(yCoordinateTextField);
 
-    Button addElementButton = new Button(0,
+    Button addElementButton =
+        new Button(
+            0,
             0,
             5,
             5,
             "Добавить элемент",
             () -> {
-              Rectangle randomElement = makeRandomElement(
+              Rectangle randomElement =
+                  makeRandomElement(
                       Integer.parseInt(xCoordinateTextField.getValue()),
-                      Integer.parseInt(yCoordinateTextField.getValue())
-              );
+                      Integer.parseInt(yCoordinateTextField.getValue()));
               ui.addElement(randomElement);
             });
     ui.addElement(addElementButton);
@@ -95,32 +91,30 @@ final public class Main {
 
     List<Supplier<Rectangle>> elementGenerator = new ArrayList<>();
 
-    elementGenerator.add(() -> new Button(
-        x,
-        y,
-        height,
-        width,
-        String.format("Кнопка в <%s,%s>", x, y),
-        () -> System.out.println(String.format("Нажата кнопка в <%s, %s>", x, y))
-    ));
+    elementGenerator.add(
+        () ->
+            new Button(
+                x,
+                y,
+                height,
+                width,
+                String.format("Кнопка в <%s,%s>", x, y),
+                () -> System.out.println(String.format("Нажата кнопка в <%s, %s>", x, y))));
 
-    elementGenerator.add(() -> new CheckBox(
-        x,
-        y,
-        height,
-        width,
-        String.format("Галка в <%s,%s>", x, y),
-        random.nextBoolean()
-    ));
+    elementGenerator.add(
+        () ->
+            new CheckBox(
+                x, y, height, width, String.format("Галка в <%s,%s>", x, y), random.nextBoolean()));
 
-    elementGenerator.add(() -> new TextField(
-            x,
-            y,
-            height,
-            width,
-            "Какое-то текстовое поле",
-            randomString().substring(0, random.nextInt(2, 10))
-    ));
+    elementGenerator.add(
+        () ->
+            new TextField(
+                x,
+                y,
+                height,
+                width,
+                "Текстовое поле в ",
+                randomString().substring(0, random.nextInt(2, 10))));
 
     Rectangle newElement = elementGenerator.get(random.nextInt(0, elementGenerator.size())).get();
 
@@ -131,28 +125,23 @@ final public class Main {
     return newElement;
   }
 
-  private static String randomString()
-  {
-    return Stream
-          .generate(() -> ThreadLocalRandom.current().nextInt(48, 123))
-          .limit(100)
-          .map((a) -> (char) ((int) a))
-          .collect(Collector.of(
-              StringBuilder::new,
-              StringBuilder::append,
-              StringBuilder::append,
-              StringBuilder::toString)
-          )
-    ;
+  private static String randomString() {
+    return Stream.generate(() -> ThreadLocalRandom.current().nextInt(48, 123))
+        .limit(100)
+        .map((a) -> (char) ((int) a))
+        .collect(
+            Collector.of(
+                StringBuilder::new,
+                StringBuilder::append,
+                StringBuilder::append,
+                StringBuilder::toString));
   }
 
-  private static Integer nextRandomXCoordinate()
-  {
+  private static Integer nextRandomXCoordinate() {
     return ThreadLocalRandom.current().nextInt(0, MAX_X_COORDINATE + 1);
   }
 
-  private static Integer nextRandomYCoordinate()
-  {
+  private static Integer nextRandomYCoordinate() {
     return ThreadLocalRandom.current().nextInt(0, MAX_Y_COORDINATE + 1);
   }
 }
