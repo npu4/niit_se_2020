@@ -5,18 +5,15 @@ import org.serieznyi.ui.element.CheckBox;
 import org.serieznyi.ui.element.TextField;
 import org.serieznyi.ui.exception.ElementsOverlapException;
 import org.serieznyi.ui.exception.ReadOnlyException;
-import org.serieznyi.ui.util.Strings;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Supplier;
 
 public final class Main {
   private static final int MAX_X_COORDINATE = 100;
   private static final int MAX_Y_COORDINATE = 100;
 
   public static void main(String[] args) {
+    ElementFactory elementFactory = new ElementFactory(MAX_X_COORDINATE, MAX_Y_COORDINATE);
+
     System.out.println("\nСоздаем UI c элементами управления:\n");
 
     UI ui = new UI(MAX_X_COORDINATE, MAX_Y_COORDINATE);
@@ -38,7 +35,7 @@ public final class Main {
             "Добавить элемент",
             () -> {
               Element randomElement =
-                  makeRandomElement(
+                      elementFactory.createRandom(
                       Integer.parseInt(xCoordinateTextField.getValue()),
                       Integer.parseInt(yCoordinateTextField.getValue()));
               ui.addElement(randomElement);
@@ -81,49 +78,6 @@ public final class Main {
 
       System.out.println();
     }
-  }
-
-  private static Element makeRandomElement(int x, int y) {
-    ThreadLocalRandom random = ThreadLocalRandom.current();
-    int width = random.nextInt(1, MAX_X_COORDINATE / 3);
-    int height = random.nextInt(1, MAX_Y_COORDINATE / 3);
-
-    List<Supplier<Element>> elementGenerator = new ArrayList<>();
-
-    elementGenerator.add(
-        () ->
-            new Button(
-                x,
-                y,
-                height,
-                width,
-                String.format("Кнопка в <%s,%s>", x, y),
-                () -> System.out.println(String.format("Нажата кнопка в <%s, %s>", x, y))));
-
-    elementGenerator.add(
-        () ->
-            new CheckBox(
-                x, y, height, width, String.format("Галка в <%s,%s>", x, y), random.nextBoolean()));
-
-    elementGenerator.add(
-        () ->
-            new TextField(
-                x,
-                y,
-                height,
-                width,
-                String.format("Текстовое поле в <%s>, %s", x, y),
-                Strings.randomString(random.nextInt(2, 10))
-            )
-    );
-
-    Element newElement = elementGenerator.get(random.nextInt(0, elementGenerator.size())).get();
-
-    if (random.nextBoolean()) {
-      newElement.disable();
-    }
-
-    return newElement;
   }
 
   private static Integer nextRandomXCoordinate() {
