@@ -16,6 +16,7 @@ import static java.lang.String.format;
 public final class Main {
   private static final int MAX_X_COORDINATE = 100;
   private static final int MAX_Y_COORDINATE = 100;
+  private static final int ADD_ELEMENT_MAX_TRIES = 10;
 
   public static void main(String[] args) {
     ElementFactory elementFactory = new ElementFactory(MAX_X_COORDINATE, MAX_Y_COORDINATE);
@@ -48,7 +49,7 @@ public final class Main {
 
     System.out.println("\nГенерируем новые элементы:\n");
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < ADD_ELEMENT_MAX_TRIES; i++) {
       xCoordinateTextField.setValue(nextRandomXCoordinate().toString());
       yCoordinateTextField.setValue(nextRandomYCoordinate().toString());
 
