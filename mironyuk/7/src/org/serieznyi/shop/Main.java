@@ -3,6 +3,7 @@ package org.serieznyi.shop;
 import org.serieznyi.shop.fabric.AppleGarden;
 import org.serieznyi.shop.fabric.ElectronicFabric;
 import org.serieznyi.shop.fabric.FoodFabric;
+import org.serieznyi.shop.factory.AppleFactory;
 import org.serieznyi.shop.item.ElectronicItem;
 import org.serieznyi.shop.item.FoodItem;
 import org.serieznyi.shop.item.ShopItem;
@@ -41,8 +42,10 @@ public class Main {
     Collection<ElectronicItem> electronicShop = new ArrayList<>();
     shops.add(electronicShop);
 
+    AppleFactory appleFactory = new AppleFactory();
+
     System.out.println("Фабрика еды:");
-    FoodFabric foodFabric = new FoodFabric();
+    FoodFabric foodFabric = new FoodFabric(appleFactory);
     System.out.println("Заполняем продуктовый магазин");
     foodFabric.fillShopWithFood(foodShop);
     System.out.println("Заполняем гипермаркет");
@@ -50,7 +53,7 @@ public class Main {
     System.out.println("----------------");
 
     System.out.println("Яблочный сад:");
-    AppleGarden appleGarden = new AppleGarden();
+    AppleGarden appleGarden = new AppleGarden(appleFactory);
     System.out.println("Заполняем продуктовый магазин");
     appleGarden.fillShopWithApples(foodShop);
     System.out.println("Заполняем гипермаркет");

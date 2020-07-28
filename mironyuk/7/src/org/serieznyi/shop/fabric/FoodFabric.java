@@ -1,5 +1,6 @@
 package org.serieznyi.shop.fabric;
 
+import org.serieznyi.shop.factory.AppleFactory;
 import org.serieznyi.shop.item.FoodItem;
 import org.serieznyi.shop.item.food.Apple;
 import org.serieznyi.shop.item.food.Bread;
@@ -15,6 +16,12 @@ public class FoodFabric {
     private static int counter = 1;
 
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
+    private final AppleFactory appleFactory;
+
+    public FoodFabric(AppleFactory appleFactory)
+    {
+        this.appleFactory = appleFactory;
+    }
 
     public void fillShopWithFood(Collection<? super FoodItem> shop)
     {
@@ -37,7 +44,7 @@ public class FoodFabric {
         Collection<Apple> apples = new ArrayList<>();
 
         for (int i = 0 ; i < random.nextInt(2, 5) ; i++) {
-            apples.add(makeApple());
+            apples.add(appleFactory.create());
         }
 
         return apples;
@@ -61,23 +68,5 @@ public class FoodFabric {
                 random.nextInt(5, 10),
                 random.nextInt(100, 400)
         );
-    }
-
-    private Apple makeApple()
-    {
-        return new Apple(
-                "Яблоко №" + counter++,
-                random.nextInt(10, 50),
-                random.nextInt(10, 40),
-                random.nextInt(5, 10),
-                nextAppleColor()
-        );
-    }
-
-    private Apple.Color nextAppleColor()
-    {
-        Apple.Color[] colors = Apple.Color.values();
-
-        return colors[random.nextInt(0, colors.length)];
     }
 }
