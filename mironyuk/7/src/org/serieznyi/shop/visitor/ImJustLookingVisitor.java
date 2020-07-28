@@ -12,6 +12,8 @@ import static java.lang.String.format;
 final public class ImJustLookingVisitor implements ShopVisitor {
     @Override
     public void visitShop(Collection<? extends ShopItem> shop) {
+        say("Обожаю донимать персонал магазина вопросами. Зайду-ка сюда");
+
         if (shop.size() == 0) {
             say("Похоже в магазине нет товаров");
             return;

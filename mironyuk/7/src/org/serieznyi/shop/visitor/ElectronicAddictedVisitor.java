@@ -10,6 +10,8 @@ import static java.lang.String.format;
 final public class ElectronicAddictedVisitor implements ShopVisitor {
     @Override
     public void visitShop(Collection<? extends ShopItem> shop) {
+        say("Как же я люблю электронику. Может тут что-то есть!?");
+
         if (shop.size() == 0) {
             say("Похоже в магазине нет товаров");
 
@@ -20,12 +22,13 @@ final public class ElectronicAddictedVisitor implements ShopVisitor {
 
         for (ShopItem item: shop) {
             if (item instanceof ElectronicItem) {
-                System.out.println(item.getName() + " - " + item.getPrice());
+                ElectronicItem currentItem = (ElectronicItem) item;
 
-                int currentPower = ((ElectronicItem) item).getPower();
+                say(format("Просто смотрю товар \"%s\" и похоже его мощность %s", currentItem.getName(), currentItem.getPower()));
 
-                if (null == electronicWithMaxPower || electronicWithMaxPower.getPower() < currentPower) {
-                    electronicWithMaxPower = (ElectronicItem) item;
+
+                if (null == electronicWithMaxPower || electronicWithMaxPower.getPower() < currentItem.getPower()) {
+                    electronicWithMaxPower = currentItem;
                 }
             }
         }
