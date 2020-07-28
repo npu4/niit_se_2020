@@ -1,7 +1,6 @@
 package org.serieznyi.shop.fabric;
 
 import org.serieznyi.shop.item.food.Apple;
-import org.serieznyi.shop.item.food.Bread;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static java.lang.String.format;
 
 public class AppleGarden {
+    private int counter = 1;
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     public void fillShopWithApples(Collection<? super Apple> shop)
@@ -28,7 +28,7 @@ public class AppleGarden {
     private Collection<Apple> generateApples() {
         Collection<Apple> apples = new ArrayList<>();
 
-        for (int i = 0 ; i < random.nextInt(2, 5) ; i++) {
+        for (int i = 0 ; i < random.nextInt(2, 10) ; i++) {
             apples.add(makeApple());
         }
 
@@ -38,7 +38,7 @@ public class AppleGarden {
     private Apple makeApple()
     {
         return new Apple(
-                "Супер яблоко",
+                "Яблоко №" + counter++,
                 random.nextInt(10, 50),
                 random.nextInt(10, 40),
                 random.nextInt(5, 10),

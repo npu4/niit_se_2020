@@ -12,6 +12,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import static java.lang.String.format;
 
 public class FoodFabric {
+    private static int counter = 1;
+
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     public void fillShopWithFood(Collection<? super FoodItem> shop)
@@ -44,7 +46,7 @@ public class FoodFabric {
     private Collection<Bread> generateBread() {
         Collection<Bread> breads = new ArrayList<>();
 
-        for (int i = 0 ; i < random.nextInt(2, 5) ; i++) {
+        for (int i = 0 ; i < random.nextInt(2, 10) ; i++) {
             breads.add(makeBread());
         }
 
@@ -53,7 +55,7 @@ public class FoodFabric {
 
     private Bread makeBread() {
         return new Bread(
-                "Мега хлеб",
+                "Хлеб №" + counter++,
                 random.nextInt(10, 50),
                 random.nextInt(10, 40),
                 random.nextInt(5, 10),
@@ -64,7 +66,7 @@ public class FoodFabric {
     private Apple makeApple()
     {
         return new Apple(
-                "Супер яблоко",
+                "Яблоко №" + counter++,
                 random.nextInt(10, 50),
                 random.nextInt(10, 40),
                 random.nextInt(5, 10),

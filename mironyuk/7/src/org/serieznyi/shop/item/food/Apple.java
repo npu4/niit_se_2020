@@ -10,7 +10,21 @@ final public class Apple extends FoodItem {
     }
 
     public enum Color {
-        RED, GREEN, YELLOW
+        RED("Красное"),
+        GREEN("Зеленое"),
+        ORANGE("Оранжевое"),
+        YELLOW("Желтое");
+
+        private final String color;
+
+        Color(String color) {
+            this.color = color;
+        }
+
+        @Override
+        public String toString() {
+            return color;
+        }
     }
 
     public Apple(String name, int price, int calorific, int expirationDateInDays, Color color) {

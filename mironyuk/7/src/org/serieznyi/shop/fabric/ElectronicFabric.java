@@ -12,6 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 
 public class ElectronicFabric {
+    private static int counter = 1;
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
 
     public void fillShopWithElectronicGoods(Collection<? super ElectronicItem> shop)
@@ -30,7 +31,7 @@ public class ElectronicFabric {
         generators.add(this::makeTv);
         generators.add(this::makeRefrigerator);
 
-        for (int i = 0 ; i < random.nextInt(2, 5) ; i++) {
+        for (int i = 0 ; i < random.nextInt(2, 10) ; i++) {
             items.add(generators.get(random.nextInt(0, generators.size())).get());
         }
 
@@ -40,7 +41,7 @@ public class ElectronicFabric {
     private TV makeTv()
     {
         return new TV(
-                "Телевизор",
+                "Телевизор №" + counter++,
                 random.nextInt(500, 1000),
                 random.nextInt(300, 500),
                 random.nextInt(1, 100)
@@ -50,7 +51,7 @@ public class ElectronicFabric {
     private Refrigerator makeRefrigerator()
     {
         return new Refrigerator(
-                "Просто холодильник",
+                "Холодильник №" + counter++,
                 random.nextInt(500, 1000),
                 random.nextInt(300, 500),
                 random.nextInt(1, 5)
