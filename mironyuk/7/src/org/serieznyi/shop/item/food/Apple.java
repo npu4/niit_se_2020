@@ -9,7 +9,7 @@ final public class Apple extends FoodItem {
         return color;
     }
 
-    enum Color {
+    public enum Color {
         RED, GREEN, YELLOW
     }
 
