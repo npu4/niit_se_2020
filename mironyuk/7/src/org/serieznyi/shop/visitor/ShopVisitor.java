@@ -5,5 +5,10 @@ import org.serieznyi.shop.item.ShopItem;
 import java.util.Collection;
 
 public interface ShopVisitor {
-    public void visitShop(Collection<? extends ShopItem> shop);
+    void visitShop(Collection<? extends ShopItem> shop);
+
+    default void say(String message)
+    {
+        System.out.println(getClass().getSimpleName() + ": " + message);
+    }
 }

@@ -11,12 +11,7 @@ final public class RichVisitor implements ShopVisitor {
     @Override
     public void visitShop(Collection<? extends ShopItem> shop) {
         if (shop.size() == 0) {
-            String message = String.format(
-                    "%s: Похоже в магазине нет товаров",
-                    getClass().getSimpleName()
-            );
-
-            System.out.println(message);
+            say("Похоже в магазине нет товаров");
 
             return;
         }
@@ -26,9 +21,8 @@ final public class RichVisitor implements ShopVisitor {
         while (iterator.hasNext()) {
             ShopItem item = iterator.next();
             if (i % 2 == 0) {
-                String message = format("%s: %s куплен по %s", getClass().getSimpleName(), item.getName(), item.getPrice());
-                System.out.println(message);
                 iterator.remove();
+                say(format("%s куплен по %s", item.getName(), item.getPrice()));
             }
 
             i++;
