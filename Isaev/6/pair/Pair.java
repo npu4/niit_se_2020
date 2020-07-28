@@ -2,23 +2,23 @@ package pair;
 
 import java.util.Objects;
 
-public class Pair<String,Integer> {
+public class Pair<A, B> {
 
-    private String name;
-    private Integer age;
+    private A first;
+    private B second;
 
-    public Pair(String name, Integer age) {
-        this.name = name;
-        this.age = age;
+    public Pair(A first, B second) {
+        this.first = first;
+        this.second = second;
     }
     
-    public String getFirst(){
-        return name;
+    public A getFirst(){
+        return first;
 
     }
 
-    public Integer getSecond(){
-        return age;
+    public B getSecond(){
+        return second;
 
     }
 
@@ -27,12 +27,14 @@ public class Pair<String,Integer> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pair<?, ?> pair = (Pair<?, ?>) o;
-        return Objects.equals(name, pair.name) &&
-                Objects.equals(age, pair.age);
+        return Objects.equals(first, pair.first) &&
+                Objects.equals(second, pair.second);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, age);
+        return Objects.hash(first);
     }
+
+
 }

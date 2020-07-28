@@ -1,32 +1,28 @@
 package animal;
 
+import pair.Pair;
+
 import java.util.*;
 
 public class animalMain {
     public static void main(String[] args) {
-        Animal Dog = new Animal("Ulk", "Dog");
-        Animal Cat = new Animal("Charley", "Cat");
-        Animal Rabbit = new Animal("Honey", "Rabbit");
-        Animal Bear = new Animal("Misha", "Bear");
-        Animal Spider = new Animal("Kirs", "Spider");
-        ArrayList<AnimalToFavouriteFood> animals = new ArrayList<>();
-        animals.add(new AnimalToFavouriteFood(Dog, "Bone"));
-        animals.add(new AnimalToFavouriteFood(Cat, "Fish"));
-        animals.add(new AnimalToFavouriteFood(Rabbit, "Carrot"));
-        animals.add(new AnimalToFavouriteFood(Bear, "Honey"));
-        animals.add(new AnimalToFavouriteFood(Spider, "Fly"));
+        List<Pair<Animal, String>> animals = new ArrayList<>();
+        animals.add(new Pair<>(new Animal("Ulk", "Dog"), "Bone"));
+        animals.add(new Pair<>(new Animal("Charley", "Cat"), "Fish"));
+        animals.add(new Pair<>(new Animal("Honey", "Rabbit"), "Carrot"));
+        animals.add(new Pair<>(new Animal("Misha", "Bear"), "Honey"));
+        animals.add(new Pair<>(new Animal("Kirs", "Spider"), "Fly"));
         feedAnimals(animals);
 
 
     }
 
-    public static void feedAnimals(ArrayList<AnimalToFavouriteFood> animals) {
-        int numberOfLuckyAnimal = new Random().nextInt(5);
+    public static void feedAnimals(List<Pair<Animal, String>> animals) {
         for (int i = 0; i < animals.size(); i++) {
-            if (i == numberOfLuckyAnimal) {
-                System.out.println("Счастливое животное " + animals.get(i).animal.toString() + " получает двойную порцию " + animals.get(i).getFavouriteFood());
+            if (i == new Random().nextInt(5)) {
+                System.out.println("Счастливое животное " + animals.get(i).getFirst().getName() + " получает двойную порцию " + animals.get(i).getSecond());
             } else
-                System.out.println(String.format("Животное " + animals.get(i).animal.toString() + " с удовольствием съедает " + animals.get(i).getFavouriteFood()));
+                System.out.println("Животное " + animals.get(i).getFirst().getName() + " с удовольствием съедает " + animals.get(i).getSecond());
         }
     }
 

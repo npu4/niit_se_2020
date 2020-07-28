@@ -2,45 +2,54 @@ package triple;
 
 import java.util.Objects;
 
-public class Triple<String, List>{
+public class Triple<A, B,C>{
 
-    private String name;
-    private java.util.List<Integer> ageToPhoneNumber;
+    private A first;
+    private B second;
+    private C third;
 
-    public Triple(String name, java.util.List<Integer> ageToPhoneNumber) throws Exception {
-        this.name = name;
-        this.ageToPhoneNumber = ageToPhoneNumber;
-        if (ageToPhoneNumber.size()!=2){
-            throw  new Exception("Please input age and work experience");
-        }
+    public Triple(A first, B second, C third) {
+        this.first = first;
+        this.second = second;
+        this.third = third;
     }
 
-    public String getFirst(){
-        return name;
-
+    public A getFirst() {
+        return first;
     }
 
-    public Integer getSecond(){
-        return (Integer) ageToPhoneNumber.get(0);
-
+    public B getSecond() {
+        return second;
     }
 
-    public Integer getThird(){
-        return (Integer) ageToPhoneNumber.get(1);
-
+    public C getThird() {
+        return third;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Triple<?, ?> triple = (Triple<?, ?>) o;
-        return Objects.equals(name, triple.name) &&
-                Objects.equals(ageToPhoneNumber, triple.ageToPhoneNumber);
+        Triple<?, ?, ?> triple = (Triple<?, ?, ?>) o;
+        return Objects.equals(first, triple.first) &&
+                Objects.equals(second, triple.second) &&
+                Objects.equals(third, triple.third);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, ageToPhoneNumber);
+        return Objects.hash(first);
+    }
+
+    @Override
+    public String toString() {
+        return "Triple{" +
+                "first=" + first +
+                ", second=" + second +
+                ", third=" + third +
+                '}';
     }
 }
+
+
+

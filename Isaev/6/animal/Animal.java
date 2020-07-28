@@ -1,6 +1,6 @@
 package animal;
 
-public class Animal<String> {
+public class Animal {
     private String name;
     private String type;
 
