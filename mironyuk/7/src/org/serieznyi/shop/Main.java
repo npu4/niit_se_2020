@@ -23,8 +23,8 @@ public class Main {
     List<Collection<? extends ShopItem>> shops = makeAndFillShops();
 
     System.out.println("Запускаем покупателей");
-    for (ShopVisitor visitor: visitors) {
-      for (Collection<? extends ShopItem> shop: shops) {
+    for (ShopVisitor visitor : visitors) {
+      for (Collection<? extends ShopItem> shop : shops) {
         visitor.visitShop(shop);
       }
     }

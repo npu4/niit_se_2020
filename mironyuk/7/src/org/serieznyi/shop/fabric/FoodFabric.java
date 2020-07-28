@@ -13,60 +13,57 @@ import java.util.concurrent.ThreadLocalRandom;
 import static java.lang.String.format;
 
 public class FoodFabric {
-    private static int counter = 1;
+  private static int counter = 1;
 
-    private final ThreadLocalRandom random = ThreadLocalRandom.current();
-    private final AppleFactory appleFactory;
+  private final ThreadLocalRandom random = ThreadLocalRandom.current();
+  private final AppleFactory appleFactory;
 
-    public FoodFabric(AppleFactory appleFactory)
-    {
-        this.appleFactory = appleFactory;
-    }
+  public FoodFabric(AppleFactory appleFactory) {
+    this.appleFactory = appleFactory;
+  }
 
-    public void fillShopWithFood(Collection<? super FoodItem> shop)
-    {
-        Collection<Apple> apples = generateApples();
+  public void fillShopWithFood(Collection<? super FoodItem> shop) {
+    Collection<Apple> apples = generateApples();
 
-        shop.addAll(apples);
+    shop.addAll(apples);
 
-        Collection<Bread> breads = generateBread();
+    Collection<Bread> breads = generateBread();
 
-        shop.addAll(breads);
+    shop.addAll(breads);
 
-        System.out.println(format(
+    System.out.println(
+        format(
             "В магазин добавлены яблоки: %s и хлеб общим весом: %s",
             Arrays.toString(apples.stream().map(Apple::getColor).toArray(Apple.Color[]::new)),
-            breads.stream().map(Bread::getWeightInGrams).reduce(0, Integer::sum)
-        ));
+            breads.stream().map(Bread::getWeightInGrams).reduce(0, Integer::sum)));
+  }
+
+  private Collection<Apple> generateApples() {
+    Collection<Apple> apples = new ArrayList<>();
+
+    for (int i = 0; i < random.nextInt(2, 5); i++) {
+      apples.add(appleFactory.create());
     }
 
-    private Collection<Apple> generateApples() {
-        Collection<Apple> apples = new ArrayList<>();
+    return apples;
+  }
 
-        for (int i = 0 ; i < random.nextInt(2, 5) ; i++) {
-            apples.add(appleFactory.create());
-        }
+  private Collection<Bread> generateBread() {
+    Collection<Bread> breads = new ArrayList<>();
 
-        return apples;
+    for (int i = 0; i < random.nextInt(2, 10); i++) {
+      breads.add(makeBread());
     }
 
-    private Collection<Bread> generateBread() {
-        Collection<Bread> breads = new ArrayList<>();
+    return breads;
+  }
 
-        for (int i = 0 ; i < random.nextInt(2, 10) ; i++) {
-            breads.add(makeBread());
-        }
-
-        return breads;
-    }
-
-    private Bread makeBread() {
-        return new Bread(
-                "Хлеб №" + counter++,
-                random.nextInt(10, 50),
-                random.nextInt(10, 40),
-                random.nextInt(5, 10),
-                random.nextInt(100, 400)
-        );
-    }
+  private Bread makeBread() {
+    return new Bread(
+        "Хлеб №" + counter++,
+        random.nextInt(10, 50),
+        random.nextInt(10, 40),
+        random.nextInt(5, 10),
+        random.nextInt(100, 400));
+  }
 }
