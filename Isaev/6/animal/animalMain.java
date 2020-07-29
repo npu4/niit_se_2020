@@ -18,8 +18,9 @@ public class animalMain {
     }
 
     public static void feedAnimals(List<Pair<Animal, String>> animals) {
+        int luckyAnimalNumber = new Random().nextInt(animals.size());
         for (int i = 0; i < animals.size(); i++) {
-            if (i == new Random().nextInt(5)) {
+            if (i == luckyAnimalNumber) {
                 System.out.println("Счастливое животное " + animals.get(i).getFirst().getName() + " получает двойную порцию " + animals.get(i).getSecond());
             } else
                 System.out.println("Животное " + animals.get(i).getFirst().getName() + " с удовольствием съедает " + animals.get(i).getSecond());
