@@ -36,5 +36,50 @@ public class Scene {
     public void setCharactersInGame(List<Character> charactersInGame) {
         this.charactersInGame = charactersInGame;
     }
+
+    public List<Character> findAllNotDead() {
+        List<Character> availableForAttack = new ArrayList<>();
+        for (Character ch : charactersInGame) {
+            if (ch != null) {
+                availableForAttack.add(ch);
+            }
+        }
+        return availableForAttack;
+    }
+
+    public List<Character> findAllEnemies(Character self) {
+        List<Character> availableAlive = findAllNotDead();
+        List<Character> availableEnemies = new ArrayList<>();
+        for (Character ch : availableAlive) {
+            if (ch != self) {
+                availableEnemies.add(ch);
+            }
+        }
+        return availableEnemies;
+    }
+
+    public List<Character> findAllNeighbours(Character self) {
+        int position = charactersInGame.indexOf(self);
+        List<Character> neighbours = new ArrayList<>();
+
+        if (charactersInGame.get(Math.abs(position - 1)) != null) {
+            neighbours.add(charactersInGame.get(Math.abs(position - 1)));
+        }
+        if (charactersInGame.get((position + 1) % 10) != null && charactersInGame.size() > (position + 2) % 10) {
+            neighbours.add(charactersInGame.get((position + 1) % 10));
+        }
+
+        return neighbours;
+    }
+
+    boolean gameIsFinished() {
+        int playersInGame = 0;
+        for (Character character : charactersInGame) {
+            if (character != null) {
+                playersInGame++;
+            }
+        }
+        return playersInGame < 2;
+    }
 }
 

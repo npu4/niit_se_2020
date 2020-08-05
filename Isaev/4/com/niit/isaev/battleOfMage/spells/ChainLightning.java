@@ -12,13 +12,12 @@ public class ChainLightning extends Spell {
     }
 
     @Override
-    public void cast(List<Character> list, Character character) {
-        for (Character chars : list) {
-            if (list.get(list.indexOf(chars)) != null && !character.getName().equals(chars.getName())) {
-                chars.setHealth(chars.getHealth() - DAMAGE);
-                System.out.println("Персонаж - " + chars.getName() + " получает урон от цепной молнии:" + DAMAGE);
-            }
+    public void cast(List<Character> allNotDead, Character executor, List<Character> allEnemies, List<Character> allNeighbour) {
+        for (Character chars : allEnemies) {
+            chars.setHealth(chars.getHealth() - DAMAGE);
+            System.out.println("Персонаж - " + chars.getName() + " получает урон от цепной молнии:" + DAMAGE);
         }
-
     }
+
 }
+
