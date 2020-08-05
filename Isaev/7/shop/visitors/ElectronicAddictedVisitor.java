@@ -12,7 +12,7 @@ public class ElectronicAddictedVisitor implements ShopVisitor {
         ShopItem itemToBuy = null;
         for (ShopItem item : list) {
             if (item instanceof ElectronicItem) {
-                item.toString();
+                System.out.println(item.toString());
                 if (((ElectronicItem) item).getPowerConsumption() > powerConsumption) {
                     powerConsumption = ((ElectronicItem) item).getPowerConsumption();
                     itemToBuy = item;
@@ -21,7 +21,9 @@ public class ElectronicAddictedVisitor implements ShopVisitor {
             }
         }
 
-        System.out.println(itemToBuy.getItemName() + " куплен по цене:" + itemToBuy.getSalePrice());
-        list.remove(itemToBuy);
+        System.out.println(itemToBuy.getItemName() + " куплен клиентом,разбирающимся в электронике по цене:" + itemToBuy.getSalePrice());
+        if (powerConsumption > 0){
+            list.remove(itemToBuy);
+        }
     }
 }

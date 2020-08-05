@@ -8,7 +8,7 @@ public class RichVisitor implements ShopVisitor {
     @Override
     public void visitShop(Collection<? extends ShopItem> list) {
         for (ShopItem item : list) {
-            System.out.println(item.getItemName() + " куплен по цене:" + item.getSalePrice());
+            System.out.println(item.getItemName() + " куплен богатым клиентом по цене:" + item.getSalePrice());
         }
         list.removeAll(list);
     }

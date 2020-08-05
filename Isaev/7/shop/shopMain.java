@@ -44,6 +44,7 @@ public class shopMain {
         foodFactory.fillShopWithFood(itemShopTwo, 5);
 
         electronicAddictedVisitor.visitShop(itemShop);
+        electronicAddictedVisitor.visitShop(electronicShop);
         iAmJustLookingVisitor.visitShop(itemShop);
         richVisitor.visitShop(electronicShop);
 
