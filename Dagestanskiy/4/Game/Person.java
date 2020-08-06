@@ -1,6 +1,6 @@
 package Game;
 
-public class Person {
+class Person {
     int positionNumber;
     String namePerson;
     int health;
@@ -9,32 +9,10 @@ public class Person {
     public Person(int positionNumber, String namePerson) {
         this.positionNumber = positionNumber;
         this.namePerson = namePerson;
-        this.health = health;
-        this.spell = spell;
-    }
-
-    public int getPositionNumber() {
-        return positionNumber;
-    }
-
-    public void setPositionNumber(int positionNumber) {
-        this.positionNumber = positionNumber;
-    }
-
-    public String getNamePerson() {
-        return namePerson;
-    }
-
-    public void setNamePerson(String namePerson) {
-        this.namePerson = namePerson;
     }
 
     public int getHealth() {
         return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
     }
 
     public String getNameClass(){
