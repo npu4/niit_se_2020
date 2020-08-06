@@ -20,4 +20,13 @@ public class Animal {
         this.color = color;
         this.weight = weight;
     }
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "name='" + name + '\'' +
+                ", color='" + color + '\'' +
+                ", weight=" + weight +
+                '}';
+    }
 }

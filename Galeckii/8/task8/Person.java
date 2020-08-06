@@ -8,9 +8,9 @@ import task8.annotations.XmlTypeName;
 public class Person {
     @XmlName(fieldName = "Имя")
     String name;
-    @XmlName(fieldName = "Фамилия")
-    String lastName;
     @XmlIgnore
+    String lastName;
+    @XmlName(fieldName = "Возраст")
     int age;
 
     public Person() {
@@ -20,5 +20,14 @@ public class Person {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                '}';
     }
 }
