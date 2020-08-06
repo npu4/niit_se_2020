@@ -1,4 +1,5 @@
-public class Animal {
+
+class Animal {
     String typeAnimal;
     String name;
 
