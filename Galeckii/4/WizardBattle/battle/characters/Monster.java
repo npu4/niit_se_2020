@@ -1,5 +1,7 @@
 package battle.characters;
 
+import battle.GameLog;
+
 import java.util.Random;
 
 public class Monster extends Character {
@@ -13,18 +15,25 @@ public class Monster extends Character {
     }
 
     @Override
-    public void attack(Character[] characters) {
+    public void attack(Character[] characters, GameLog gameLog) {
         int targetPosition;
+        String action;
         while (true) {
             targetPosition = new Random().nextInt(characters.length);
 
             if (characters[targetPosition] != this && characters[targetPosition] != null) {
                 characters[targetPosition].setHealth(characters[targetPosition].getHealth() - ATTACK_DAMAGE);
-                System.out.printf("%s атакует %s и наносит %d урона\n\n", this.getName(), characters[targetPosition].getName(), ATTACK_DAMAGE);
+                action = String.format("%s атакует %s и наносит %d урона\n",
+                        this.getName(), characters[targetPosition].getName(), ATTACK_DAMAGE);
+                gameLog.addAction(action);
                 break;
             }
         }
 
-        isTargetDead(characters, targetPosition);
+        isTargetDead(characters, targetPosition, gameLog);
+    }
+
+    public int getAttackDamage() {
+        return ATTACK_DAMAGE;
     }
 }
