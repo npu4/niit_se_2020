@@ -3,17 +3,12 @@ package org.serieznyi.serialization.serializer;
 import org.serieznyi.serialization.serializer.encoder.XmlEncoder;
 import org.serieznyi.serialization.serializer.exception.FormatNotSupportedException;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class Serializer {
   private final Normalizer normalizer = new Normalizer();
-  private final List<Encoder> encoders =
-      new ArrayList<Encoder>() {
-        {
-          add(new XmlEncoder());
-        }
-      };
+  private final List<Encoder> encoders = Arrays.asList(new XmlEncoder());
 
   public Serializer() {}
 
