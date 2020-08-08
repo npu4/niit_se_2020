@@ -14,6 +14,11 @@ import java.lang.reflect.InvocationTargetException;
 public final class Normalizer {
   ObjectValue normalize(Object objectForNormalization) {
     Class<?> clazz = objectForNormalization.getClass();
+
+    if (!isNormalizationSupported(clazz)) {
+      throw NormalizerException.fromMessage("Class not marked by serialization annotation");
+    }
+
     String typeName = getTypeName(clazz);
     boolean skipNull = isSkipNull(clazz);
 
@@ -33,12 +38,12 @@ public final class Normalizer {
 
         if (isPrimitiveTypeField(declaredField)) {
           resultObject.addPrimitiveValue(fieldName, fieldObject.toString(), null);
-        } else {
-          if (fieldObject != null) {
-            resultObject.addObjectValue(fieldName, normalize(fieldObject));
-          } else if (fieldObject == null && !skipNull) {
+        } else if (fieldObject == null) {
+          if (!skipNull) {
             resultObject.addNullValue(fieldName);
           }
+        } else {
+          resultObject.addObjectValue(fieldName, normalize(fieldObject));
         }
       } catch (IllegalAccessException e) {
         throw new NormalizerException(e);
@@ -46,6 +51,10 @@ public final class Normalizer {
     }
 
     return resultObject;
+  }
+
+  private boolean isNormalizationSupported(Class<?> clazz) {
+    return clazz.isAnnotationPresent(Serialize.class);
   }
 
   Object denormalize(ObjectValue value, Class<?> clazz) {
@@ -120,8 +129,20 @@ public final class Normalizer {
   private Object castPrimitiveValue(Class<?> declaredFieldType, Object value) {
     Object result;
 
-    if (declaredFieldType.equals(int.class)) {
-      result = Integer.parseInt((String) value); // TODO
+    if (declaredFieldType.equals(short.class)) {
+      result = Short.parseShort((String) value);
+    } else if (declaredFieldType.equals(int.class)) {
+      result = Integer.parseInt((String) value);
+    } else if (declaredFieldType.equals(long.class)) {
+      result = Long.parseLong((String) value);
+    } else if (declaredFieldType.equals(float.class)) {
+      result = Float.parseFloat((String) value);
+    } else if (declaredFieldType.equals(double.class)) {
+      result = Double.parseDouble((String) value);
+    } else if (declaredFieldType.equals(boolean.class)) {
+      result = Boolean.parseBoolean((String) value);
+    } else if (declaredFieldType.equals(char.class)) {
+      result = ((String) value).charAt(0);
     } else {
       result = declaredFieldType.cast(value);
     }
@@ -136,10 +157,13 @@ public final class Normalizer {
   private boolean isPrimitiveTypeField(Field field) {
     Class<?> type = field.getType();
 
-    return type == float.class
+    return type == short.class
         || type == int.class
-        || type == short.class
+        || type == long.class
+        || type == float.class
+        || type == double.class
         || type == String.class
-        || type == double.class;
+        || type == boolean.class
+        || type == char.class;
   }
 }
