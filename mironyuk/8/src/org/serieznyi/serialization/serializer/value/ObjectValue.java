@@ -12,8 +12,8 @@ public final class ObjectValue extends Value<Map<String, Value<?>>> {
     this.typeName = typeName;
   }
 
-  public void addPrimitiveValue(String name, String value, PrimitiveValue.Type type) {
-    this.value.put(name, new PrimitiveValue(value, type));
+  public void addPrimitiveValue(String name, String value) {
+    this.value.put(name, new PrimitiveValue(value));
   }
 
   public void addNullValue(String name) {

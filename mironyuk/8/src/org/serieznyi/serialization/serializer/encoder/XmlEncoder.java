@@ -80,7 +80,7 @@ public class XmlEncoder implements Encoder {
         if (nodeText.equals(NULL_IDENTIFIER)) {
           objectValue.addNullValue(node.getNodeName());
         } else {
-          objectValue.addPrimitiveValue(node.getNodeName(), nodeText, null);
+          objectValue.addPrimitiveValue(node.getNodeName(), nodeText);
         }
       } else if (nodeChildesCount == 1 && firstChildType == Node.ELEMENT_NODE) {
         objectValue.addObjectValue(nodeName, xmlElementToObjectValue((Element) firstChild));

@@ -37,7 +37,7 @@ public final class Normalizer {
         String fieldName = getFieldName(declaredField);
 
         if (isPrimitiveTypeField(declaredField)) {
-          resultObject.addPrimitiveValue(fieldName, fieldObject.toString(), null);
+          resultObject.addPrimitiveValue(fieldName, fieldObject.toString());
         } else if (fieldObject == null) {
           if (!skipNull) {
             resultObject.addNullValue(fieldName);
