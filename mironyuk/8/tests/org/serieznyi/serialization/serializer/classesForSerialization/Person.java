@@ -12,9 +12,6 @@ public class Person {
     @SerializeName(value = "Возраст")
     double age;
 
-    @SerializeName(value = "Возраст")
-    double age;
-
     @SerializeIgnoreField
     String password;
 
