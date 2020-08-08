@@ -36,12 +36,12 @@ public final class Normalizer {
 
         String fieldName = getFieldName(declaredField);
 
-        if (isPrimitiveTypeField(declaredField)) {
-          resultObject.addPrimitiveValue(fieldName, fieldObject.toString());
-        } else if (fieldObject == null) {
+        if (fieldObject == null) {
           if (!skipNull) {
             resultObject.addNullValue(fieldName);
           }
+        } else if (isPrimitiveTypeField(declaredField)) {
+          resultObject.addPrimitiveValue(fieldName, fieldObject.toString());
         } else {
           resultObject.addObjectValue(fieldName, normalize(fieldObject));
         }
@@ -71,7 +71,13 @@ public final class Normalizer {
   private String getTypeName(Class<?> clazz) {
     Serialize serializeAnnotation = clazz.getAnnotation(Serialize.class);
 
-    return serializeAnnotation != null ? serializeAnnotation.typeName() : clazz.getName();
+    String typeName = clazz.getName();
+
+    if (serializeAnnotation != null && !serializeAnnotation.typeName().isEmpty()) {
+      typeName = serializeAnnotation.typeName();
+    }
+
+    return typeName;
   }
 
   private boolean isSkipNull(Class<?> clazz) {

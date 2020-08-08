@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Serialize {
   /** @return название типа класса который запишется в кодированную строку */
-  String typeName();
+  String typeName() default "";
 
   /** @return При false не инициализированные значения будут записаны в конечный результат */
   boolean skipNull() default true;
