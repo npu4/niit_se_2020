@@ -9,6 +9,11 @@ public class Main {
   public static void main(String[] args) {
     Person person = new Person("Василий", 22, "password123");
     person.friend = new Person("Алексей", 24, "password125");
+    person.rating = 21.0F;
+    person.favoriteChar = 'F';
+    person.hasChildes = true;
+    person.height = 181;
+    person.phone = 783308165733L;
 
     System.out.println("Создали объект для сериализации\n");
 
