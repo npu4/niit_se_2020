@@ -17,9 +17,9 @@ public class PlayGames {
 
         if (HelpUtil.qwestionAnswer("Хотите проиграть реплей?", scanner)) {
 
-            System.out.print("Введите имя файла - реплея ( name.txt ): ");
+            System.out.print("Введите путь\\имя файла  : ");
             String nameFile = scanner.nextLine();
-            try (FileReader reader = new FileReader("9\\com\\replays\\" + nameFile)) {
+            try (FileReader reader = new FileReader( nameFile)) {
                 Scanner scan = new Scanner(reader);
                 String resultRead = scan.nextLine();
                 String[] substrResult = resultRead.split("<");

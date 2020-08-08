@@ -20,10 +20,10 @@ public  class HelpUtil {
     }
 
     public static void writeStringToFile(String replay, Scanner scanner) {
-            System.out.print("Введите имя файла для сохранения реплея ( name.txt ): ");
+            System.out.print("Укажите путь к файлу  куда сохранить игру : ");
             String nameFile = scanner.nextLine();
 
-            try (FileWriter writer = new FileWriter("9\\com\\replays\\" + nameFile, false)) {
+            try (FileWriter writer = new FileWriter( nameFile, false)) {
                 writer.write(replay);
                 writer.flush();
                 writer.close();
