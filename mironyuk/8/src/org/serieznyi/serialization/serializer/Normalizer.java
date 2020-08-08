@@ -114,6 +114,7 @@ public final class Normalizer {
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
           InstantiationException {
     Constructor<?> declaredConstructor = clazz.getDeclaredConstructor();
+    declaredConstructor.setAccessible(true);
 
     Object object = declaredConstructor.newInstance();
 
