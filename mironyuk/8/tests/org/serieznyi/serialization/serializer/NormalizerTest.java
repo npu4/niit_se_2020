@@ -3,12 +3,12 @@ package org.serieznyi.serialization.serializer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.serieznyi.serialization.serializer.classesForSerialization.*;
-import org.serieznyi.serialization.serializer.classesForSerialization.supportedPrimitive.ClassWithPrimitiveDouble;
-import org.serieznyi.serialization.serializer.classesForSerialization.supportedPrimitive.ClassWithPrimitiveFloat;
-import org.serieznyi.serialization.serializer.classesForSerialization.supportedPrimitive.ClassWithPrimitiveInt;
-import org.serieznyi.serialization.serializer.classesForSerialization.unsupportedPrimitive.ClassWithArray;
-import org.serieznyi.serialization.serializer.classesForSerialization.unsupportedPrimitive.ClassWithCollection;
+import data.classesForNormalization.*;
+import data.classesForNormalization.supportedPrimitive.ClassWithPrimitiveDouble;
+import data.classesForNormalization.supportedPrimitive.ClassWithPrimitiveFloat;
+import data.classesForNormalization.supportedPrimitive.ClassWithPrimitiveInt;
+import data.classesForNormalization.unsupportedPrimitive.ClassWithArray;
+import data.classesForNormalization.unsupportedPrimitive.ClassWithCollection;
 import org.serieznyi.serialization.serializer.exception.NormalizerException;
 import org.serieznyi.serialization.serializer.value.ObjectValue;
 import org.serieznyi.serialization.serializer.value.Value;
@@ -18,11 +18,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NormalizerTest {
+final class NormalizerTest {
     private final Normalizer normalizer = new Normalizer();
 
     @Test
-    void failIfInClassNotPresentSerializeAnnotation()
+    void testWhatFailIfSerializeAnnotationNotPresentInClass()
     {
         NormalizerException thrown = assertThrows(
                 NormalizerException.class,
@@ -31,6 +31,18 @@ class NormalizerTest {
         );
 
         assertEquals(thrown.getMessage(), "Class not marked by serialization annotation");
+    }
+
+    @Test
+    void testWhatFailIfDefaultConstructorNotPresentInClass()
+    {
+        NormalizerException thrown = assertThrows(
+                NormalizerException.class,
+                () -> normalizer.normalize(new ClassWithoutDefaultConstructor("t1", "t2")),
+                "Fail if default constructor not present"
+        );
+
+        assertEquals(thrown.getMessage(), "Class doesn't have default constructor");
     }
 
     private static List<Object> objectsWithPrimitiveTypes() {
@@ -44,7 +56,7 @@ class NormalizerTest {
 
     @ParameterizedTest
     @MethodSource("objectsWithPrimitiveTypes")
-    void successNormalizePrimitiveTypes(Object object)
+    void testWhatPrimitiveTypesNormalisationIsWork(Object object)
     {
         ObjectValue objectValue = normalizer.normalize(object);
 
@@ -63,7 +75,7 @@ class NormalizerTest {
 
     @ParameterizedTest
     @MethodSource("objectsWithNotSupportedBasicTypes")
-    void failOnNotSupportedBasicTypes(Object object)
+    void testWhatFailOnNotSupportedBasicTypes(Object object)
     {
         NormalizerException thrown = assertThrows(
                 NormalizerException.class,
@@ -75,21 +87,21 @@ class NormalizerTest {
     }
 
     @Test
-    void successFieldNameOverride() {
+    void testWhatFieldNameOverrideIsWork() {
         ObjectValue objectValue = normalizer.normalize(new ClassWithOverriddenTypeAndFieldName());
 
         assertTrue(objectValue.getValue().containsKey("newFieldName"),  "Значение лежит под правильным ключем");
     }
 
     @Test
-    void successTypeNameOverride() {
+    void testWhatTypeNameOverrideIsWork() {
         ObjectValue objectValue = normalizer.normalize(new ClassWithOverriddenTypeAndFieldName());
 
         assertEquals(objectValue.getTypeName(), "NewTypeName",  "Название типа контейнера переопределено");
     }
 
     @Test
-    void successIgnoreField() {
+    void testWhatIgnoreFieldIsWork() {
         ObjectValue objectValue = normalizer.normalize(new ClassWithIgnoredField());
 
         assertEquals(objectValue.getValue().size(), 1,  "В результате только одно поле");
@@ -98,7 +110,7 @@ class NormalizerTest {
     }
 
     @Test
-    void successNullFieldsSkip() {
+    void testWhatNullFieldsSkipIsWork() {
         ObjectValue objectValue = normalizer.normalize(new ClassWithNullSkipping());
 
         assertEquals(objectValue.getValue().size(), 1,  "В результате только одно поле");
@@ -107,7 +119,7 @@ class NormalizerTest {
     }
 
     @Test
-    void successWithNullField() {
+    void testWhaNormalisationWithNullFieldIsWork() {
         ObjectValue objectValue = normalizer.normalize(new ClassWithoutNullSkipping());
 
         assertEquals(objectValue.getValue().size(), 2,  "В результате только одно поле");

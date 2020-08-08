@@ -1,4 +1,4 @@
-package org.serieznyi.serialization.serializer.classesForSerialization;
+package data.classesForNormalization;
 
 import org.serieznyi.serialization.serializer.annotation.Serialize;
 import org.serieznyi.serialization.serializer.annotation.SerializeIgnoreField;

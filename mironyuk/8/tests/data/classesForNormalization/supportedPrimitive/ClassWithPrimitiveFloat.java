@@ -1,4 +1,4 @@
-package org.serieznyi.serialization.serializer.classesForSerialization.supportedPrimitive;
+package data.classesForNormalization.supportedPrimitive;
 
 import org.serieznyi.serialization.serializer.annotation.Serialize;
 

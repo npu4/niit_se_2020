@@ -19,6 +19,10 @@ public final class Normalizer {
       throw NormalizerException.fromMessage("Class not marked by serialization annotation");
     }
 
+    if (!isHasDefaultConstructor(clazz)) {
+      throw NormalizerException.fromMessage("Class doesn't have default constructor");
+    }
+
     String typeName = getTypeName(clazz);
     boolean skipNull = isSkipNull(clazz);
 
@@ -51,6 +55,16 @@ public final class Normalizer {
     }
 
     return resultObject;
+  }
+
+  private boolean isHasDefaultConstructor(Class<?> clazz) {
+    for (Constructor<?> declaredConstructor : clazz.getDeclaredConstructors()) {
+      if (declaredConstructor.getParameterCount() == 0) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private boolean isNormalizationSupported(Class<?> clazz) {

@@ -1,4 +1,4 @@
-package org.serieznyi.serialization.serializer.classesForSerialization;
+package data.classesForNormalization;
 
 public class ClassWithoutSerializeAnnotation {
     public String fieldOne = "one";
