@@ -24,10 +24,6 @@ public final class ObjectValue extends Value<Map<String, Value<?>>> {
     this.value.put(name, value);
   }
 
-  public void addValue(String name, Value<?> value) {
-    this.value.put(name, value);
-  }
-
   public String getTypeName() {
     return typeName;
   }
