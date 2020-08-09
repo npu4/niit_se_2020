@@ -1,5 +1,5 @@
 package data.classesForNormalization;
 
 public class ClassWithoutSerializeAnnotation {
-    public String fieldOne = "one";
+  public String fieldOne = "one";
 }

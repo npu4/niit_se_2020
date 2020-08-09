@@ -40,11 +40,15 @@ public final class ObjectValue extends Value<SortedMap<String, Value<?>>> {
 
   @Override
   public String toString() {
-    return "ObjectValue{" +
-            "typeName='" + typeName + '\'' +
-            ", type=" + type +
-            ", value=" + value +
-            '}';
+    return "ObjectValue{"
+        + "typeName='"
+        + typeName
+        + '\''
+        + ", type="
+        + type
+        + ", value="
+        + value
+        + '}';
   }
 
   @Override

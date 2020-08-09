@@ -19,18 +19,9 @@ public abstract class Value<T> {
     return value;
   }
 
-  public enum Type {
-    PRIMITIVE,
-    OBJECT,
-    NULL
-  }
-
   @Override
   public String toString() {
-    return "Value{" +
-            "type=" + type +
-            ", value=" + value +
-            '}';
+    return "Value{" + "type=" + type + ", value=" + value + '}';
   }
 
   @Override
@@ -38,12 +29,17 @@ public abstract class Value<T> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Value<?> value1 = (Value<?>) o;
-    return type == value1.type &&
-            value.equals(value1.value);
+    return type == value1.type && value.equals(value1.value);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(type, value);
+  }
+
+  public enum Type {
+    PRIMITIVE,
+    OBJECT,
+    NULL
   }
 }

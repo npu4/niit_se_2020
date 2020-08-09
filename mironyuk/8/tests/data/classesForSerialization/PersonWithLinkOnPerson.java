@@ -41,14 +41,14 @@ public final class PersonWithLinkOnPerson {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     PersonWithLinkOnPerson that = (PersonWithLinkOnPerson) o;
-    return age == that.age &&
-            phone == that.phone &&
-            height == that.height &&
-            Float.compare(that.rating, rating) == 0 &&
-            hasChildes == that.hasChildes &&
-            favoriteChar == that.favoriteChar &&
-            firstName.equals(that.firstName) &&
-            friend.equals(that.friend);
+    return age == that.age
+        && phone == that.phone
+        && height == that.height
+        && Float.compare(that.rating, rating) == 0
+        && hasChildes == that.hasChildes
+        && favoriteChar == that.favoriteChar
+        && firstName.equals(that.firstName)
+        && friend.equals(that.friend);
   }
 
   @Override
@@ -58,15 +58,24 @@ public final class PersonWithLinkOnPerson {
 
   @Override
   public String toString() {
-    return "PersonWithLinkOnPerson{" +
-            "firstName='" + firstName + '\'' +
-            ", age=" + age +
-            ", phone=" + phone +
-            ", height=" + height +
-            ", rating=" + rating +
-            ", hasChildes=" + hasChildes +
-            ", favoriteChar=" + favoriteChar +
-            ", friend=" + friend +
-            '}';
+    return "PersonWithLinkOnPerson{"
+        + "firstName='"
+        + firstName
+        + '\''
+        + ", age="
+        + age
+        + ", phone="
+        + phone
+        + ", height="
+        + height
+        + ", rating="
+        + rating
+        + ", hasChildes="
+        + hasChildes
+        + ", favoriteChar="
+        + favoriteChar
+        + ", friend="
+        + friend
+        + '}';
   }
 }

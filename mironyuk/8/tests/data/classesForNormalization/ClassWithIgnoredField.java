@@ -5,8 +5,7 @@ import org.serieznyi.serialization.serializer.annotation.SerializeIgnoreField;
 
 @Serialize
 public class ClassWithIgnoredField {
-    public String fieldOne = "one";
+  public String fieldOne = "one";
 
-    @SerializeIgnoreField
-    public String fieldTwo = "two";
+  @SerializeIgnoreField public String fieldTwo = "two";
 }

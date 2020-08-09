@@ -32,14 +32,15 @@ public final class PersonWithPrimitiveFieldsWithOverriddenNames {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    PersonWithPrimitiveFieldsWithOverriddenNames that = (PersonWithPrimitiveFieldsWithOverriddenNames) o;
-    return age == that.age &&
-            phone == that.phone &&
-            height == that.height &&
-            Float.compare(that.rating, rating) == 0 &&
-            hasChildes == that.hasChildes &&
-            favoriteChar == that.favoriteChar &&
-            firstName.equals(that.firstName);
+    PersonWithPrimitiveFieldsWithOverriddenNames that =
+        (PersonWithPrimitiveFieldsWithOverriddenNames) o;
+    return age == that.age
+        && phone == that.phone
+        && height == that.height
+        && Float.compare(that.rating, rating) == 0
+        && hasChildes == that.hasChildes
+        && favoriteChar == that.favoriteChar
+        && firstName.equals(that.firstName);
   }
 
   @Override
@@ -49,14 +50,22 @@ public final class PersonWithPrimitiveFieldsWithOverriddenNames {
 
   @Override
   public String toString() {
-    return "PersonWithPrimitiveFieldsWithOverriddenNames{" +
-            "firstName='" + firstName + '\'' +
-            ", age=" + age +
-            ", phone=" + phone +
-            ", height=" + height +
-            ", rating=" + rating +
-            ", hasChildes=" + hasChildes +
-            ", favoriteChar=" + favoriteChar +
-            '}';
+    return "PersonWithPrimitiveFieldsWithOverriddenNames{"
+        + "firstName='"
+        + firstName
+        + '\''
+        + ", age="
+        + age
+        + ", phone="
+        + phone
+        + ", height="
+        + height
+        + ", rating="
+        + rating
+        + ", hasChildes="
+        + hasChildes
+        + ", favoriteChar="
+        + favoriteChar
+        + '}';
   }
 }

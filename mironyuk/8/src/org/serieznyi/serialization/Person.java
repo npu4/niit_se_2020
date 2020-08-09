@@ -42,16 +42,27 @@ public final class Person {
 
   @Override
   public String toString() {
-    return "Person{" +
-            "firstName='" + firstName + '\'' +
-            ", age=" + age +
-            ", phone=" + phone +
-            ", height=" + height +
-            ", rating=" + rating +
-            ", hasChildes=" + hasChildes +
-            ", password='" + password + '\'' +
-            ", friend=" + friend +
-            ", favoriteChar=" + favoriteChar +
-            '}';
+    return "Person{"
+        + "firstName='"
+        + firstName
+        + '\''
+        + ", age="
+        + age
+        + ", phone="
+        + phone
+        + ", height="
+        + height
+        + ", rating="
+        + rating
+        + ", hasChildes="
+        + hasChildes
+        + ", password='"
+        + password
+        + '\''
+        + ", friend="
+        + friend
+        + ", favoriteChar="
+        + favoriteChar
+        + '}';
   }
 }

@@ -5,6 +5,6 @@ import org.serieznyi.serialization.serializer.annotation.SerializeName;
 
 @Serialize(typeName = "NewTypeName")
 public class ClassWithOverriddenTypeAndFieldName {
-    @SerializeName("newFieldName")
-    public String fieldOne = "one";
+  @SerializeName("newFieldName")
+  public String fieldOne = "one";
 }

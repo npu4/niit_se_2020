@@ -15,36 +15,37 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 final class SerializerTest {
-    private final Serializer serializer = new Serializer();
+  private final Serializer serializer = new Serializer();
 
-    private static List<Pair<Object, Serializer.Format>> objects() {
-        List<Object> classesForSerialization = Arrays.asList(
+  private static List<Pair<Object, Serializer.Format>> objects() {
+    List<Object> classesForSerialization =
+        Arrays.asList(
             new PersonWithPrimitiveFieldsWithoutOverriddenNames(),
             new PersonWithPrimitiveFieldsWithOverriddenNames(),
-            new PersonWithLinkOnPerson(new PersonWithPrimitiveFieldsWithoutOverriddenNames())
-        );
+            new PersonWithLinkOnPerson(new PersonWithPrimitiveFieldsWithoutOverriddenNames()));
 
-        List<Pair<Object, Serializer.Format>> data = new ArrayList<>();
+    List<Pair<Object, Serializer.Format>> data = new ArrayList<>();
 
-        for (Serializer.Format format : Serializer.Format.values()) {
-            for (Object o : classesForSerialization) {
-                data.add(new Pair<>(o, format));
-            }
-        }
-
-        return data;
+    for (Serializer.Format format : Serializer.Format.values()) {
+      for (Object o : classesForSerialization) {
+        data.add(new Pair<>(o, format));
+      }
     }
 
-    @ParameterizedTest
-    @MethodSource("objects")
-    void testWhatSerializingAndDeserializingIsSuccessful(Pair<Object, Serializer.Format> pair) throws FormatNotSupportedException {
-        Object object = pair.getFirst();
-        Serializer.Format format = pair.getSecond();
+    return data;
+  }
 
-        String serializeResult = serializer.serialize(object, format);
+  @ParameterizedTest
+  @MethodSource("objects")
+  void testWhatSerializingAndDeserializingIsSuccessful(Pair<Object, Serializer.Format> pair)
+      throws FormatNotSupportedException {
+    Object object = pair.getFirst();
+    Serializer.Format format = pair.getSecond();
 
-        Object deserializedObject = serializer.deserialize(serializeResult, object.getClass(), format);
+    String serializeResult = serializer.serialize(object, format);
 
-        assertEquals(object, deserializedObject, "Десериализованный объект равен сериализованному");
-    }
+    Object deserializedObject = serializer.deserialize(serializeResult, object.getClass(), format);
+
+    assertEquals(object, deserializedObject, "Десериализованный объект равен сериализованному");
+  }
 }
