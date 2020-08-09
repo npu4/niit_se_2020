@@ -22,7 +22,6 @@ public abstract class Value<T> {
   public enum Type {
     PRIMITIVE,
     OBJECT,
-    COLLECTION,
     NULL
   }
 
