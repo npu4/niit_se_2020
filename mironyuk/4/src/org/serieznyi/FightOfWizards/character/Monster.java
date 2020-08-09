@@ -16,7 +16,7 @@ public final class Monster extends Character {
   }
 
   @Override
-  public void action(Scene scene) {
+  public void applyAction(Scene scene) {
     Character opponent = scene.getRandomOpponentFor(this);
 
     LOGGER.characterAttack(this, opponent);

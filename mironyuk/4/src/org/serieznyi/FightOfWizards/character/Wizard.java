@@ -38,7 +38,7 @@ public final class Wizard extends Character {
   }
 
   @Override
-  public void action(Scene scene) {
+  public void applyAction(Scene scene) {
     Spell spell = takeSomeSpell();
 
     LOGGER.readSpell(this, spell);

@@ -129,7 +129,7 @@ public class Scene {
             "--------------------- Ходит %s \"%s\" ---------------------",
             character.getType().toString().toLowerCase(), character.getName());
 
-        character.action(this);
+        character.applyAction(this);
 
         checkBodies();
       }
