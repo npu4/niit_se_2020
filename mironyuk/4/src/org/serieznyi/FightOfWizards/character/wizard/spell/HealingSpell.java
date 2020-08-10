@@ -3,6 +3,7 @@ package org.serieznyi.FightOfWizards.character.wizard.spell;
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.HealingAction;
+import org.serieznyi.FightOfWizards.action.result.Result;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.logging.Logger;
@@ -40,7 +41,9 @@ public final class HealingSpell implements Spell {
             .withValue(healingStrength)
             .build();
 
-    if (wizard.reactOnAction(action)) {
+    Result result = wizard.reactOnAction(action);
+
+    if (result.isSuccessful()) {
       LOGGER.healing(wizard, healingStrength, wizard.getHealth());
 
       weakenSpell(wizard);

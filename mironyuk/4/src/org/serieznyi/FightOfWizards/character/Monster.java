@@ -3,6 +3,7 @@ package org.serieznyi.FightOfWizards.character;
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
+import org.serieznyi.FightOfWizards.action.result.Result;
 import org.serieznyi.FightOfWizards.logging.Logger;
 
 public final class Monster extends Character {
@@ -29,9 +30,9 @@ public final class Monster extends Character {
             .causePhysicalDamage(damageSize)
             .build();
 
-    boolean damaged = opponent.reactOnAction(action);
+    Result result = opponent.reactOnAction(action);
 
-    if (damaged) {
+    if (result.isSuccessful()) {
       LOGGER.takeDamageTo(this, opponent, damageSize);
     }
   }

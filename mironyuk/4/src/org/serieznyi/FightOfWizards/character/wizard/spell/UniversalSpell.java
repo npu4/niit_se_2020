@@ -2,6 +2,7 @@ package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.Action;
+import org.serieznyi.FightOfWizards.action.result.Result;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.logging.Logger;
@@ -61,7 +62,9 @@ public final class UniversalSpell implements Spell {
       Action action = actionCreator.apply(wizard).apply(opponent.getValue()).apply(value);
       Character character = opponent.getValue();
 
-      if (character.reactOnAction(action)) {
+      Result result = character.reactOnAction(action);
+
+      if (result.isSuccessful()) {
         damagedOpponents.add(character);
       }
     }

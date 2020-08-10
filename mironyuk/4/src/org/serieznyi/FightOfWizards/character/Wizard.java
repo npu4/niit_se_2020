@@ -3,6 +3,9 @@ package org.serieznyi.FightOfWizards.character;
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.action.HealingAction;
+import org.serieznyi.FightOfWizards.action.result.CausingDamageResult;
+import org.serieznyi.FightOfWizards.action.result.HealingResult;
+import org.serieznyi.FightOfWizards.action.result.Result;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.logging.Logger;
 
@@ -47,15 +50,19 @@ public final class Wizard extends Character {
   }
 
   @Override
-  public boolean reactOnHealingAction(HealingAction action) {
+  public Result reactOnHealingAction(HealingAction action) {
     int oldHealth = getHealth();
     int newHealth = increaseHealth(action.getValue());
 
-    return newHealth != oldHealth;
+    return new HealingResult(
+            newHealth != oldHealth,
+            newHealth - oldHealth,
+            newHealth
+    );
   }
 
   @Override
-  public boolean reactOnCausingDamageAction(CausingDamageAction action) {
+  public Result reactOnCausingDamageAction(CausingDamageAction action) {
     int oldHealth = getHealth();
     int damage = action.getDamage();
 
@@ -66,6 +73,11 @@ public final class Wizard extends Character {
 
     int newHealth = decreaseHealth(damage);
 
-    return oldHealth != newHealth;
+    return new CausingDamageResult(
+            oldHealth != newHealth,
+            damage,
+            action.getDamage(),
+            newHealth
+    );
   }
 }

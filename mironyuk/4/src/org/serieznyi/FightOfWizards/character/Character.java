@@ -4,6 +4,9 @@ import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.action.HealingAction;
+import org.serieznyi.FightOfWizards.action.result.CausingDamageResult;
+import org.serieznyi.FightOfWizards.action.result.NoneResult;
+import org.serieznyi.FightOfWizards.action.result.Result;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 public abstract class Character {
@@ -56,33 +59,38 @@ public abstract class Character {
    * @param action Действие применяемое к персонажу
    * @return boolean возвращает True если действие повлияло на персонажа
    */
-  public boolean reactOnAction(Action action) {
+  public Result reactOnAction(Action action) {
     if (action instanceof HealingAction) {
       return reactOnHealingAction((HealingAction) action);
     } else if (action instanceof CausingDamageAction) {
       return reactOnCausingDamageAction((CausingDamageAction) action);
     }
 
-    return false;
+    return NoneResult.INSTANCE;
   }
 
   /**
    * @param action Действие применяемое к персонажу
    * @return boolean возвращает True если действие повлияло на персонажа
    */
-  public boolean reactOnHealingAction(HealingAction action) {
-    return false;
+  public Result reactOnHealingAction(HealingAction action) {
+    return NoneResult.INSTANCE;
   }
 
   /**
    * @param action Действие применяемое к персонажу
    * @return boolean возвращает True если действие повлияло на персонажа
    */
-  public boolean reactOnCausingDamageAction(CausingDamageAction action) {
+  public Result reactOnCausingDamageAction(CausingDamageAction action) {
     int oldHealth = getHealth();
     int newHealth = decreaseHealth(action.getDamage());
 
-    return oldHealth != newHealth;
+    return new CausingDamageResult(
+            oldHealth != newHealth,
+            action.getDamage(),
+            action.getDamage(),
+            newHealth
+    );
   }
 
   public enum Type {
