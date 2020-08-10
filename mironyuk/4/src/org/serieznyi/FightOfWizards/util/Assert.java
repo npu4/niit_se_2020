@@ -14,14 +14,24 @@ public final class Assert {
     }
   }
 
-  public static void requireNotNull(Object str) {
-    Objects.requireNonNull(str);
+  public static void requireNotNull(Object value, String message) {
+    if (value == null) {
+      throw new IllegalArgumentException(message);
+    }
+  }
+
+  public static void requireNotNull(Object object) {
+    requireNotNull(object, "Объект не может быть пустым");
+  }
+
+  public static void greaterThan(int value, int minValue, String message) {
+    if (value < minValue) {
+      throw new IllegalArgumentException(message);
+    }
   }
 
   public static void greaterThan(int value, int minValue) {
-    if (value < minValue) {
-      throw new IllegalArgumentException("Значение должно быть больше " + minValue);
-    }
+    greaterThan(value, minValue, "Значение должно быть больше " + minValue);
   }
 
   public static <T> void requireNotEmptyArray(T[] array) {
@@ -32,11 +42,16 @@ public final class Assert {
     }
   }
 
+
   public static void requireNotEmptyCollection(Collection<?> collection) {
+      requireNotEmptyCollection(collection, "Коллекция не может быть пустой");
+  }
+
+  public static void requireNotEmptyCollection(Collection<?> collection, String message) {
     Objects.requireNonNull(collection);
 
     if (collection.isEmpty()) {
-      throw new IllegalArgumentException("Коллекция не может быть пустой");
+      throw new IllegalArgumentException(message);
     }
   }
 }

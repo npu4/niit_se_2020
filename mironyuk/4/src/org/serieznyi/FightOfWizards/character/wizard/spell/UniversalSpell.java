@@ -26,9 +26,8 @@ public final class UniversalSpell implements Spell {
   private final String description;
   private final Number value;
   private final BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
-  private final BiFunction<Character, Number, Action> actionCreator;
-  private final Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>>
-      successMessage;
+  private final Function<Character, Function<Character, Function<Number, Action>>> actionCreator;
+  private final Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> successMessage;
 
   private UniversalSpell(Builder builder) {
     name = builder.name;
@@ -59,7 +58,7 @@ public final class UniversalSpell implements Spell {
     Set<Character> damagedOpponents = new HashSet<>();
 
     for (Map.Entry<Integer, Character> opponent : opponents.entrySet()) {
-      Action action = actionCreator.apply(opponent.getValue(), value);
+      Action action = actionCreator.apply(wizard).apply(opponent.getValue()).apply(value);
       Character character = opponent.getValue();
 
       if (character.reactOnAction(action)) {
@@ -99,7 +98,7 @@ public final class UniversalSpell implements Spell {
     private String description;
     private Number value;
     private BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
-    private BiFunction<Character, Number, Action> actionCreator;
+    private Function<Character, Function<Character, Function<Number, Action>>> actionCreator;
     private Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>>
         successMessage;
 
@@ -139,7 +138,7 @@ public final class UniversalSpell implements Spell {
       return this;
     }
 
-    public Builder withActionCreator(BiFunction<Character, Number, Action> executor) {
+    public Builder withActionCreator(Function<Character, Function<Character, Function<Number, Action>>> executor) {
       this.actionCreator = executor;
 
       return this;

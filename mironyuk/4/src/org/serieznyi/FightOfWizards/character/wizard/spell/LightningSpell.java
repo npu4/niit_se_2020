@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
@@ -32,7 +33,14 @@ public final class LightningSpell implements Spell {
   public void cast(Character wizard, Scene scene) {
     Character opponent = scene.getRandomOpponentFor(wizard);
 
-    opponent.reactOnAction(CausingDamageAction.causeLightingDamage(damage));
+    Action action = CausingDamageAction
+            .builder()
+            .withAggressor(wizard)
+            .addTarget(opponent)
+            .causeLightingDamage(damage)
+            .build();
+
+    opponent.reactOnAction(action);
 
     LOGGER.takeDamageTo(wizard, this, opponent, damage);
   }

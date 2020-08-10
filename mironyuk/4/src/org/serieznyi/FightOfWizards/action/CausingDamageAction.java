@@ -2,31 +2,22 @@ package org.serieznyi.FightOfWizards.action;
 
 import org.serieznyi.FightOfWizards.util.Assert;
 
-public final class CausingDamageAction implements Action {
+
+public final class CausingDamageAction extends Action {
   private final Type type;
   private final int damage;
 
-  public CausingDamageAction(Type type, int damage) {
-    this.type = type;
-
-    Assert.greaterThan(damage, 1);
-    this.damage = damage;
+  public static CausingDamageAction.Builder builder()
+  {
+    return new CausingDamageAction.Builder();
   }
 
-  public static Action causeFireDamage(int value) {
-    return new CausingDamageAction(Type.FIRE, value);
-  }
+  private CausingDamageAction(Builder builder) {
+    super(builder);
 
-  public static Action causePhysicalDamage(int value) {
-    return new CausingDamageAction(Type.PHYSICAL, value);
-  }
+    this.type = builder.type;
 
-  public static Action causeMagicalDamage(int value) {
-    return new CausingDamageAction(Type.MAGICAL, value);
-  }
-
-  public static Action causeLightingDamage(int value) {
-    return new CausingDamageAction(Type.LIGHTNING, value);
+    this.damage = builder.damage;
   }
 
   public int getDamage() {
@@ -40,6 +31,68 @@ public final class CausingDamageAction implements Action {
   public Type getDamageType() {
     return type;
   }
+
+  public static class Builder extends Action.Builder<Builder> {
+    Type type;
+    int damage;
+
+    private Builder() {
+      super();
+    }
+
+    protected void check() {
+      super.check();
+
+      Assert.greaterThan(damage, 1, "Урон не может быть меньше единицы");
+    }
+
+    public CausingDamageAction build()
+    {
+      check();
+
+      return new CausingDamageAction(this);
+    }
+
+    public CausingDamageAction.Builder withDamage(int value) {
+      this.damage = value;
+
+      return this;
+    }
+
+    public CausingDamageAction.Builder withType(Type type) {
+      this.type = type;
+
+      return this;
+    }
+
+    public Builder causeFireDamage(int damage) {
+      type = Type.FIRE;
+      this.damage = damage;
+
+      return this;
+    }
+
+    public Builder causePhysicalDamage(int damage) {
+      type = Type.PHYSICAL;
+      this.damage = damage;
+
+      return this;
+    }
+
+    public Builder causeMagicalDamage(int damage) {
+      type = Type.MAGICAL;
+      this.damage = damage;
+
+      return this;
+    }
+
+    public Builder causeLightingDamage(int damage) {
+      type = Type.LIGHTNING;
+      this.damage = damage;
+
+      return this;
+    }
+}
 
   public enum Type {
     PHYSICAL,

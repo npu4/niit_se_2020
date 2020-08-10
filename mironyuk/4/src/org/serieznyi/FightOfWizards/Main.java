@@ -127,12 +127,15 @@ public class Main {
       Spell chainLightingSpell =
           UniversalSpell.builder()
               .withName("Цепная молния")
-              .withDescription(
-                  "Наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание.")
+              .withDescription("Наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание.")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c))
               .withValue(damageGenerator.get())
-              .withActionCreator(
-                  (character, value) -> CausingDamageAction.causeLightingDamage(value.intValue()))
+              .withActionCreator(a -> o -> v -> CausingDamageAction
+                      .builder()
+                      .withAggressor(a)
+                      .addTarget(o)
+                      .causeLightingDamage(v.intValue())
+                      .build())
               .withSuccessfulCallback(
                   w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
@@ -145,10 +148,13 @@ public class Main {
               .withDescription("Наносит урон всем монстрам")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
               .withValue(damageGenerator.get())
-              .withActionCreator(
-                  (character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
-              .withSuccessfulCallback(
-                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withActionCreator(a -> o -> v -> CausingDamageAction
+                      .builder()
+                      .withAggressor(a)
+                      .addTarget(o)
+                      .causeMagicalDamage(v.intValue())
+                      .build())
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(banishingMonstersSpell);
@@ -159,10 +165,13 @@ public class Main {
               .withDescription("Наносит урон всем магам")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.WIZARD))
               .withValue(damageGenerator.get())
-              .withActionCreator(
-                  (character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
-              .withSuccessfulCallback(
-                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withActionCreator(a -> o -> v -> CausingDamageAction
+                      .builder()
+                      .withAggressor(a)
+                      .addTarget(o)
+                      .causeMagicalDamage(v.intValue())
+                      .build())
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(migraineSpell);
@@ -173,10 +182,13 @@ public class Main {
               .withDescription("Наносит урон всем персонажам на четных позициях")
               .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
               .withValue(damageGenerator.get())
-              .withActionCreator(
-                  (character, value) -> CausingDamageAction.causeFireDamage(value.intValue()))
-              .withSuccessfulCallback(
-                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withActionCreator(a -> o -> v -> CausingDamageAction
+                      .builder()
+                      .withAggressor(a)
+                      .addTarget(o)
+                      .causeFireDamage(v.intValue())
+                      .build())
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
               .build();
 
       spells.add(wallOfFireSpell);

@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.logging.Logger;
 
@@ -21,7 +22,14 @@ public final class Monster extends Character {
 
     LOGGER.characterAttack(this, opponent);
 
-    boolean damaged = opponent.reactOnAction(CausingDamageAction.causePhysicalDamage(damageSize));
+    Action action = CausingDamageAction
+            .builder()
+            .withAggressor(this)
+            .addTarget(opponent)
+            .causePhysicalDamage(damageSize)
+            .build();
+
+    boolean damaged = opponent.reactOnAction(action);
 
     if (damaged) {
       LOGGER.takeDamageTo(this, opponent, damageSize);

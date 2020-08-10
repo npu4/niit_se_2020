@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
@@ -43,7 +44,14 @@ public final class FireTouchSpell implements Spell {
     if (opponent.isPresent()) {
       Character c = opponent.get();
 
-      c.reactOnAction(CausingDamageAction.causeFireDamage(damage));
+      Action action = CausingDamageAction
+              .builder()
+              .withAggressor(wizard)
+              .addTarget(c)
+              .causeFireDamage(damage)
+              .build();
+
+      c.reactOnAction(action);
 
       LOGGER.takeDamageTo(wizard, this, c, damage);
     } else {
