@@ -7,16 +7,16 @@ public class Firewall extends Spell {
     private final int ATTACK_DAMAGE = 4;
 
     @Override
-    public void cast(Character[] characters, Wizard attacker) {
-        System.out.println(attacker.getName() + " читает заклинание Стена огня");
+    public String cast(Character[] characters, Wizard attacker) {
+        StringBuilder action = new StringBuilder();
+        action.append(attacker.getName()).append(" читает заклинание Стена огня\n");
         for (int targetPosition = 0; targetPosition < characters.length; targetPosition += 2) {
             if (characters[targetPosition] != null) {
                 characters[targetPosition].setHealth(characters[targetPosition].getHealth() - ATTACK_DAMAGE);
-                System.out.printf("%s атакует %s и наносит %d урона\n",
-                        attacker.getName(), characters[targetPosition].getName(), ATTACK_DAMAGE);
-                isTargetDead(characters, targetPosition);
+                action.append(String.format("%s атакует %s и наносит %d урона\n",
+                        attacker.getName(), characters[targetPosition].getName(), ATTACK_DAMAGE));
             }
         }
-        System.out.println();
+        return action.toString();
     }
 }

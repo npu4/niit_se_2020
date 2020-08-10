@@ -1,5 +1,6 @@
 package battle.characters;
 
+import battle.GameLog;
 import battle.spell.*;
 
 import java.util.ArrayList;
@@ -21,8 +22,11 @@ public class Wizard extends Character {
     }
 
     @Override
-    public void attack(Character[] characters) {
-        bookOfSpells.get(new Random().nextInt(bookOfSpells.size())).cast(characters, this);
+    public void attack(Character[] characters, GameLog gameLog) {
+        Spell spell = bookOfSpells.get(new Random().nextInt(bookOfSpells.size()));
+        isTargetDead(characters, this.getPosition(), gameLog);
+        String action = spell.cast(characters, this);
+        gameLog.addAction(action);
     }
 
     public void setBookOfSpells() {

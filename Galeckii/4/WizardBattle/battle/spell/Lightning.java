@@ -9,19 +9,20 @@ public class Lightning extends Spell {
     private final int ATTACK_DAMAGE = 5;
 
     @Override
-    public void cast(Character[] characters, Wizard attacker) {
-
+    public String cast(Character[] characters, Wizard attacker) {
+        StringBuilder action = new StringBuilder();
+        action.append(attacker.getName()).append(" читает заклинание Молния\n");
         int targetPosition;
         while (true) {
             targetPosition = new Random().nextInt(characters.length);
             if (characters[targetPosition] != null && characters[targetPosition] != attacker) {
-                System.out.println(attacker.getName() + " читает заклинание Молния");
                 characters[targetPosition].setHealth(characters[targetPosition].getHealth() - ATTACK_DAMAGE);
-                System.out.printf("%s атакует %s и наносит %d урона\n\n", attacker.getName(), characters[targetPosition].getName(), ATTACK_DAMAGE);
+                action.append(String.format("%s атакует %s и наносит %d урона\n",
+                        attacker.getName(), characters[targetPosition].getName(), ATTACK_DAMAGE));
                 break;
             }
         }
 
-        isTargetDead(characters, targetPosition);
+        return action.toString();
     }
 }
