@@ -22,7 +22,7 @@ final public class Lecture {
 
     @Override
     public String toString() {
-    return name + "(" + date + ")";
+        return name + "(" + date + ")";
     }
 
     @Override
