@@ -11,13 +11,11 @@ public class Shop {
 
     final private List<ShopItem> items = new ArrayList<>();
 
-    public void addItem(ShopItem shopItem)
-    {
+    public void addItem(ShopItem shopItem) {
         items.add(shopItem);
     }
 
-    public void addComparator(Comparator<ShopItem> comparator)
-    {
+    public void addComparator(Comparator<ShopItem> comparator) {
         comparators.add(comparator);
     }
 
@@ -25,8 +23,7 @@ public class Shop {
         return items.stream().sorted(getAnyComparator()).collect(Collectors.toList());
     }
 
-    private Comparator<ShopItem> getAnyComparator()
-    {
+    private Comparator<ShopItem> getAnyComparator() {
         return comparators.get(ThreadLocalRandom.current().nextInt(0, comparators.size()));
     }
 }

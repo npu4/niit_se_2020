@@ -4,12 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Hello world!
- *
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
+public class App {
+    public static void main(String[] args) {
         Shop shop = new Shop();
 
         shop.addItem(new ShopItem("Хозтовары", 12.0, "Веник", 1));
@@ -30,7 +27,7 @@ public class App
 
         System.out.println("ID\t\t\tКатегория\t\t\tНаименование\t\t\tЦена\t\t\tОстаток");
 
-        for (ShopItem item: shop.getSortedItems()) {
+        for (ShopItem item : shop.getSortedItems()) {
             String line = String.format(
                     "%s\t\t\t%s\t\t\t%s\t\t\t%s\t\t\t%s",
                     StringUtils.abbreviate(item.getId(), 10),
