@@ -18,4 +18,9 @@ final public class Student {
     public Set<Lecture> getLectures() {
         return lectures;
     }
+
+    @Override
+    public String toString() {
+        return name + ": " + lectures;
+    }
 }
