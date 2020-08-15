@@ -10,6 +10,9 @@ import org.serieznyi.serialization.serializer.value.Value;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public final class Normalizer {
   ObjectValue normalize(Object objectForNormalization) {
@@ -28,7 +31,7 @@ public final class Normalizer {
 
     ObjectValue resultObject = new ObjectValue(typeName);
 
-    for (Field declaredField : clazz.getDeclaredFields()) {
+    for (Field declaredField : getFields(clazz)) {
       declaredField.setAccessible(true);
 
       if (isIgnoredField(declaredField)) {
@@ -118,7 +121,7 @@ public final class Normalizer {
 
     Object object = declaredConstructor.newInstance();
 
-    for (Field declaredField : clazz.getDeclaredFields()) {
+    for (Field declaredField : getFields(clazz)) {
       declaredField.setAccessible(true);
 
       String fieldName = getFieldName(declaredField);
@@ -193,5 +196,18 @@ public final class Normalizer {
             || type == Boolean.class
             || type == char.class
             || type == Number.class;
+  }
+
+  private List<Field> getFields(Class<?> clazzArg) {
+    List<Field> fields = new ArrayList<>();
+
+    Class<?> clazz = clazzArg;
+
+    do {
+      fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+
+    } while ((clazz = clazz.getSuperclass()) != null && !clazz.equals(Object.class));
+
+    return fields;
   }
 }

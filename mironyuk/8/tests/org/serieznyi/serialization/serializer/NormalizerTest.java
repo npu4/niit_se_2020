@@ -127,4 +127,15 @@ final class NormalizerTest {
     assertEquals(
         objectValue.getValue().get("fieldTwo").getType(), Value.Type.NULL, "Значение типа NULL");
   }
+
+  @Test
+  void testWhaNormalisationForClassWithSuperClassIsWork() {
+    ObjectValue objectValue = normalizer.normalize(new ClassWithSuperClass());
+
+    assertEquals(objectValue.getValue().size(), 2, "Оба поля присутствуют");
+    assertTrue(objectValue.getValue().containsKey("classField"), "Поле класса присутствует");
+    assertTrue(objectValue.getValue().containsKey("fieldOfSuperClass"), "Поле суперскласа присутствует");
+
+    assertEquals(new ClassWithSuperClass(), normalizer.denormalize(objectValue, ClassWithSuperClass.class));
+  }
 }
