@@ -8,7 +8,7 @@ import org.serieznyi.FightOfWizards.logging.Logger;
 
 import java.util.*;
 
-final public class ActionProducer {
+final public class ActionConsumer {
     static final Logger LOGGER = Logger.create();
 
     public void produce(Action action)

@@ -18,7 +18,7 @@ public class Scene {
   private final Map<Integer, Character> characters = new HashMap<>();
   private final List<Character> deadCharacters = new ArrayList<>();
   private State state;
-  final private ActionProducer producer = new ActionProducer();
+  final private ActionConsumer producer = new ActionConsumer();
 
   public Scene(int size) {
     if (size > MAX_SCENE_SIZE || size < MIN_SCENE_SIZE) {
