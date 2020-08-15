@@ -1,9 +1,7 @@
 package org.serieznyi.serialization.serializer;
 
 import data.classesForNormalization.*;
-import data.classesForNormalization.supportedPrimitive.ClassWithPrimitiveDouble;
-import data.classesForNormalization.supportedPrimitive.ClassWithPrimitiveFloat;
-import data.classesForNormalization.supportedPrimitive.ClassWithPrimitiveInt;
+import data.classesForNormalization.supportedPrimitive.*;
 import data.classesForNormalization.unsupportedPrimitive.ClassWithArray;
 import data.classesForNormalization.unsupportedPrimitive.ClassWithCollection;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,12 @@ final class NormalizerTest {
 
   private static List<Object> objectsWithPrimitiveTypes() {
     return Arrays.asList(
-        new ClassWithPrimitiveInt(), new ClassWithPrimitiveDouble(), new ClassWithPrimitiveFloat());
+        new ClassWithPrimitiveInt(),
+        new ClassWithPrimitiveWrappedInteger(),
+        new ClassWithPrimitiveWrappedBoolean(),
+        new ClassWithPrimitiveDouble(),
+        new ClassWithPrimitiveFloat()
+    );
   }
 
   private static List<Object> objectsWithNotSupportedBasicTypes() {

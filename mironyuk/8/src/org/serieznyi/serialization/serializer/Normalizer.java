@@ -150,17 +150,17 @@ public final class Normalizer {
   private Object castPrimitiveValue(Class<?> declaredFieldType, Object value) {
     Object result;
 
-    if (declaredFieldType.equals(short.class)) {
+    if (declaredFieldType.equals(short.class) || declaredFieldType.equals(Short.class)) {
       result = Short.parseShort((String) value);
-    } else if (declaredFieldType.equals(int.class)) {
+    } else if (declaredFieldType.equals(int.class) || declaredFieldType.equals(Integer.class)) {
       result = Integer.parseInt((String) value);
-    } else if (declaredFieldType.equals(long.class)) {
+    } else if (declaredFieldType.equals(long.class) || declaredFieldType.equals(Long.class)) {
       result = Long.parseLong((String) value);
-    } else if (declaredFieldType.equals(float.class)) {
+    } else if (declaredFieldType.equals(float.class) || declaredFieldType.equals(Float.class)) {
       result = Float.parseFloat((String) value);
-    } else if (declaredFieldType.equals(double.class)) {
+    } else if (declaredFieldType.equals(double.class) || declaredFieldType.equals(Double.class)) {
       result = Double.parseDouble((String) value);
-    } else if (declaredFieldType.equals(boolean.class)) {
+    } else if (declaredFieldType.equals(boolean.class) || declaredFieldType.equals(Boolean.class)) {
       result = Boolean.parseBoolean((String) value);
     } else if (declaredFieldType.equals(char.class)) {
       result = ((String) value).charAt(0);
@@ -179,12 +179,19 @@ public final class Normalizer {
     Class<?> type = field.getType();
 
     return type == short.class
-        || type == int.class
-        || type == long.class
-        || type == float.class
-        || type == double.class
-        || type == String.class
-        || type == boolean.class
-        || type == char.class;
+            || type == Short.class
+            || type == int.class
+            || type == Integer.class
+            || type == long.class
+            || type == Long.class
+            || type == float.class
+            || type == Float.class
+            || type == double.class
+            || type == Double.class
+            || type == String.class
+            || type == boolean.class
+            || type == Boolean.class
+            || type == char.class
+            || type == Number.class;
   }
 }
