@@ -3,7 +3,6 @@ package org.serieznyi.FightOfWizards.character.wizard.spell;
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.HealingAction;
-import org.serieznyi.FightOfWizards.action.result.Result;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.logging.Logger;
@@ -33,23 +32,13 @@ public final class HealingSpell implements Spell {
   }
 
   @Override
-  public void cast(Character wizard, Scene scene) {
-    Action action = HealingAction
+  public Action cast(Character wizard, Scene scene) {
+    return HealingAction
             .builder()
-            .withAggressor(wizard)
+            .withInitiator(wizard)
             .addTarget(wizard)
             .withValue(healingStrength)
             .build();
-
-    Result result = wizard.reactOnAction(action);
-
-    if (result.isSuccessful()) {
-      LOGGER.healing(wizard, healingStrength, wizard.getHealth());
-
-      weakenSpell(wizard);
-    } else {
-      LOGGER.debug("Заклинание не подействовало");
-    }
   }
 
   /** Уменьшаем силу заклинания, что бы маг не мог бесконечно себя лечить */

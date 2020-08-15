@@ -85,6 +85,21 @@ public final class Logger {
     handler.info("");
   }
 
+  public void characterAttack(Character aggressor, Set<Character> targets) {
+    if (targets.size() == 1) {
+      characterAttack(aggressor, targets.iterator().next());
+      return;
+    }
+
+    String names = targets.stream().map(Character::getName).reduce("", (a, b) -> b + ", " + a);
+
+    String message =
+        format(
+            "%s \"%s\" атакует \"%s\"", aggressor.getType(), aggressor.getName(), names);
+
+    handler.info(message);
+  }
+
   public void characterAttack(Character aggressor, Character target) {
     String message =
         format(

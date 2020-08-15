@@ -2,10 +2,10 @@ package org.serieznyi.FightOfWizards.character.wizard.spell;
 
 import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.Action;
-import org.serieznyi.FightOfWizards.action.result.Result;
+import org.serieznyi.FightOfWizards.action.DummyAction;
+import org.serieznyi.FightOfWizards.action.result.MessageResult;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
-import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 import java.util.HashSet;
@@ -21,13 +21,11 @@ import java.util.function.Function;
  * группе противников
  */
 public final class UniversalSpell implements Spell {
-  static final Logger LOGGER = Logger.create();
-
   private final String name;
   private final String description;
   private final Number value;
   private final BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
-  private final Function<Character, Function<Character, Function<Number, Action>>> actionCreator;
+  private final Function<Character, Function<Set<Character>, Function<Number, Action>>> actionCreator;
   private final Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> successMessage;
 
   private UniversalSpell(Builder builder) {
@@ -54,28 +52,14 @@ public final class UniversalSpell implements Spell {
   }
 
   @Override
-  public void cast(Character wizard, Scene scene) {
+  public Action cast(Character wizard, Scene scene) {
     Map<Integer, Character> opponents = targetsFinder.apply(wizard, scene);
-    Set<Character> damagedOpponents = new HashSet<>();
 
-    for (Map.Entry<Integer, Character> opponent : opponents.entrySet()) {
-      Action action = actionCreator.apply(wizard).apply(opponent.getValue()).apply(value);
-      Character character = opponent.getValue();
-
-      Result result = character.reactOnAction(action);
-
-      if (result.isSuccessful()) {
-        damagedOpponents.add(character);
-      }
+    if (opponents.isEmpty()) {
+      return new DummyAction(wizard, new MessageResult("Похоже мы не нанесли ни кому урона"));
     }
 
-    if (null != successMessage && damagedOpponents.size() > 0) {
-      successMessage.apply(wizard).apply(this).apply(damagedOpponents).accept(value);
-    }
-
-    if (damagedOpponents.size() == 0) {
-      LOGGER.debug("Заклинание не подействовало");
-    }
+    return actionCreator.apply(wizard).apply(new HashSet<>(opponents.values())).apply(value);
   }
 
   @Override
@@ -101,7 +85,7 @@ public final class UniversalSpell implements Spell {
     private String description;
     private Number value;
     private BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
-    private Function<Character, Function<Character, Function<Number, Action>>> actionCreator;
+    private Function<Character, Function<Set<Character>, Function<Number, Action>>> actionCreator;
     private Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>>
         successMessage;
 
@@ -141,7 +125,7 @@ public final class UniversalSpell implements Spell {
       return this;
     }
 
-    public Builder withActionCreator(Function<Character, Function<Character, Function<Number, Action>>> executor) {
+    public Builder withActionCreator(Function<Character, Function<Set<Character>, Function<Number, Action>>> executor) {
       this.actionCreator = executor;
 
       return this;

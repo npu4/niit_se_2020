@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.action.HealingAction;
 import org.serieznyi.FightOfWizards.action.result.CausingDamageResult;
@@ -41,12 +42,8 @@ public final class Wizard extends Character {
   }
 
   @Override
-  public void applyAction(Scene scene) {
-    Spell spell = takeSomeSpell();
-
-    LOGGER.readSpell(this, spell);
-
-    spell.cast(this, scene);
+  public Action produceAction(Scene scene) {
+    return takeSomeSpell().cast(this, scene);
   }
 
   @Override

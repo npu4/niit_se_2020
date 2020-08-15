@@ -3,7 +3,7 @@ package org.serieznyi.FightOfWizards.action;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 
-public final class CausingDamageAction extends Action {
+public final class CausingDamageAction extends BasicAction {
   private final Type type;
   private final int damage;
 
@@ -28,7 +28,7 @@ public final class CausingDamageAction extends Action {
     return type;
   }
 
-  public static class Builder extends Action.Builder<Builder> {
+  public static class Builder extends BasicAction.Builder<Builder> {
     Type type;
     int damage;
 

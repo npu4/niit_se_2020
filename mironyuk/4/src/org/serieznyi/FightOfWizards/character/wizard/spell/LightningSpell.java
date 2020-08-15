@@ -5,12 +5,9 @@ import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
-import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 public final class LightningSpell implements Spell {
-  static final Logger LOGGER = Logger.create();
-
   /** Количество урона наносимое заклинанием */
   private final int damage;
 
@@ -30,18 +27,14 @@ public final class LightningSpell implements Spell {
   }
 
   @Override
-  public void cast(Character wizard, Scene scene) {
+  public Action cast(Character wizard, Scene scene) {
     Character opponent = scene.getRandomOpponentFor(wizard);
 
-    Action action = CausingDamageAction
+    return CausingDamageAction
             .builder()
-            .withAggressor(wizard)
+            .withInitiator(wizard)
             .addTarget(opponent)
             .causeLightingDamage(damage)
             .build();
-
-    opponent.reactOnAction(action);
-
-    LOGGER.takeDamageTo(wizard, this, opponent, damage);
   }
 }

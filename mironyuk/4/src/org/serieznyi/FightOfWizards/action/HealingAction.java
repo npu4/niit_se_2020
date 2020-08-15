@@ -2,7 +2,7 @@ package org.serieznyi.FightOfWizards.action;
 
 import org.serieznyi.FightOfWizards.util.Assert;
 
-public final class HealingAction extends Action {
+public final class HealingAction extends BasicAction {
   private final int value;
 
   public static Builder builder()
@@ -20,7 +20,7 @@ public final class HealingAction extends Action {
     return value;
   }
 
-  public static class Builder extends Action.Builder<Builder> {
+  public static class Builder extends BasicAction.Builder<Builder> {
     int value;
 
     protected Builder() {

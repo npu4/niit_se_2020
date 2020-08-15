@@ -1,5 +1,6 @@
 package org.serieznyi.FightOfWizards;
 
+import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Functions;
@@ -17,6 +18,7 @@ public class Scene {
   private final Map<Integer, Character> characters = new HashMap<>();
   private final List<Character> deadCharacters = new ArrayList<>();
   private State state;
+  final private ActionProducer producer = new ActionProducer();
 
   public Scene(int size) {
     if (size > MAX_SCENE_SIZE || size < MIN_SCENE_SIZE) {
@@ -93,8 +95,7 @@ public class Scene {
   }
 
   public Map<Integer, Character> getOpponentsFor(Character character, Character.Type type) {
-    return getOpponentsForInternal(
-        character, (Map.Entry<Integer, Character> entry) -> entry.getValue().getType() == type);
+    return getOpponentsForInternal(character, (Map.Entry<Integer, Character> entry) -> entry.getValue().getType() == type);
   }
 
   private Map<Integer, Character> getOpponentsForInternal(
@@ -129,7 +130,9 @@ public class Scene {
             "--------------------- Ходит %s \"%s\" ---------------------",
             character.getType().toString().toLowerCase(), character.getName());
 
-        character.applyAction(this);
+        Action action = character.produceAction(this);
+
+        producer.produce(action);
 
         checkBodies();
       }

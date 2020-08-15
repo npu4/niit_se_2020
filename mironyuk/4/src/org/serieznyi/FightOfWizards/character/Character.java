@@ -33,7 +33,7 @@ public abstract class Character {
     return type;
   }
 
-  public abstract void applyAction(Scene scene);
+  public abstract Action produceAction(Scene scene);
 
   public String toString() {
     return name;

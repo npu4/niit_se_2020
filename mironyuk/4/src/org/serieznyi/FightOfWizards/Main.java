@@ -132,8 +132,8 @@ public class Main {
               .withValue(damageGenerator.get())
               .withActionCreator(a -> o -> v -> CausingDamageAction
                       .builder()
-                      .withAggressor(a)
-                      .addTarget(o)
+                      .withInitiator(a)
+                      .addTargets(o)
                       .causeLightingDamage(v.intValue())
                       .build())
               .withSuccessfulCallback(
@@ -150,8 +150,8 @@ public class Main {
               .withValue(damageGenerator.get())
               .withActionCreator(a -> o -> v -> CausingDamageAction
                       .builder()
-                      .withAggressor(a)
-                      .addTarget(o)
+                      .withInitiator(a)
+                      .addTargets(o)
                       .causeMagicalDamage(v.intValue())
                       .build())
               .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
@@ -167,8 +167,8 @@ public class Main {
               .withValue(damageGenerator.get())
               .withActionCreator(a -> o -> v -> CausingDamageAction
                       .builder()
-                      .withAggressor(a)
-                      .addTarget(o)
+                      .withInitiator(a)
+                      .addTargets(o)
                       .causeMagicalDamage(v.intValue())
                       .build())
               .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
@@ -184,8 +184,8 @@ public class Main {
               .withValue(damageGenerator.get())
               .withActionCreator(a -> o -> v -> CausingDamageAction
                       .builder()
-                      .withAggressor(a)
-                      .addTarget(o)
+                      .withInitiator(a)
+                      .addTargets(o)
                       .causeFireDamage(v.intValue())
                       .build())
               .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
