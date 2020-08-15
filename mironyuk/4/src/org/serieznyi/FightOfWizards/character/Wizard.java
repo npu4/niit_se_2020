@@ -4,6 +4,7 @@ import org.serieznyi.FightOfWizards.Scene;
 import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.action.HealingAction;
+import org.serieznyi.FightOfWizards.action.SpellActionDecorator;
 import org.serieznyi.FightOfWizards.action.result.CausingDamageResult;
 import org.serieznyi.FightOfWizards.action.result.HealingResult;
 import org.serieznyi.FightOfWizards.action.result.Result;
@@ -43,7 +44,11 @@ public final class Wizard extends Character {
 
   @Override
   public Action produceAction(Scene scene) {
-    return takeSomeSpell().cast(this, scene);
+    Spell spell = takeSomeSpell();
+
+    Action spellAction = spell.cast(this, scene);
+
+    return new SpellActionDecorator(spell, this, spellAction);
   }
 
   @Override

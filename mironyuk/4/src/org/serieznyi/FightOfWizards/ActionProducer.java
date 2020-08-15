@@ -1,9 +1,6 @@
 package org.serieznyi.FightOfWizards;
 
-import org.serieznyi.FightOfWizards.action.Action;
-import org.serieznyi.FightOfWizards.action.CausingDamageAction;
-import org.serieznyi.FightOfWizards.action.DummyAction;
-import org.serieznyi.FightOfWizards.action.HealingAction;
+import org.serieznyi.FightOfWizards.action.*;
 import org.serieznyi.FightOfWizards.action.result.CausingDamageResult;
 import org.serieznyi.FightOfWizards.action.result.HealingResult;
 import org.serieznyi.FightOfWizards.character.Character;
@@ -22,9 +19,17 @@ final public class ActionProducer {
             produceHealingAction((HealingAction) action);
         } else if (action instanceof DummyAction) {
             produceDummyAction((DummyAction) action);
+        } else if (action instanceof SpellActionDecorator) {
+            produceSpellAction((SpellActionDecorator) action);
         } else {
-            throw new RuntimeException("TODO");
+            throw new RuntimeException("Неизвестное действие");
         }
+    }
+
+    private void produceSpellAction(SpellActionDecorator action) {
+        LOGGER.readSpell(action.getInitiator(), action.getSpell());
+
+        produce(action.getRealAction());
     }
 
     public void produceCausingDamageAction(CausingDamageAction action)
