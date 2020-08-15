@@ -117,10 +117,11 @@ public class Scene {
       return;
     }
 
-    LOGGER.info(String.format("На поле боя находится бойцов: %s\n", characters.size()));
-
     for (int step = 1; getAliveCharacters().size() > 1; step++) {
       LOGGER.info("Шаг: " + step);
+
+      LOGGER.charactersOnBattlefield(getAliveCharacters());
+
       for (Character character : getShuffledCharacters()) {
         if (!hasAnyOpponents() || character.isDead()) {
           break;

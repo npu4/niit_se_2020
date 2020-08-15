@@ -4,6 +4,7 @@ import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.logging.handler.OutputHandler;
 
+import java.util.List;
 import java.util.Set;
 
 import static java.lang.String.format;
@@ -130,5 +131,11 @@ public final class Logger {
 
   public void winner(Character winner) {
     handler.success(String.format("На поле боя остался только \"%s\"", winner.getName()));
+  }
+
+  public void charactersOnBattlefield(List<Character> characters) {
+    String characterNames = characters.stream().map(Character::getName).reduce("", (a, b) -> b + ", " + a);
+
+    info("На поле боя находятся: %s", characterNames);
   }
 }
