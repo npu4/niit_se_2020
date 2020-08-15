@@ -6,7 +6,7 @@ import org.serieznyi.FightOfWizards.action.result.HealingResult;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.logging.Logger;
 
-import java.util.Set;
+import java.util.*;
 
 final public class ActionProducer {
     static final Logger LOGGER = Logger.create();
@@ -34,16 +34,33 @@ final public class ActionProducer {
 
     public void produceCausingDamageAction(CausingDamageAction action)
     {
-        Set<Character> targets = action.getTargets();
         Character initiator = action.getInitiator();
+        Set<Character> targets = action.getTargets();
 
         LOGGER.characterAttack(initiator, targets);
+
+        Map<Integer, Set<Character>> resultMap = new HashMap<>();
 
         for (Character target : targets) {
             CausingDamageResult result = (CausingDamageResult) target.reactOnAction(action);
 
-            if (result.isSuccessful()) {
-                LOGGER.takeDamageTo(initiator, target, result.getTakenDamage());
+            if (!result.isSuccessful()) {
+                LOGGER.miss(target);
+                continue;
+            }
+
+            if (resultMap.containsKey(result.getTakenDamage())) {
+                resultMap.get(result.getTakenDamage()).add(target);
+            } else {
+                resultMap.put(result.getTakenDamage(), new HashSet<>(Collections.singletonList(target)));
+            }
+        }
+
+        for (Map.Entry<Integer, Set<Character>> resultEntry : resultMap.entrySet()) {
+            if (resultEntry.getValue().size() == 1) {
+                LOGGER.takenDamage(initiator, resultEntry.getValue().iterator().next(), resultEntry.getKey());
+            } else {
+                LOGGER.takenDamage(initiator, resultEntry.getValue(), resultEntry.getKey());
             }
         }
     }

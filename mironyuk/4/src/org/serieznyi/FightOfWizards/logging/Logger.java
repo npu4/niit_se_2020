@@ -46,7 +46,7 @@ public final class Logger {
     handler.info(message);
   }
 
-  public void takeDamageTo(
+  public void takenDamage(
       Character character, Spell spell, Set<Character> characters, int damage) {
     String message =
         format(
@@ -60,7 +60,7 @@ public final class Logger {
     handler.warning(message);
   }
 
-  public void takeDamageTo(Character character, Spell spell, Character opponent, int damage) {
+  public void takenDamage(Character character, Spell spell, Character opponent, int damage) {
     String message =
         format(
             "%s \"%s\" нанес урон персонажу \"%s\" в размере \"%s\" единиц с помощью заклинания \"%s\"",
@@ -69,11 +69,22 @@ public final class Logger {
     handler.warning(message);
   }
 
-  public void takeDamageTo(Character character, Character opponent, int damage) {
+  public void takenDamage(Character character, Character opponent, int damage) {
     String message =
         format(
             "%s \"%s\" нанес \"%s\" единиц урона персонажу \"%s\"",
             character.getType(), character.getName(), damage, opponent.getName());
+
+    handler.warning(message);
+  }
+
+  public void takenDamage(Character character, Set<Character> opponents, int damage) {
+    String characterNames = opponents.stream().map(Character::getName).reduce("", (a, b) -> b + ", " + a);
+
+    String message =
+        format(
+            "%s \"%s\" нанес \"%s\" единиц урона персонажам \"%s\"",
+            character.getType(), character.getName(), damage, characterNames);
 
     handler.warning(message);
   }
@@ -137,5 +148,11 @@ public final class Logger {
     String characterNames = characters.stream().map(Character::getName).reduce("", (a, b) -> b + ", " + a);
 
     info("На поле боя находятся: %s", characterNames);
+  }
+
+  public void miss(Character character) {
+    String message = format("Персонаж \"%s\" избежал урона", character.getName());
+
+    handler.info(message);
   }
 }

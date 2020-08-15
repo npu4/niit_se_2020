@@ -137,7 +137,7 @@ public class Main {
                       .causeLightingDamage(v.intValue())
                       .build())
               .withSuccessfulCallback(
-                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+                  w -> s -> c -> v -> LOGGER.takenDamage(w, s, c, v.intValue()))
               .build();
 
       spells.add(chainLightingSpell);
@@ -154,7 +154,7 @@ public class Main {
                       .addTargets(o)
                       .causeMagicalDamage(v.intValue())
                       .build())
-              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takenDamage(w, s, c, v.intValue()))
               .build();
 
       spells.add(banishingMonstersSpell);
@@ -171,7 +171,7 @@ public class Main {
                       .addTargets(o)
                       .causeMagicalDamage(v.intValue())
                       .build())
-              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takenDamage(w, s, c, v.intValue()))
               .build();
 
       spells.add(migraineSpell);
@@ -188,7 +188,7 @@ public class Main {
                       .addTargets(o)
                       .causeFireDamage(v.intValue())
                       .build())
-              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
+              .withSuccessfulCallback(w -> s -> c -> v -> LOGGER.takenDamage(w, s, c, v.intValue()))
               .build();
 
       spells.add(wallOfFireSpell);
