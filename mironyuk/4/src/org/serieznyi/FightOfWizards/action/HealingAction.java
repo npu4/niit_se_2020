@@ -16,10 +16,6 @@ public final class HealingAction extends Action {
     this.value = builder.value;
   }
 
-  public Type getType() {
-    return Type.HEALING;
-  }
-
   public int getValue() {
     return value;
   }

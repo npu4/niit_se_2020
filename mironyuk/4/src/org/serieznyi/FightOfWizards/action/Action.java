@@ -10,8 +10,6 @@ abstract public class Action {
   private final Character aggressor;
   private final Set<Character> targets;
 
-  abstract Type getType();
-
   protected Action(Builder<?> builder) {
 
     this.aggressor = builder.aggressor;
@@ -25,11 +23,6 @@ abstract public class Action {
 
   public Set<Character> getTargets() {
     return targets;
-  }
-
-  enum Type {
-    DAMAGE,
-    HEALING,
   }
 
   /**

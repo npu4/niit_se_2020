@@ -24,10 +24,6 @@ public final class CausingDamageAction extends Action {
     return damage;
   }
 
-  public Action.Type getType() {
-    return Action.Type.DAMAGE;
-  }
-
   public Type getDamageType() {
     return type;
   }
