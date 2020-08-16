@@ -35,8 +35,6 @@ final public class RandomGameObjectsProducer implements ObjectsProducer {
 
     private Character nextCharacter;
 
-    private Character nextCharacterStep;
-
     public RandomGameObjectsProducer(int characterCount)
     {
         this.characterCount = characterCount;

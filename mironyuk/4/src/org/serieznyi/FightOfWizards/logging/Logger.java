@@ -141,7 +141,9 @@ public final class Logger {
   }
 
   public void winner(Character winner) {
+    handler.success("\n-------------------------------------------------------------------");
     handler.success(String.format("На поле боя остался только \"%s\"", winner.getName()));
+    handler.success("-------------------------------------------------------------------");
   }
 
   public void charactersOnBattlefield(List<Character> characters) {

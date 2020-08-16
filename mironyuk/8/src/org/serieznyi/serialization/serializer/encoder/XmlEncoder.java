@@ -3,6 +3,7 @@ package org.serieznyi.serialization.serializer.encoder;
 import org.serieznyi.serialization.serializer.Encoder;
 import org.serieznyi.serialization.serializer.Serializer;
 import org.serieznyi.serialization.serializer.exception.EncoderException;
+import org.serieznyi.serialization.serializer.value.ListValue;
 import org.serieznyi.serialization.serializer.value.ObjectValue;
 import org.serieznyi.serialization.serializer.value.Value;
 import org.w3c.dom.Document;
@@ -50,18 +51,37 @@ public class XmlEncoder implements Encoder {
 
       Element element = document.createElement(key);
 
-      if (value.getType() == Value.Type.PRIMITIVE) {
-        element.appendChild(document.createTextNode((String) value.getValue()));
-      } else if (value.getType() == Value.Type.NULL) {
-        element.appendChild(document.createTextNode(NULL_IDENTIFIER));
-      } else if (value.getType() == Value.Type.OBJECT) {
-        element.appendChild(objectValueToXmlElement(document, (ObjectValue) value));
-      }
+      element.appendChild(valueToXmlElement(document, value));
 
       rootElement.appendChild(element);
     }
 
     return rootElement;
+  }
+
+  private Node valueToXmlElement(Document document, Value<?> value) {
+    Node node;
+
+    if (value.getType() == Value.Type.PRIMITIVE || value.getType() == Value.Type.ENUM) {
+      node = document.createTextNode((String) value.getValue());
+    } else if (value.getType() == Value.Type.NULL) {
+      node = document.createTextNode(NULL_IDENTIFIER);
+    } else if (value.getType() == Value.Type.LIST) {
+
+      ListValue listValue = (ListValue) value;
+
+      node = document.createDocumentFragment();
+
+      for (Value<?> listValueItem : listValue.getValue()) {
+        node.appendChild(valueToXmlElement(document, listValueItem));
+      }
+    } else if (value.getType() == Value.Type.OBJECT) {
+      node = objectValueToXmlElement(document, (ObjectValue) value);
+    } else {
+      throw new EncoderException("Не поддерживаемый тип: " + value.getType());
+    }
+
+    return node;
   }
 
   private ObjectValue xmlElementToObjectValue(Element element) {

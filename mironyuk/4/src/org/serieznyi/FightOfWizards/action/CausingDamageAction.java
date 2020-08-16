@@ -4,8 +4,13 @@ import org.serieznyi.FightOfWizards.util.Assert;
 
 
 public final class CausingDamageAction extends BasicAction {
-  private final Type type;
-  private final int damage;
+  private Type type;
+  private int damage;
+
+  private CausingDamageAction()
+  {
+    super();
+  }
 
   public static CausingDamageAction.Builder builder()
   {

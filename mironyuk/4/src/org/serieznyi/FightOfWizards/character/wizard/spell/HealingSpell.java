@@ -7,14 +7,26 @@ import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.util.Assert;
+import org.serieznyi.serialization.serializer.annotation.Serialize;
+import org.serieznyi.serialization.serializer.annotation.SerializeIgnoreField;
 
+@Serialize
 public final class HealingSpell implements Spell {
+  @SerializeIgnoreField
   private static final Logger LOGGER = Logger.create();
 
+  @SerializeIgnoreField
   private static final int MIN_HEALING_STRENGTH = 1;
+
+  @SerializeIgnoreField
   private static final int HEALING_STRENGTH_WEAKEN_STEP = 2;
   /** Текущая сила лечения заклинания */
   private int healingStrength;
+
+  private HealingSpell()
+  {
+
+  }
 
   public HealingSpell(int healingStrength) {
     Assert.greaterThan(healingStrength, 1);

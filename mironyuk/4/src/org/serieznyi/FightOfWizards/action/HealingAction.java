@@ -3,7 +3,12 @@ package org.serieznyi.FightOfWizards.action;
 import org.serieznyi.FightOfWizards.util.Assert;
 
 public final class HealingAction extends BasicAction {
-  private final int value;
+  private int value;
+
+  private HealingAction()
+  {
+    super();
+  }
 
   public static Builder builder()
   {

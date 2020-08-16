@@ -191,14 +191,6 @@ public class Scene {
     }
   }
 
-  private boolean hasAnyOpponents() {
-    return characters.entrySet().stream()
-            .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-            .size()
-        > 1;
-  }
-
   public int getIndexFor(Character character) {
     for (Map.Entry<Integer, Character> entry : characters.entrySet()) {
       if (entry.getValue().equals(character)) {
@@ -229,5 +221,9 @@ public class Scene {
     INITIALIZED,
     STARTED,
     DONE
+  }
+
+  public List<Action> getHistory() {
+    return new ArrayList<>(producedActions);
   }
 }

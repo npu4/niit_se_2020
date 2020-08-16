@@ -7,6 +7,7 @@ import org.serieznyi.FightOfWizards.action.result.MessageResult;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 import org.serieznyi.FightOfWizards.util.Assert;
+import org.serieznyi.serialization.serializer.annotation.SerializeIgnoreField;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -21,12 +22,19 @@ import java.util.function.Function;
  * группе противников
  */
 public final class UniversalSpell implements Spell {
-  private final String name;
-  private final String description;
-  private final Number value;
-  private final BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
-  private final Function<Character, Function<Set<Character>, Function<Number, Action>>> actionCreator;
-  private final Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> successMessage;
+  private String name;
+  @SerializeIgnoreField
+  private String description;
+  @SerializeIgnoreField
+  private Number value;
+  @SerializeIgnoreField
+  private BiFunction<Character, Scene, Map<Integer, Character>> targetsFinder;
+  @SerializeIgnoreField
+  private Function<Character, Function<Set<Character>, Function<Number, Action>>> actionCreator;
+  @SerializeIgnoreField
+  private Function<Character, Function<Spell, Function<Set<Character>, Consumer<Number>>>> successMessage;
+
+  private UniversalSpell() {}
 
   private UniversalSpell(Builder builder) {
     name = builder.name;

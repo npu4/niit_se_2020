@@ -4,6 +4,7 @@ import org.serieznyi.serialization.serializer.annotation.Serialize;
 import org.serieznyi.serialization.serializer.annotation.SerializeIgnoreField;
 import org.serieznyi.serialization.serializer.annotation.SerializeName;
 import org.serieznyi.serialization.serializer.exception.NormalizerException;
+import org.serieznyi.serialization.serializer.value.ListValue;
 import org.serieznyi.serialization.serializer.value.ObjectValue;
 import org.serieznyi.serialization.serializer.value.Value;
 
@@ -18,12 +19,8 @@ public final class Normalizer {
   ObjectValue normalize(Object objectForNormalization) {
     Class<?> clazz = objectForNormalization.getClass();
 
-    if (!isNormalizationSupported(clazz)) {
-      throw NormalizerException.fromMessage("Class not marked by serialization annotation");
-    }
-
     if (!isHasDefaultConstructor(clazz)) {
-      throw NormalizerException.fromMessage("Class doesn't have default constructor");
+      throw NormalizerException.fromMessage("Class doesn't have default constructor: " + clazz.getName());
     }
 
     String typeName = getTypeName(clazz);
@@ -49,6 +46,16 @@ public final class Normalizer {
           }
         } else if (isPrimitiveTypeField(declaredField)) {
           resultObject.addPrimitiveValue(fieldName, fieldObject.toString());
+        } else if (fieldObject instanceof Enum<?>) {
+          resultObject.addEnumValue(fieldName, fieldObject.toString());
+        } else if (fieldObject instanceof List) {
+          List<ObjectValue> list = new ArrayList<>();
+
+          for (Object o : (List<?>) fieldObject) {
+            list.add(normalize(o));
+          }
+
+          resultObject.addListValue(fieldName, new ListValue(list));
         } else {
           resultObject.addObjectValue(fieldName, normalize(fieldObject));
         }
@@ -100,7 +107,7 @@ public final class Normalizer {
   private boolean isSkipNull(Class<?> clazz) {
     Serialize serializeAnnotation = clazz.getAnnotation(Serialize.class);
 
-    return serializeAnnotation.skipNull();
+    return serializeAnnotation != null && serializeAnnotation.skipNull();
   }
 
   private boolean isIgnoredField(Field declaredField) {

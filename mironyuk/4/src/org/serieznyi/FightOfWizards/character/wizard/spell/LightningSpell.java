@@ -9,7 +9,9 @@ import org.serieznyi.FightOfWizards.util.Assert;
 
 public final class LightningSpell implements Spell {
   /** Количество урона наносимое заклинанием */
-  private final int damage;
+  private int damage;
+
+  private LightningSpell() {}
 
   public LightningSpell(int damage) {
     Assert.greaterThan(damage, 1);

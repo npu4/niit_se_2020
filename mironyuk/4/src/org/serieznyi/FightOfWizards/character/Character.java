@@ -8,13 +8,19 @@ import org.serieznyi.FightOfWizards.action.result.CausingDamageResult;
 import org.serieznyi.FightOfWizards.action.result.NoneResult;
 import org.serieznyi.FightOfWizards.action.result.Result;
 import org.serieznyi.FightOfWizards.util.Assert;
+import org.serieznyi.serialization.serializer.annotation.Serialize;
 
+@Serialize
 public abstract class Character {
-  private final Health health;
+  protected int initialHealth;
+
+  protected int health;
 
   protected String name;
 
   protected Type type;
+
+  protected Character() {}
 
   public Character(Type type, String name, int health) {
     Assert.requireNotEmptyString(name);
@@ -22,11 +28,37 @@ public abstract class Character {
 
     this.type = type;
 
-    this.health = new Health(health);
+    this.health = this.initialHealth = health;
+  }
+
+  protected int decreaseHealth(int health) {
+    this.health -= health;
+
+    return this.health;
+  }
+
+  /**
+   * @param health value to increase health
+   * @return new health value
+   */
+  protected int increaseHealth(int health) {
+    if (isHealthLowerInitialHealth()) {
+      this.health += health;
+    }
+
+    return this.health;
+  }
+
+  private boolean isHealthLowerInitialHealth() {
+    return this.health < initialHealth;
   }
 
   public int getHealth() {
-    return health.getHealth();
+    return health;
+  }
+
+  public boolean isDead() {
+    return health <= 0;
   }
 
   public Type getType() {
@@ -41,18 +73,6 @@ public abstract class Character {
 
   public String getName() {
     return name;
-  }
-
-  public boolean isDead() {
-    return health.isDead();
-  }
-
-  protected int decreaseHealth(int value) {
-    return health.decreaseHealth(value);
-  }
-
-  protected int increaseHealth(int value) {
-    return health.increaseHealth(value);
   }
 
   /**
@@ -105,46 +125,6 @@ public abstract class Character {
       public String toString() {
         return "Маг";
       }
-    }
-  }
-
-  private static class Health {
-    protected final int initialHealth;
-    protected int health;
-
-    private Health(int health) {
-      Assert.greaterThan(health, 1);
-      this.health = initialHealth = health;
-    }
-
-    public int decreaseHealth(int health) {
-      this.health -= health;
-
-      return this.health;
-    }
-
-    /**
-     * @param health value to increase health
-     * @return new health value
-     */
-    public int increaseHealth(int health) {
-      if (isHealthLowerInitialHealth()) {
-        this.health += health;
-      }
-
-      return this.health;
-    }
-
-    private boolean isHealthLowerInitialHealth() {
-      return this.health < initialHealth;
-    }
-
-    public int getHealth() {
-      return health;
-    }
-
-    public boolean isDead() {
-      return health <= 0;
     }
   }
 }

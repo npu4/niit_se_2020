@@ -5,9 +5,14 @@ import org.serieznyi.FightOfWizards.character.Wizard;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
 
 public class SpellActionDecorator implements Action {
-    private final Spell spell;
-    private final Wizard wizard;
-    private final Action originalAction;
+    private Spell spell;
+    private Wizard wizard;
+    private Action originalAction;
+
+    private SpellActionDecorator()
+    {
+        super();
+    }
 
     public SpellActionDecorator(Spell spell, Wizard wizard, Action originalAction) {
         this.spell = spell;

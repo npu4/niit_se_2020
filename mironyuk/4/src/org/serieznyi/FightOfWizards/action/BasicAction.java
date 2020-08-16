@@ -3,18 +3,24 @@ package org.serieznyi.FightOfWizards.action;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.util.Assert;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 abstract public class BasicAction implements Action {
-  private final Character initiator;
-  private final Set<Character> targets;
+  private Character initiator;
+  private List<Character> targets;
 
   protected BasicAction(Builder<?> builder) {
 
     this.initiator = builder.initiator;
 
-    this.targets = builder.targets;
+    this.targets = new ArrayList<>(builder.targets);
+  }
+
+  public BasicAction() {
+
   }
 
   public Character getInitiator() {
@@ -22,13 +28,7 @@ abstract public class BasicAction implements Action {
   }
 
   public Set<Character> getTargets() {
-    return targets;
-  }
-
-  enum Type {
-    DAMAGE,
-    HEALING,
-    DUMMY,
+    return new HashSet<>(targets);
   }
 
   /**

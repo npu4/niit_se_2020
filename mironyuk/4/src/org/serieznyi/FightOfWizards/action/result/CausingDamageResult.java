@@ -5,6 +5,12 @@ final public class CausingDamageResult extends Result {
     private final int originalDamageValue;
     private final int newCharacterHealth;
 
+    private CausingDamageResult(int takenDamage, int newCharacterHealth) {
+        super();
+        this.takenDamage = takenDamage;
+        this.newCharacterHealth = newCharacterHealth;
+        originalDamageValue = 0;
+    }
 
     public CausingDamageResult(boolean successful, int takenDamage, int originalDamageValue, int newCharacterHealth) {
         super(successful);

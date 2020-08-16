@@ -22,6 +22,13 @@ public final class ObjectValue extends Value<SortedMap<String, Value<?>>> {
     return this;
   }
 
+  public ObjectValue addEnumValue(String name, String value)
+  {
+    this.value.put(name, new EnumValue(value));
+
+    return this;
+  }
+
   public ObjectValue addNullValue(String name) {
     this.value.put(name, new NullValue());
 
@@ -29,6 +36,12 @@ public final class ObjectValue extends Value<SortedMap<String, Value<?>>> {
   }
 
   public ObjectValue addObjectValue(String name, ObjectValue value) {
+    this.value.put(name, value);
+
+    return this;
+  }
+
+  public ObjectValue addListValue(String name, ListValue value) {
     this.value.put(name, value);
 
     return this;

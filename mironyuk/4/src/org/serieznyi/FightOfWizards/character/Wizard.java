@@ -9,7 +9,8 @@ import org.serieznyi.FightOfWizards.action.result.CausingDamageResult;
 import org.serieznyi.FightOfWizards.action.result.HealingResult;
 import org.serieznyi.FightOfWizards.action.result.Result;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
-import org.serieznyi.FightOfWizards.logging.Logger;
+import org.serieznyi.serialization.serializer.annotation.Serialize;
+import org.serieznyi.serialization.serializer.annotation.SerializeIgnoreField;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,12 +20,18 @@ import java.util.concurrent.ThreadLocalRandom;
  * - Может использовать заклинания
  * - Магический урон наносит только половину урона
  */
+@Serialize
 public final class Wizard extends Character {
-  static final Logger LOGGER = Logger.create();
 
+  @SerializeIgnoreField
   private static final int SPELLS_BAG_SIZE = 3;
 
-  private final List<Spell> spells;
+  @SerializeIgnoreField
+  private List<Spell> spells;
+
+  private Wizard() {
+    super();
+  }
 
   public Wizard(String name, int health, Spell[] spells) {
     super(Type.WIZARD, name, health);

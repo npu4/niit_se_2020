@@ -5,7 +5,12 @@ import org.serieznyi.FightOfWizards.character.Character;
 
 final public class DummyAction implements Action {
     private Character initiator;
-    private final Result result;
+    private Result result;
+
+    private DummyAction()
+    {
+        super();
+    }
 
     public DummyAction(Character initiator, Result result) {
         this.initiator = initiator;
