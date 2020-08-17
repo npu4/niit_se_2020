@@ -13,7 +13,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
   static final Serializer serializer = new Serializer();
@@ -29,64 +31,57 @@ public class Main {
     scene.run();
 
     if (isSaveReplay()) {
-      Path replayPath = getReplayPath("Укажите полный путь к файлу в который будет сохранен replay. Файл должен быть с раширением .xml");
+      Path replayPath = getReplayPath("Укажите полный путь к файлу в который будет сохранен replay. Имя файла должно заканчиваться на .xml");
 
       saveReplay(replayPath, scene.getHistory());
     }
   }
 
   private static boolean isSaveReplay() {
-    return true;
+    Scanner scanner = new Scanner(System.in);
 
-//    Scanner scanner = new Scanner(System.in);
-//
-//    String answer;
-//
-//    while (true) {
-//      System.out.println("\nХотите сохранить реплей? да\\нет\n");
-//
-//      answer = scanner.next();
-//
-//      if (!answer.equalsIgnoreCase("Да") && !answer.equalsIgnoreCase("Нет")) {
-//        System.out.println("Неверный формат ответа. Попробуй-те еще раз");
-//        continue;
-//      }
-//
-//      break;
-//    }
-//
-//    return answer.equalsIgnoreCase("Да");
+    String answer;
+
+    while (true) {
+      System.out.println("\nХотите сохранить реплей? да\\нет\n");
+
+      answer = scanner.next();
+
+      if (!answer.equalsIgnoreCase("Да") && !answer.equalsIgnoreCase("Нет")) {
+        System.out.println("Неверный формат ответа. Попробуй-те еще раз");
+        continue;
+      }
+
+      break;
+    }
+
+    return answer.equalsIgnoreCase("Да");
   }
 
   private static Path getReplayPath(String message) {
-    return new File("./asd.xml").toPath().toAbsolutePath();
+    Scanner scanner = new Scanner(System.in);
 
-//    Scanner scanner = new Scanner(System.in);
-//
-//    Path path;
-//
-//    while (true) {
-//      System.out.println("\n" + message + "\n");
-//
-//      path = Paths.get(scanner.next()).toAbsolutePath();
-//
-//      if (!path.toString().endsWith(".xml")) {
-//        System.out.println("Неверное расширение файла. Попробуй-те еще раз");
-//        continue;
-//      }
-//
-//      File dir = path.getParent().toFile();
-//
-//      if (!dir.exists() || !dir.canWrite()) {
-//        System.out.println("Нет доступа или директори не существует: " + path.getParent() + ". Попробуй-те еще раз");
-//        continue;
-//      }
-//
-//
-//      break;
-//    }
-//
-//    return path;
+    Path path;
+
+    while (true) {
+      System.out.println("\n" + message + "\n");
+
+      path = Paths.get(scanner.next()).toAbsolutePath();
+
+      if (!path.toString().endsWith(".xml")) {
+        System.out.println("Неверное расширение файла. Попробуй-те еще раз");
+        continue;
+      }
+
+      path.getParent().toFile().mkdirs();
+
+      break;
+    }
+
+    return path;
+  }
+
+  private static void createDirIfNotExists(File dir) {
   }
 
   private static void saveReplay(Path replayPath, List<Action> history) {

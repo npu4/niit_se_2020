@@ -77,10 +77,6 @@ public final class Normalizer {
     return false;
   }
 
-  private boolean isNormalizationSupported(Class<?> clazz) {
-    return clazz.isAnnotationPresent(Serialize.class);
-  }
-
   Object denormalize(ObjectValue value, Class<?> clazz) {
     try {
       return valueToObject(value, clazz);
