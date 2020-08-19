@@ -19,6 +19,8 @@ public abstract class Spell {
         this.name = name;
     }
 
-    public void cast(List<Character> list, Character character) {
+    public void cast(List<Character> allNotDead, Character executor, List<Character> allEnemies, List<Character> allNeighbour) {
+
+
     }
 }

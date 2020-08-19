@@ -1,6 +1,7 @@
 package com.niit.isaev.battleOfMage.spells;
 
 import com.niit.isaev.battleOfMage.characters.Character;
+import com.niit.isaev.battleOfMage.characters.Monster;
 
 import java.util.List;
 
@@ -12,13 +13,12 @@ public class ExpellingMonster extends Spell {
     }
 
     @Override
-    public void cast(List<Character> list, Character character) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) != null && list.get(i).getClass().getSimpleName().equals("Monster")) {
-                list.get(i).setHealth(list.get(i).getHealth() - DAMAGE);
-                System.out.println("Монстр с именем " + list.get(i).getName() + " получил урон от изгнания монстров:" + DAMAGE);
+    public void cast(List<Character> allNotDead, Character character, List<Character> allEnemies, List<Character> allNeighbour) {
+        for (int i = 0; i < allNotDead.size(); i++) {
+            if (allNotDead.get(i) instanceof Monster) {
+                allNotDead.get(i).setHealth(allNotDead.get(i).getHealth() - DAMAGE);
+                System.out.println("Монстр с именем " + allNotDead.get(i).getName() + " получил урон от изгнания монстров:" + DAMAGE);
             }
         }
     }
-
 }

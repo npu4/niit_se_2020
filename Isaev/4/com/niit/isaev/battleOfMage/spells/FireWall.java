@@ -12,9 +12,9 @@ public class FireWall extends Spell {
     }
 
     @Override
-    public void cast(List<Character> list, Character character) {
-        for (Character chars : list) {
-            if (list.indexOf(chars) % 2 == 0 && chars != null) {
+    public void cast(List<Character> allNotDead, Character executor, List<Character> allEnemies, List<Character> allNeighbour) {
+        for (Character chars : allNotDead) {
+            if (allNotDead.indexOf(chars) % 2 == 0) {
                 chars.setHealth(chars.getHealth() - DAMAGE);
                 System.out.println("Персонаж - " + chars.getName() + " получает урон от стены огня:" + DAMAGE);
             }

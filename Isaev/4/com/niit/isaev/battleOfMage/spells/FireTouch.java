@@ -13,22 +13,24 @@ public class FireTouch extends Spell {
     }
 
     @Override
-    public void cast(List<Character> list, Character character) {
-        int position = list.indexOf(character);
-        Character first;
-        Character second;
-        if (list.get(Math.abs(position - 1)) != null) {
-            first = list.get(Math.abs(position - 1));
+    public void cast(List<Character> allNotDead, Character executor, List<Character> allEnemies, List<Character> allNeighbour) {
+        Character first = null;
+        if (allNeighbour.size() > 0) {
+            first = allNeighbour.get(0);
+        }
+        Character second = null;
+        if (allNeighbour.size() > 1) {
+            second = allNeighbour.get(1);
+        }
+        if (first != null) {
             first.setHealth(first.getHealth() - DAMAGE);
-            System.out.println("Персонаж " + character.getName() + " получает урон от огненного прикосновения:" + DAMAGE);
+            System.out.println("Персонаж " + executor.getName() + " получает урон от огненного прикосновения:" + DAMAGE);
         } else {
             System.out.println("На позиции слева никого нет.");
         }
-
-        if (list.get((position + 1) % 10) != null) {
-            second = list.get((position + 1) % 10);
+        if (second != null) {
             second.setHealth(second.getHealth() - DAMAGE);
-            System.out.println("Персонаж " + character.getName() + " получает урон от огненного прикосновения:" + DAMAGE);
+            System.out.println("Персонаж " + executor.getName() + " получает урон от огненного прикосновения:" + DAMAGE);
         } else {
             System.out.println("На позиции справа никого нет.");
         }

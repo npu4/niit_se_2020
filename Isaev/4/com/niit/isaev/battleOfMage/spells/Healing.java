@@ -12,16 +12,16 @@ public class Healing extends Spell {
     }
 
     @Override
-    public void cast(List<Character> list, Character character) {
-        if (character.getHealth() == character.getDEFAULT_HEALTH()) {
-            System.out.println("Здоровье персонажа " + character.getName() + " полное.");
+    public void cast(List<Character> allNotDead, Character executor, List<Character> allEnemies, List<Character> allNeighbour) {
+        if (executor.getHealth() == executor.getDEFAULT_HEALTH()) {
+            System.out.println("Здоровье персонажа " + executor.getName() + " полное.");
         } else {
-            if (character.getHealth() + HEAL > character.getDEFAULT_HEALTH()) {
-                character.setHealth(100);
+            if (executor.getHealth() + HEAL > executor.getDEFAULT_HEALTH()) {
+                executor.setHealth(100);
             } else {
-                character.setHealth(character.getHealth() + HEAL);
+                executor.setHealth(executor.getHealth() + HEAL);
             }
-            System.out.println("Персонаж - " + character.getName() + " вылечился на " + HEAL + ". Теперь его здоровье равно:" + character.getHealth());
+            System.out.println("Персонаж - " + executor.getName() + " вылечился на " + HEAL + ". Теперь его здоровье равно:" + executor.getHealth());
         }
     }
 

@@ -4,41 +4,28 @@ import com.niit.isaev.battleOfMage.characters.Character;
 
 
 public class mainGame {
-
     static Scene scene = new Scene(10);
-
-    static {
-        scene.getRandomCharacters();
-    }
-
     public static void main(String[] args) {
+
         scene.getRandomCharacters();
         while (true) {
             for (Character character : scene.getCharactersInGame()) {
-                if (scene.charactersInGame.get(scene.charactersInGame.indexOf(character)) != null) {
-                    character.attack(scene.getCharactersInGame());
+                if (character != null) {
+                    character.attack(scene.getCharactersInGame(), scene.findAllNotDead(), scene.findAllEnemies(character), scene.findAllNeighbours(character));
                 }
             }
 
-            if (gameIsFinished()) {
-                for (Character character : scene.charactersInGame) {
-                    if (character != null) {
-                        System.out.println(character.getName() + " - победил всех!");
-                    }
+            if (scene.gameIsFinished()) {
+                if (scene.findAllNotDead().size() < 2 && scene.findAllNotDead().size() != 0) {
+                    System.out.println(scene.findAllNotDead().get(0).getName() + " - победил всех!");
+                } else if (scene.findAllNotDead().size() == 0) {
+                    System.out.println("Все персонажи мервы...победителя нет!");
                 }
-                break;
-            }
-        }
-    }
 
-    static boolean gameIsFinished() {
-        int playersInGame = 0;
-        for (Character character : scene.getCharactersInGame()) {
-            if (character != null) {
-                playersInGame++;
-            }
+            } else
+                continue;
+            break;
         }
-        return playersInGame == 1;
-    }
+        }
 }
 

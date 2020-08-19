@@ -1,6 +1,7 @@
 package com.niit.isaev.battleOfMage.spells;
 
 import com.niit.isaev.battleOfMage.characters.Character;
+import com.niit.isaev.battleOfMage.characters.Mage;
 
 import java.util.List;
 
@@ -13,9 +14,9 @@ public class Migraine extends Spell {
     }
 
     @Override
-    public void cast(List<Character> list, Character character) {
-        for (Character chars : list) {
-            if (list.get(list.indexOf(chars)) != null && chars.getClass().getSimpleName().equals("Mage")) {
+    public void cast(List<Character> allNotDead, Character executor, List<Character> allEnemies, List<Character> allNeighbour) {
+        for (Character chars : allNotDead) {
+            if (chars instanceof Mage) {
                 chars.setHealth(chars.getHealth() - DAMAGE);
                 System.out.println("Монстр с именем " + chars.getName() + " получил урон от мигрени:" + DAMAGE);
             }
