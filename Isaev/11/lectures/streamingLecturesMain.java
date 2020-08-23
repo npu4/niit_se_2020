@@ -1,5 +1,6 @@
-package streamingLectures;
+package lectures;
 
+import java.io.PrintStream;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -20,16 +21,10 @@ public class streamingLecturesMain {
 
     static void checkVisit(List<Student> students, String checkLection) {
         System.out.println("Студенты,посетившие " + checkLection + " минимум 1 раз:");
-        students.stream()
-                .forEach(student -> {
-                    Set<Lection> setLection = student.getLections();
-                    setLection.stream()
-                            .filter(lection -> lection.getLectionName().equals(checkLection))
-                            .map(lection -> student)
-                            .distinct()
-                            .map(student1 -> student.getName())
-                            .forEach(System.out::println);
-                });
+        students
+                .stream()
+                .filter(student -> student.getLections().stream().anyMatch(lection -> lection.getLectionName().equals(checkLection)))
+                .forEach(student -> System.out.println(student.getName()));
     }
 
     static void getStatistic(List<Student> students) {
@@ -43,15 +38,9 @@ public class streamingLecturesMain {
     static void maxNumberOfVisits(List<Student> students) {
         System.out.println("Курсы с наибольшей посещаемостью:");
         Map<String, Integer> lectureVisiting = new HashMap<>();
-        lectureVisiting.put("матанализ", 0);
-        lectureVisiting.put("английский язык", 0);
-        lectureVisiting.put("физкультура", 0);
-        lectureVisiting.put("история", 0);
-        lectureVisiting.put("философия", 0);
         students.stream()
-                .forEach(student -> student.getLections().forEach(lection -> {
-                    lectureVisiting.put(lection.getLectionName(), lectureVisiting.get(lection.getLectionName()) + 1);
-                }));
+                .flatMap(student -> student.getLections().stream())
+                .forEach(lection -> lectureVisiting.merge(lection.getLectionName(),1, (oldVal,newVal) -> oldVal+newVal));
         lectureVisiting.entrySet()
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
@@ -64,19 +53,15 @@ public class streamingLecturesMain {
         students.stream().forEach(student -> {
             Map<LocalDate, Integer> lectionsNumbers = new HashMap<>();
             student.getLections().forEach(lection -> {
-                if (lectionsNumbers.getOrDefault(lection.getLectionDate(), -1) == -1) {
-                    lectionsNumbers.putIfAbsent(lection.getLectionDate(), 1);
-                } else {
-                    lectionsNumbers.put(lection.getLectionDate(), lectionsNumbers.get(lection.getLectionDate()) + 1);
-                }
+                lectionsNumbers.merge(lection.getLectionDate(), 1, (oldVal, newVal) -> oldVal + newVal);
+                List<Integer> lectionNumbersValue = new ArrayList<>();
+                lectionsNumbers.entrySet().stream()
+                        .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
+                        .forEach(k -> lectionNumbersValue.add(k.getValue()));
+                studentsAndNumberLections.put(student, lectionNumbersValue.get(0));
             });
-            List<Integer> lectionNumbersValue = new ArrayList<>();
-            lectionsNumbers.entrySet().stream()
-                    .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
-                    .forEach(k -> lectionNumbersValue.add(k.getValue()));
-            studentsAndNumberLections.put(student, lectionNumbersValue.get(0));
-        });
-        studentsAndNumberLections.entrySet().stream().sorted(Map.Entry.<Student, Integer>comparingByValue().reversed()).forEach(System.out::println);
+            studentsAndNumberLections.entrySet().stream().sorted(Map.Entry.<Student, Integer>comparingByValue().reversed()).forEach(System.out::println);
+            });
     }
 
     static void maxCourseVisit(List<Student> students) {
@@ -89,7 +74,7 @@ public class streamingLecturesMain {
         students.forEach(student -> {
             Set<String> setLection = new HashSet<>();
             student.getLections().forEach(lecture -> setLection.add(lecture.getLectionName()));
-            setLection.forEach(lection -> visitCourse.put(lection, visitCourse.get(lection) + 1));
+            setLection.forEach(lection -> visitCourse.merge(lection, 1,(oldVal,newVal)->oldVal + newVal));
         });
         System.out.println(visitCourse);
 

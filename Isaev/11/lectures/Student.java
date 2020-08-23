@@ -1,4 +1,4 @@
-package streamingLectures;
+package lectures;
 
 
 import java.util.HashSet;
@@ -7,12 +7,12 @@ import java.util.Set;
 
 public class Student {
 
-    String name;
-    Set<Lection> lections;
-    String[] names = {"Вася", "Петя", "Никита", "Олег", "Даша", "Лена", "Катя", "Алина", "Руслан", "Вероника"};
+    private String name;
+    private Set<Lection> lections;
+    private static final String[] NAMES = {"Вася", "Петя", "Никита", "Олег", "Даша", "Лена", "Катя", "Алина", "Руслан", "Вероника"};
 
     public Student() {
-        this.name = names[new Random().nextInt(names.length)];
+        this.name = NAMES[new Random().nextInt(NAMES.length)];
         this.lections = getLectionsToSet(5 + new Random().nextInt(10));
     }
 

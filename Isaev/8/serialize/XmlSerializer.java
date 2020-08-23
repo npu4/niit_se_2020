@@ -58,7 +58,7 @@ public class XmlSerializer {
             XmlName fieldName = field.getAnnotation(XmlName.class);
             return fieldName.fieldName();
         }
-        return null;
+        return field.getName();
     }
 
     static String typeName(Class type) {
@@ -66,6 +66,6 @@ public class XmlSerializer {
             XmlTypeName typeName = (XmlTypeName) type.getAnnotation(XmlTypeName.class);
             return typeName.typeName();
         }
-        return null;
+        return type.getSimpleName();
     }
 }

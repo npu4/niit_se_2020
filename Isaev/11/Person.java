@@ -2,14 +2,14 @@ import java.util.*;
 
 public class Person {
 
-    String name;
-    int age;
-    String[] names = {"Вася","Петя","Никита","Олег","Даша","Лена","Катя"};
-    int[] ages = {10,20,45,30,32,18,17};
+    private String name;
+    private int age;
+    private static final String[] NAMES = {"Вася","Петя","Никита","Олег","Даша","Лена","Катя"};
+    private static final int[] AGES = {10,20,45,30,32,18,17};
 
     public Person() {
-        this.name = names[new Random().nextInt(names.length)];
-        this.age = ages[new Random().nextInt(ages.length)];
+        this.name = NAMES[new Random().nextInt(NAMES.length)];
+        this.age = AGES[new Random().nextInt(AGES.length)];
     }
 
     public String getName() {
