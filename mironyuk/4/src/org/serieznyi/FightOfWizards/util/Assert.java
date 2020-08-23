@@ -1,5 +1,6 @@
 package org.serieznyi.FightOfWizards.util;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -51,6 +52,18 @@ public final class Assert {
     Objects.requireNonNull(collection);
 
     if (collection.isEmpty()) {
+      throw new IllegalArgumentException(message);
+    }
+  }
+
+    public static void requirePathExists(Path path, String message) {
+      if (!path.toFile().exists()) {
+        throw new IllegalArgumentException(message);
+      }
+    }
+
+  public static void requirePathEnds(Path path, String postfix, String message) {
+    if (!path.toString().endsWith(postfix)) {
       throw new IllegalArgumentException(message);
     }
   }

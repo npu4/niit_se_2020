@@ -151,7 +151,7 @@ public class Scene {
   public void printCharacterStepInfo(Character character) {
     LOGGER.info(
             "--------------------- Ходит %s \"%s\" ---------------------",
-            character.getType().toString().toLowerCase(),
+            character.getType().translate().toLowerCase(),
             character.getName()
     );
   }
@@ -217,7 +217,11 @@ public class Scene {
     return Optional.empty();
   }
 
-  private enum State {
+    public Map<Integer, Character> getCharacters() {
+      return characters;
+    }
+
+    private enum State {
     INITIALIZED,
     STARTED,
     DONE

@@ -8,19 +8,14 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class XmlPrettyFormatter {
@@ -36,27 +31,19 @@ public class XmlPrettyFormatter {
     this.indent = indent;
   }
 
-  private static NodeList extractNodeListWithNormalizedSpaces(Document document)
-      throws XPathExpressionException {
+  private static NodeList extractNodeListWithNormalizedSpaces(Document document) throws XPathExpressionException {
     XPath xPath = XPathFactory.newInstance().newXPath();
     return (NodeList)
         xPath.evaluate("//text()[normalize-space()='']", document, XPathConstants.NODESET);
   }
 
-  // метод для конвертации строки с XML разметкой в объект Document
-  private static Document convertStringToDocument(String xml) {
-    try {
-      return DocumentBuilderFactory.newInstance()
-          .newDocumentBuilder()
-          .parse(new InputSource(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))));
-    } catch (SAXException | IOException | ParserConfigurationException e) {
-      e.printStackTrace();
-    }
-    return null;
+  private static Document stringToDocument(String xml) throws ParserConfigurationException, IOException, SAXException {
+    return DocumentBuilderFactory.newInstance()
+        .newDocumentBuilder()
+        .parse(new InputSource(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8))));
   }
 
-  private String toPrettyXmlString(Document document) {
-    try {
+  private String toPrettyXmlString(Document document) throws XPathExpressionException, TransformerException {
       NodeList nodeList = extractNodeListWithNormalizedSpaces(document);
 
       for (int i = 0; i < nodeList.getLength(); i++) {
@@ -64,31 +51,56 @@ public class XmlPrettyFormatter {
         node.getParentNode().removeChild(node);
       }
 
-      Transformer transformer = this.createTransformer();
+      Transformer transformer = this.createPrettyTransformer();
 
       StringWriter stringWriter = new StringWriter();
       transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
 
       return stringWriter.toString();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
   }
 
-  private Transformer createTransformer() throws TransformerConfigurationException {
+  private Transformer createPrettyTransformer() throws TransformerConfigurationException {
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
     transformerFactory.setAttribute("indent-number", this.indent);
     Transformer transformer = transformerFactory.newTransformer();
     transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
     return transformer;
   }
 
-  public String toPrettyView(String xml) {
-    Document document = convertStringToDocument(xml);
+  public String toPrettyView(String xml) throws FormattingException {
+    try {
+      Document document = stringToDocument(xml);
 
-    return toPrettyXmlString(document);
+      return toPrettyXmlString(document);
+    } catch (Throwable e) {
+      throw new FormattingException(e);
+    }
+  }
+
+  public String fromPrettyView(String value) {
+    return trim(value);
+  }
+
+  public static String trim(String input) {
+    BufferedReader reader = new BufferedReader(new StringReader(input));
+    StringBuilder result = new StringBuilder();
+    try {
+      String line;
+      while ( (line = reader.readLine() ) != null)
+        result.append(line.trim());
+      return result.toString();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static class FormattingException extends Exception
+  {
+    public FormattingException(Throwable e) {
+      super(e);
+    }
   }
 }

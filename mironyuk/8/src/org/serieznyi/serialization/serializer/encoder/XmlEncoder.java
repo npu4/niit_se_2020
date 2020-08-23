@@ -4,12 +4,13 @@ import org.serieznyi.serialization.serializer.Encoder;
 import org.serieznyi.serialization.serializer.Serializer;
 import org.serieznyi.serialization.serializer.exception.EncoderException;
 import org.serieznyi.serialization.serializer.value.ListValue;
+import org.serieznyi.serialization.serializer.value.MapValue;
 import org.serieznyi.serialization.serializer.value.ObjectValue;
 import org.serieznyi.serialization.serializer.value.Value;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,8 +19,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class XmlEncoder implements Encoder {
@@ -51,6 +54,8 @@ public class XmlEncoder implements Encoder {
 
       Element element = document.createElement(key);
 
+      element.setAttribute("type", value.getType().toString());
+
       element.appendChild(valueToXmlElement(document, value));
 
       rootElement.appendChild(element);
@@ -67,7 +72,6 @@ public class XmlEncoder implements Encoder {
     } else if (value.getType() == Value.Type.NULL) {
       node = document.createTextNode(NULL_IDENTIFIER);
     } else if (value.getType() == Value.Type.LIST) {
-
       ListValue listValue = (ListValue) value;
 
       node = document.createDocumentFragment();
@@ -75,10 +79,33 @@ public class XmlEncoder implements Encoder {
       for (Value<?> listValueItem : listValue.getValue()) {
         node.appendChild(valueToXmlElement(document, listValueItem));
       }
+    } else if (value.getType() == Value.Type.MAP) {
+
+      MapValue mapValue = (MapValue) value;
+
+      node = document.createDocumentFragment();
+
+      for (Map.Entry<String, ? extends Value<?>> entry : mapValue.getValue().entrySet()) {
+        Element item = document.createElement("item");
+
+        Node key = document.createElement("key");
+        key.appendChild(document.createTextNode(entry.getKey()));
+        item.appendChild(key);
+
+        Node value2 = document.createElement("value");
+        value2.appendChild(valueToXmlElement(document, entry.getValue()));
+        item.appendChild(value2);
+
+        node.appendChild(item);
+      }
     } else if (value.getType() == Value.Type.OBJECT) {
       node = objectValueToXmlElement(document, (ObjectValue) value);
     } else {
       throw new EncoderException("Не поддерживаемый тип: " + value.getType());
+    }
+
+    if (node instanceof Element) {
+      ((Element)node).setAttribute("type", value.getType().toString());
     }
 
     return node;
@@ -91,19 +118,44 @@ public class XmlEncoder implements Encoder {
       Node node = element.getChildNodes().item(i);
       String nodeName = node.getNodeName();
       Node firstChild = node.getFirstChild();
-      int firstChildType = firstChild.getNodeType();
-      int nodeChildesCount = node.getChildNodes().getLength();
 
-      if (nodeChildesCount == 1 && firstChildType == Node.TEXT_NODE) {
-        String nodeText = node.getTextContent();
+      String type = node.getAttributes().getNamedItem("type").getNodeValue();
 
-        if (nodeText.equals(NULL_IDENTIFIER)) {
-          objectValue.addNullValue(node.getNodeName());
-        } else {
-          objectValue.addPrimitiveValue(node.getNodeName(), nodeText);
-        }
-      } else if (nodeChildesCount == 1 && firstChildType == Node.ELEMENT_NODE) {
+      if (Value.Type.PRIMITIVE.name().equals(type)) {
+        objectValue.addPrimitiveValue(nodeName, node.getTextContent());
+      } else if (Value.Type.NULL.name().equals(type)) {
+        objectValue.addNullValue(nodeName);
+      } else if (Value.Type.ENUM.name().equals(type)) {
+        objectValue.addEnumValue(nodeName, node.getTextContent());
+      } else if (Value.Type.OBJECT.name().equals(type)) {
         objectValue.addObjectValue(nodeName, xmlElementToObjectValue((Element) firstChild));
+      } else if (Value.Type.LIST.name().equals(type)) {
+        List<ObjectValue> list = new ArrayList<>();
+
+        NodeList childNodes = node.getChildNodes();
+
+        for (int k = 0; k < childNodes.getLength() ; k++) {
+          list.add(xmlElementToObjectValue((Element) childNodes.item(k)));
+        }
+
+        objectValue.addListValue(nodeName, new ListValue(list));
+      } else if (Value.Type.MAP.name().equals(type)) {
+        Map<String, ObjectValue> map = new HashMap<>();
+
+        NodeList childNodes = node.getChildNodes();
+
+        for (int k = 0; k < childNodes.getLength() ; k++) {
+          Node item = childNodes.item(k);
+
+          Element first = (Element) item.getFirstChild();
+          Element last = (Element) item.getLastChild();
+          Node keyNode = first.getTagName().equals("key") ? first : last;
+          Node valueNode = last.getTagName().equals("value") ? last.getFirstChild() : first.getFirstChild();
+
+          map.put(keyNode.getTextContent(), xmlElementToObjectValue((Element) valueNode));
+        }
+
+        objectValue.addMapValue(nodeName, new MapValue(map));
       }
     }
 
@@ -119,7 +171,7 @@ public class XmlEncoder implements Encoder {
               .parse(new ByteArrayInputStream(data.getBytes()));
 
       return xmlElementToObjectValue(document.getDocumentElement());
-    } catch (SAXException | ParserConfigurationException | IOException e) {
+    } catch (Throwable e) {
       throw new EncoderException(e);
     }
   }

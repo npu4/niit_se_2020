@@ -114,17 +114,27 @@ public abstract class Character {
   }
 
   public enum Type {
-    MONSTER {
-      @Override
-      public String toString() {
-        return "Монстр";
+    MONSTER, WIZARD;
+
+    public String translate()
+    {
+      String value;
+
+      switch (this) {
+        case WIZARD: {
+          value = "Маг";
+          break;
+        }
+        case MONSTER: {
+          value = "Монстр";
+          break;
+        }
+        default: {
+          value = "";
+        }
       }
-    },
-    WIZARD {
-      @Override
-      public String toString() {
-        return "Маг";
-      }
+
+      return value;
     }
   }
 }

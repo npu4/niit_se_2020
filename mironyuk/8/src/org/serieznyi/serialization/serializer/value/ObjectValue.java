@@ -47,6 +47,12 @@ public final class ObjectValue extends Value<SortedMap<String, Value<?>>> {
     return this;
   }
 
+  public ObjectValue addMapValue(String name, MapValue value) {
+    this.value.put(name, value);
+
+    return this;
+  }
+
   public String getTypeName() {
     return typeName;
   }

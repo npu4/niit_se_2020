@@ -6,7 +6,7 @@ import org.serieznyi.serialization.serializer.exception.FormatNotSupportedExcept
 public class Main {
   private static final XmlPrettyFormatter xmlPrettyFormatter = new XmlPrettyFormatter();
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws XmlPrettyFormatter.FormattingException {
     Person person = new Person("Василий", 22, "password123");
     person.friend = new Person("Алексей", 24, "password125");
     person.rating = 21.0F;
