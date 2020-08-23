@@ -22,6 +22,7 @@ public class ReplayActionProducer implements ObjectsProducer {
     private boolean initialized = false;
     private Snapshot snapshot;
     private Iterator<Action> actionIterator;
+    private final LinksFixer linksFixer;
 
     public ReplayActionProducer(Path replayFilePath) {
         Assert.requirePathExists(replayFilePath, "Файл не существует: " + replayFilePath);
@@ -29,6 +30,8 @@ public class ReplayActionProducer implements ObjectsProducer {
         replayPath = replayFilePath;
 
         serializer = new Serializer();
+
+        linksFixer = new LinksFixer();
     }
 
     private void initialise() {
@@ -50,7 +53,7 @@ public class ReplayActionProducer implements ObjectsProducer {
 
             snapshot = (Snapshot) serializer.deserialize(xml, Snapshot.class, Serializer.Format.XML);
 
-            resetCharacters();
+            linksFixer.resetCharacters();
         } catch (IOException|FormatNotSupportedException e) {
             throw new RuntimeException(e);
         }
@@ -58,107 +61,6 @@ public class ReplayActionProducer implements ObjectsProducer {
         actionIterator = snapshot.getActions().iterator();
 
         initialized = true;
-    }
-
-    private void resetCharacters() {
-        try {
-            resetCharactersHealth();
-
-            resetCharacterLinkInActions();
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void resetCharacterLinkInActions() throws IllegalAccessException {
-        for (Action action : snapshot.getActions()) {
-            resetCharacterLink(action);
-        }
-    }
-
-    private void resetCharacterLink(Object object) throws IllegalAccessException {
-        Class<?> clazz = object.getClass();
-
-        Map<String, Field> fields = getFields(clazz);
-
-        for (Map.Entry<String, Field> entry : fields.entrySet()) {
-            Field field = entry.getValue();
-            field.setAccessible(true);
-            Object fieldValue = field.get(object);
-
-            if (fieldValue instanceof Character) {
-                field.set(object, getRealCharacterLinkFor((Character) fieldValue));
-            } else if (fieldValue instanceof Collection) {
-                resetCharacterLinkInCollection(fieldValue);
-            } else if (fieldValue instanceof Action) {
-                resetCharacterLink(fieldValue);
-            }
-        }
-    }
-
-    private void resetCharacterLinkInCollection(Object fieldValue) throws IllegalAccessException {
-        Collection collection = (Collection<?>) fieldValue;
-
-        if (collection.isEmpty()) {
-            return;
-        }
-
-        Optional<?> first = collection.stream().findFirst();
-
-        if (first.get() instanceof Character) {
-            Object[] collectionData = collection.toArray();
-            collection.clear();
-            for (Object o : collectionData) {
-                collection.add(getRealCharacterLinkFor((Character) o));
-            }
-        } else {
-            for (Object o : collection) {
-                resetCharacterLink(o);
-            }
-        }
-    }
-
-    private Character getRealCharacterLinkFor(Character character)
-    {
-        for (Map.Entry<Integer, Character> entry : snapshot.getCharacters().entrySet()) {
-            Character fixedCharter = entry.getValue();
-
-            if (fixedCharter.getName().equals(character.getName())) {
-                return fixedCharter;
-            }
-        }
-
-        throw new RuntimeException("Не могу найти ссылку для персонажа: " + character);
-    }
-
-    private void resetCharactersHealth() throws IllegalAccessException {
-        for (Map.Entry<Integer, Character> entry : snapshot.getCharacters().entrySet()) {
-            Character character = entry.getValue();
-            Class<? extends Character> clazz = character.getClass();
-            Map<String, Field> fields = getFields(clazz);
-
-            Field health = fields.get("health");
-            health.setAccessible(true);
-
-            Field initialHealth = fields.get("initialHealth");
-            initialHealth.setAccessible(true);
-
-            health.set(character, initialHealth.get(character));
-        }
-    }
-
-    private Map<String, Field> getFields(Class<?> clazzArg) {
-        Map<String, Field> fields = new HashMap<>();
-
-        Class<?> clazz = clazzArg;
-
-        do {
-            for (Field field : clazz.getDeclaredFields()) {
-                fields.put(field.getName(), field);
-            }
-        } while ((clazz = clazz.getSuperclass()) != null && !clazz.equals(Object.class));
-
-        return fields;
     }
 
     @Override
@@ -177,5 +79,109 @@ public class ReplayActionProducer implements ObjectsProducer {
         }
 
         return actionIterator.next();
+    }
+
+    private class LinksFixer {
+        private void resetCharacters() {
+            try {
+                resetCharactersHealth();
+
+                resetCharacterLinkInActions();
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private void resetCharacterLinkInActions() throws IllegalAccessException {
+            for (Action action : snapshot.getActions()) {
+                resetCharacterLink(action);
+            }
+        }
+
+        private void resetCharacterLink(Object object) throws IllegalAccessException {
+            Class<?> clazz = object.getClass();
+
+            Map<String, Field> fields = getFields(clazz);
+
+            for (Map.Entry<String, Field> entry : fields.entrySet()) {
+                Field field = entry.getValue();
+                field.setAccessible(true);
+                Object fieldValue = field.get(object);
+
+                if (fieldValue instanceof Character) {
+                    field.set(object, getRealCharacterLinkFor((Character) fieldValue));
+                } else if (fieldValue instanceof Collection) {
+                    resetCharacterLinkInCollection(fieldValue);
+                } else if (fieldValue instanceof Action) {
+                    resetCharacterLink(fieldValue);
+                }
+            }
+        }
+
+        private void resetCharacterLinkInCollection(Object fieldValue) throws IllegalAccessException {
+            Collection collection = (Collection<?>) fieldValue;
+
+            if (collection.isEmpty()) {
+                return;
+            }
+
+            Optional<?> first = collection.stream().findFirst();
+
+            if (first.get() instanceof Character) {
+                Object[] collectionData = collection.toArray();
+                collection.clear();
+                for (Object o : collectionData) {
+                    collection.add(getRealCharacterLinkFor((Character) o));
+                }
+            } else {
+                for (Object o : collection) {
+                    resetCharacterLink(o);
+                }
+            }
+        }
+
+        private Character getRealCharacterLinkFor(Character character)
+        {
+            for (Map.Entry<Integer, Character> entry : snapshot.getCharacters().entrySet()) {
+                Character fixedCharter = entry.getValue();
+
+                if (fixedCharter.getName().equals(character.getName())) {
+                    return fixedCharter;
+                }
+            }
+
+            throw new RuntimeException("Не могу найти ссылку для персонажа: " + character);
+        }
+
+        private void resetCharactersHealth() throws IllegalAccessException {
+            for (Map.Entry<Integer, Character> entry : snapshot.getCharacters().entrySet()) {
+                Character character = entry.getValue();
+                Class<? extends Character> clazz = character.getClass();
+                Map<String, Field> fields = getFields(clazz);
+
+                Field health = fields.get("health");
+                health.setAccessible(true);
+
+                Field initialHealth = fields.get("initialHealth");
+                initialHealth.setAccessible(true);
+
+                health.set(character, initialHealth.get(character));
+            }
+        }
+
+        private Map<String, Field> getFields(Class<?> clazzArg) {
+            Map<String, Field> fields = new HashMap<>();
+
+            Class<?> clazz = clazzArg;
+
+            do {
+                for (Field field : clazz.getDeclaredFields()) {
+                    fields.put(field.getName(), field);
+                }
+            } while ((clazz = clazz.getSuperclass()) != null && !clazz.equals(Object.class));
+
+            return fields;
+        }
+
     }
 }

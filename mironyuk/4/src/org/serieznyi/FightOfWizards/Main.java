@@ -26,8 +26,7 @@ public class Main {
   public static void main(String[] args) throws IOException, FormatNotSupportedException, XmlPrettyFormatter.FormattingException {
     sceneOptions = getSceneOptions();
 
-    GameMode gameMode = GameMode.REPLAY; // TODO
-//    GameMode gameMode = chooseGameMode();
+    GameMode gameMode = chooseGameMode();
 
     if (gameMode == GameMode.EXIT) {
       System.exit(0);
@@ -85,8 +84,7 @@ public class Main {
   }
 
   private static ReplayActionProducer makeReplayActionProducer() {
-    return new ReplayActionProducer(Paths.get("asd.xml")); // TODO
-//    return new ReplayActionProducer(getReplayPathForRestore());
+    return new ReplayActionProducer(getReplayPathForRestore());
   }
 
   private static RandomGameObjectsProducer makeRandomGameObjectProducer() {
