@@ -5,15 +5,16 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 public class StreamingLectures {
     public static void main(String[] args) {
-        List <Lection> lectionList = initLectionsList();
-        List <Student> studentList = initStudentsList(lectionList);
+        List<Lection> lectionList = initLectionsList();
+        List<Student> studentList = initStudentsList(lectionList);
 
         whoVisitedMatan(studentList);
         studentVisitStatistics(studentList);
         lecturesWithMoreAttendance(studentList);
-        studentsWhoAttendedLargestNumberOfLecturesPerDay(studentList,lectionList);
+        studentsWhoAttendedLargestNumberOfLecturesPerDay(studentList);
         lectureStatistics(studentList);
 
     }
@@ -34,34 +35,22 @@ public class StreamingLectures {
         for (String[] statistic : statistics) System.out.println(statistic[0] + " -  " + statistic[1] + " студентов.");
     }
 
-    private static void studentsWhoAttendedLargestNumberOfLecturesPerDay(List<Student> studentList, List<Lection> lectionList) {
-        List<String[]> mostVisitsPerDayByStudent = new ArrayList<>();
-        List<String[]> datesOfLectures = new ArrayList<>();
-        Set<LocalDate> dates = new HashSet<>();
-        for (Lection lection : lectionList) dates.add(lection.getDate());
-        for (LocalDate date : dates) datesOfLectures.add(new String[]{date.toString(), "0"});
-        for (Student student : studentList) {
-            student.getLections().stream()
-                    .map(Lection::getDate)
-                    .sorted()
-                    .forEach(localDate -> {
-                        for (String[] datesOfLecture : datesOfLectures)
-                            if (localDate.toString().equals(datesOfLecture[0]))
-                                datesOfLecture[1] = Integer.toString(Integer.parseInt(datesOfLecture[1]) + 1);
-                    });
-            datesOfLectures.sort((o1, o2) -> Integer.compare(Integer.parseInt(o2[1]), Integer.parseInt(o1[1])));
-            mostVisitsPerDayByStudent.add(new String[]{student.getName(), datesOfLectures.get(0)[1], datesOfLectures.get(0)[0]});
-            for (String[] datesOfLecture : datesOfLectures) {
-                datesOfLecture[1] = "0";
-            }
-        }
-        mostVisitsPerDayByStudent.sort((o1, o2) -> Integer.compare(Integer.parseInt(o2[1]), Integer.parseInt(o1[1])));
+    private static void studentsWhoAttendedLargestNumberOfLecturesPerDay(List<Student> studentList) {
+        Map<String, Integer> mostVisitsPerDayByStudent = new HashMap<>();
+        studentList.forEach(student -> {
+            Map<LocalDate, Integer> numberLection = new HashMap<>();
+            student.getLections().forEach(lection -> numberLection.merge(lection.getDate(), 1, Integer::sum));
+            mostVisitsPerDayByStudent.put(student.getName(), Collections.max(numberLection.values(), Comparator.comparingInt(o -> o)));
+        });
+        List<Map.Entry<String, Integer>> list = new ArrayList(mostVisitsPerDayByStudent.entrySet());
+        Collections.sort(list, (o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+        Integer max = list.get(0).getValue();
         System.out.println("\n    Студенты, посетившие наибольшее количество лекций в день:  ");
-        String s = mostVisitsPerDayByStudent.get(0)[1];
-        for (String[] strings : mostVisitsPerDayByStudent)
-            if (strings[1].equals(s)) System.out.println(strings[0] + " посетил " + strings[1] + " лекции " +
-                    strings[2]);
+        for (Map.Entry<String, Integer> l : list)
+            if (l.getValue().equals(max))
+                System.out.println("Студент " + l.getKey() + " посетил " + l.getValue() + " лекции.");
     }
+
 
     private static void lecturesWithMoreAttendance(List<Student> studentList) {
         List<String[]> attendanceOfLectures = new ArrayList<>();
@@ -87,51 +76,47 @@ public class StreamingLectures {
         }
     }
 
-    private static void studentVisitStatistics(List<Student> studentList){
+    private static void studentVisitStatistics(List<Student> studentList) {
         System.out.println("\n    Статистика посещений для каждого студента: ");
-        studentList.stream()
-                .forEach(student -> System.out.println(student.getName()+" посетил "
-                +student.getLectionsSize()+" лекций."));
+        studentList
+                .forEach(student -> System.out.println(student.getName() + " посетил "
+                        + student.getLectionsSize() + " лекций."));
     }
 
-    private static void whoVisitedMatan(List<Student> studentList){
-        System.out.println("    Список студентов, которые хоть раз посещали "+LectureName.matan.getName()+":");
-        AtomicInteger count= new AtomicInteger(1);
-        studentList.stream()
-                .filter(student->student.getLections().toString().contains(LectureName.matan.getName()))
-                .forEach(student -> System.out.println((count.getAndIncrement())+". "+student.getName())
-                );
+    private static void whoVisitedMatan(List<Student> studentList) {
+        System.out.println("    Список студентов, которые хоть раз посещали " + LectureName.matan.getName() + ":");
+        AtomicInteger count = new AtomicInteger(1);
+        for (Student student : studentList) {
+            student.getLections().stream()
+                    .map(Lection::getName)
+                    .distinct()
+                    .filter(s -> s.equals(LectureName.matan.getName()))
+                    .forEach(s -> System.out.println((count.getAndIncrement()) + ". " + student.getName()));
+        }
     }
 
-    private static List<Student> initStudentsList(List<Lection> lectionList){
+    private static List<Student> initStudentsList(List<Lection> lectionList) {
         List<Student> studentList = new ArrayList<>();
-        studentList.add(new Student(lectionList,"Кирилл"));
-        studentList.add(new Student(lectionList,"Петя"));
-        studentList.add(new Student(lectionList,"Иван"));
-        studentList.add(new Student(lectionList,"Федя"));
-        studentList.add(new Student(lectionList,"Алексей"));
-        studentList.add(new Student(lectionList,"Коля"));
-        studentList.add(new Student(lectionList,"Артем"));
-        studentList.add(new Student(lectionList,"Игорь"));
-        studentList.add(new Student(lectionList,"Саша"));
-        studentList.add(new Student(lectionList,"Сергей"));
+        String[] studentName = new String[]{"Кирилл", "Петя", "Иван", "Федя", "Алексей", "Коля",
+                "Артем", "Игорь", "Саша", "Сергей"};
+        for (String s : studentName) studentList.add(new Student(lectionList, s));
         return studentList;
     }
 
-    private static List<Lection> initLectionsList(){
-        List<Lection> lections= new ArrayList<>();
+    private static List<Lection> initLectionsList() {
+        List<Lection> lections = new ArrayList<>();
         //расписание на неделю
-        LocalDate date;
-        for (int i = 0; i <7 ; i++) {
-            date = LocalDate.of(2020, 3, i+1);
-           if (date.getDayOfWeek()== DayOfWeek.SUNDAY){
-               date.plusDays(1L);
-               continue;
-           }
+//        LocalDate date;
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = LocalDate.of(2020, 3, i + 1);
+            if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                date.plusDays(1L);
+                continue;
+            }
             for (LectureName lectureName : LectureName.values()) {
                 //в среднем по две лекции в день
-                if(2<Student.rndIn(0,4)){
-                    lections.add(new Lection(lectureName.getName(),date));
+                if (2 < Student.rndIn(0, 4)) {
+                    lections.add(new Lection(lectureName.getName(), date));
                 }
             }
             date.plusDays(1L);
