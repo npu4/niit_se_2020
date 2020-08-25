@@ -6,13 +6,15 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MazeGenerator {
-    public int[][] generate(int width, int height)
+    public Maze generate(int width, int height)
     {
         Node[][] maze = makeMaze(width, height);
 
         int[][] intMaze = mazeToIntArray(maze);
 
-        return addWallsAround(intMaze);
+        int[][] withWalls = addWallsAround(intMaze);
+
+        return new Maze(withWalls);
     }
 
     private int[][] addWallsAround(int[][] maze) {
