@@ -6,13 +6,14 @@ import java.util.concurrent.*;
 
 public class Main {
 
-    public static final int MIN_PLAYERS_COUNT = 2;
-    public static final int MAX_PLAYERS_COUNT = 5;
+    public static final int MIN_PLAYERS_COUNT = 1;
+    public static final int MAX_PLAYERS_COUNT = 2;
+    public static final int MAZE_SIZE = 10;
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         MazeGenerator generator = new MazeGenerator();
 
-        Maze maze = generator.generate(10, 10);
+        Maze maze = generator.generate(MAZE_SIZE);
 
         drawMaze(maze);
 
@@ -24,9 +25,7 @@ public class Main {
 
         for (Player player : players) {
             final Future<Player> task = service.submit(() -> {
-                while (!player.step()) {
-                    System.out.println(player.getName() + " в поисках выхода из лабиринта");
-                }
+                while (!player.step()) {}
 
                 return player;
             });
@@ -39,6 +38,8 @@ public class Main {
 
             System.out.println(player.getName() + " нашел выход из лабиринта");
         }
+
+        service.shutdown();
     }
 
     private static List<Player> makePlayers(Maze maze) {

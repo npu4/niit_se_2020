@@ -6,6 +6,11 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MazeGenerator {
+    public Maze generate(int size)
+    {
+        return generate(size, size);
+    }
+
     public Maze generate(int width, int height)
     {
         Node[][] maze = makeMaze(width, height);
