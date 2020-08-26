@@ -1,6 +1,7 @@
 package org.serieznyi.FightOfWizards.character.wizard;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.character.Character;
 
 public interface Spell {
@@ -8,5 +9,5 @@ public interface Spell {
 
   String getDescription();
 
-  void cast(Character wizard, Scene scene);
+  Action cast(Character wizard, Scene scene);
 }

@@ -1,8 +1,9 @@
 package org.serieznyi.FightOfWizards;
 
+import org.serieznyi.FightOfWizards.action.Action;
+import org.serieznyi.FightOfWizards.actionProducer.ObjectsProducer;
 import org.serieznyi.FightOfWizards.character.Character;
 import org.serieznyi.FightOfWizards.logging.Logger;
-import org.serieznyi.FightOfWizards.util.Functions;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -17,8 +18,12 @@ public class Scene {
   private final Map<Integer, Character> characters = new HashMap<>();
   private final List<Character> deadCharacters = new ArrayList<>();
   private State state;
+  final private ActionConsumer producer = new ActionConsumer();
+  final private List<Action> producedActions = new ArrayList<>();
+  private final ObjectsProducer objectsProducer;
+  private int step = 1;
 
-  public Scene(int size) {
+  public Scene(int size, ObjectsProducer objectsProducer) {
     if (size > MAX_SCENE_SIZE || size < MIN_SCENE_SIZE) {
       throw new IllegalArgumentException(
           "Размер сцены должен быть не меньше "
@@ -26,16 +31,25 @@ public class Scene {
               + " и не больше "
               + MAX_SCENE_SIZE);
     }
+
+    this.objectsProducer = objectsProducer;
+
     this.size = size;
 
     state = State.INITIALIZED;
   }
 
-  public void appendCharacterToRandomPosition(Character character) {
+  public void appendCharacters(Set<Character> charactersArg) {
     if (state != State.INITIALIZED) {
       throw new RuntimeException("Невозможно добавить новых персонажей т.к. сцена уже запущена");
     }
 
+    for (Character character : charactersArg) {
+      appendCharacter(character);
+    }
+  }
+
+  private void appendCharacter(Character character) {
     if (characters.containsValue(character)) {
       throw new IllegalArgumentException("Персонаж уже на сцене: " + character);
     }
@@ -93,8 +107,7 @@ public class Scene {
   }
 
   public Map<Integer, Character> getOpponentsFor(Character character, Character.Type type) {
-    return getOpponentsForInternal(
-        character, (Map.Entry<Integer, Character> entry) -> entry.getValue().getType() == type);
+    return getOpponentsForInternal(character, (Map.Entry<Integer, Character> entry) -> entry.getValue().getType() == type);
   }
 
   private Map<Integer, Character> getOpponentsForInternal(
@@ -107,39 +120,46 @@ public class Scene {
   }
 
   public void run() {
+    appendCharacters(objectsProducer.getCharacters(this, size));
+
     state = State.STARTED;
 
     LOGGER.info("Начинается великая битва!");
 
-    if (characters.isEmpty()) {
-      LOGGER.info("Но похоже на нее ни кто не пришел");
-      return;
-    }
+    Action action;
 
-    LOGGER.info(String.format("На поле боя находится бойцов: %s\n", characters.size()));
-
-    for (int step = 1; getAliveCharacters().size() > 1; step++) {
-      LOGGER.info("Шаг: " + step);
-      for (Character character : getShuffledCharacters()) {
-        if (!hasAnyOpponents() || character.isDead()) {
-          break;
-        }
-
-        LOGGER.info(
-            "--------------------- Ходит %s \"%s\" ---------------------",
-            character.getType().toString().toLowerCase(), character.getName());
-
-        character.action(this);
-
-        checkBodies();
-      }
+    while ((action = objectsProducer.nextAction(this)) != null) {
+      producer.produce(action);
 
       LOGGER.newline();
+
+      checkBodies();
+
+      producedActions.add(action);
+    }
+
+    if (producedActions.isEmpty()) {
+      LOGGER.info("Но похоже на нее ни кто не пришел");
+      return;
     }
 
     showWinner();
 
     state = State.DONE;
+  }
+
+  public void printCharacterStepInfo(Character character) {
+    LOGGER.info(
+            "--------------------- Ходит %s \"%s\" ---------------------",
+            character.getType().translate().toLowerCase(),
+            character.getName()
+    );
+  }
+
+  public void printStepInfo() {
+    LOGGER.info("Шаг: " + step++);
+
+    LOGGER.charactersOnBattlefield(getAliveCharacters());
   }
 
   private void showWinner() {
@@ -154,7 +174,7 @@ public class Scene {
     LOGGER.winner(winner);
   }
 
-  private List<Character> getAliveCharacters() {
+  public List<Character> getAliveCharacters() {
     return characters.values().stream()
         .filter(character -> !character.isDead())
         .collect(Collectors.toList());
@@ -169,22 +189,6 @@ public class Scene {
         LOGGER.characterDead(character);
       }
     }
-  }
-
-  private List<Character> getShuffledCharacters() {
-    return characters.entrySet().stream()
-        .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
-        .sorted(Functions::randomComparator)
-        .map(Map.Entry::getValue)
-        .collect(Collectors.toList());
-  }
-
-  private boolean hasAnyOpponents() {
-    return characters.entrySet().stream()
-            .filter((Map.Entry<Integer, Character> v) -> !v.getValue().isDead())
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-            .size()
-        > 1;
   }
 
   public int getIndexFor(Character character) {
@@ -213,9 +217,17 @@ public class Scene {
     return Optional.empty();
   }
 
-  private enum State {
+    public Map<Integer, Character> getCharacters() {
+      return characters;
+    }
+
+    private enum State {
     INITIALIZED,
     STARTED,
     DONE
+  }
+
+  public List<Action> getHistory() {
+    return new ArrayList<>(producedActions);
   }
 }

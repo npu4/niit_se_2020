@@ -4,26 +4,23 @@ import org.serieznyi.serialization.serializer.annotation.Serialize;
 import org.serieznyi.serialization.serializer.annotation.SerializeIgnoreField;
 import org.serieznyi.serialization.serializer.annotation.SerializeName;
 import org.serieznyi.serialization.serializer.exception.NormalizerException;
+import org.serieznyi.serialization.serializer.value.ListValue;
+import org.serieznyi.serialization.serializer.value.MapValue;
 import org.serieznyi.serialization.serializer.value.ObjectValue;
 import org.serieznyi.serialization.serializer.value.Value;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 public final class Normalizer {
   ObjectValue normalize(Object objectForNormalization) {
     Class<?> clazz = objectForNormalization.getClass();
 
-    if (!isNormalizationSupported(clazz)) {
-      throw NormalizerException.fromMessage("Class not marked by serialization annotation");
-    }
-
     if (!isHasDefaultConstructor(clazz)) {
-      throw NormalizerException.fromMessage("Class doesn't have default constructor");
+      throw NormalizerException.fromMessage("Class doesn't have default constructor: " + clazz.getName());
     }
 
     String typeName = getTypeName(clazz);
@@ -49,6 +46,24 @@ public final class Normalizer {
           }
         } else if (isPrimitiveTypeField(declaredField)) {
           resultObject.addPrimitiveValue(fieldName, fieldObject.toString());
+        } else if (fieldObject instanceof Enum<?>) {
+          resultObject.addEnumValue(fieldName, fieldObject.toString());
+        } else if (fieldObject instanceof List) {
+          List<ObjectValue> list = new ArrayList<>();
+
+          for (Object o : (List<?>) fieldObject) {
+            list.add(normalize(o));
+          }
+
+          resultObject.addListValue(fieldName, new ListValue(list));
+        } else if (fieldObject instanceof Map) {
+          Map<String, ObjectValue> map = new HashMap<>();
+
+          for (Map.Entry<?, ?> entry: ((Map<?, ?>) fieldObject).entrySet()) {
+            map.put(entry.getKey().toString(), normalize(entry.getValue()));
+          }
+
+          resultObject.addMapValue(fieldName, new MapValue(map));
         } else {
           resultObject.addObjectValue(fieldName, normalize(fieldObject));
         }
@@ -68,10 +83,6 @@ public final class Normalizer {
     }
 
     return false;
-  }
-
-  private boolean isNormalizationSupported(Class<?> clazz) {
-    return clazz.isAnnotationPresent(Serialize.class);
   }
 
   Object denormalize(ObjectValue value, Class<?> clazz) {
@@ -100,7 +111,7 @@ public final class Normalizer {
   private boolean isSkipNull(Class<?> clazz) {
     Serialize serializeAnnotation = clazz.getAnnotation(Serialize.class);
 
-    return serializeAnnotation.skipNull();
+    return serializeAnnotation != null && serializeAnnotation.skipNull();
   }
 
   private boolean isIgnoredField(Field declaredField) {
@@ -116,6 +127,11 @@ public final class Normalizer {
   private Object valueToObject(ObjectValue value, Class<?> clazz)
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
           InstantiationException {
+
+    if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
+      clazz = getObjectValueType(value);
+    }
+
     Constructor<?> declaredConstructor = clazz.getDeclaredConstructor();
     declaredConstructor.setAccessible(true);
 
@@ -139,15 +155,67 @@ public final class Normalizer {
   private Object castValueTo(Class<?> declaredFieldType, Value<?> value)
       throws InvocationTargetException, NoSuchMethodException, InstantiationException,
           IllegalAccessException {
-    Object result = null;
+    Object result;
 
-    if (value.getType() == Value.Type.PRIMITIVE) {
-      result = castPrimitiveValue(declaredFieldType, value.getValue());
-    } else if (value.getType() == Value.Type.OBJECT) {
-      result = valueToObject((ObjectValue) value, declaredFieldType);
+    switch (value.getType()) {
+      case PRIMITIVE: {
+        result = castPrimitiveValue(declaredFieldType, value.getValue());
+
+        break;
+      }
+      case ENUM: {
+        result = Enum.valueOf((Class<Enum>) declaredFieldType, (String) value.getValue());
+
+        break;
+      }
+      case OBJECT: {
+        result = valueToObject((ObjectValue) value, declaredFieldType);
+
+        break;
+      }
+      case MAP: {
+        Map<String, Object> map = new HashMap<>();
+
+        for (Map.Entry<String, ObjectValue> entry : ((Map<String, ObjectValue>) value.getValue()).entrySet()) {
+          Class<?> itemClazz = getObjectValueType(entry.getValue());
+
+          map.put(entry.getKey(), valueToObject(entry.getValue(), itemClazz));
+        }
+
+        result = map;
+        break;
+      }
+      case LIST: {
+        List<Object> list = new ArrayList<>();
+
+        for (ObjectValue value1 : (List<ObjectValue>) value.getValue()) {
+
+          Class<?> itemClazz = getObjectValueType(value1);
+
+          list.add(valueToObject(value1, itemClazz));
+        }
+
+        result = list;
+
+        break;
+      }
+      default: {
+        throw new NormalizerException("Неизвестный тип: " + value.getType());
+      }
     }
 
     return result;
+  }
+
+  private Class<?> getObjectValueType(ObjectValue value1) {
+    try {
+      return Class.forName(value1.getTypeName());
+    } catch (ClassNotFoundException e) {
+
+      // TODO брать тип через SerializeName
+
+      throw new NormalizerException(e);
+    }
   }
 
   private Object castPrimitiveValue(Class<?> declaredFieldType, Object value) {

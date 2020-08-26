@@ -1,10 +1,7 @@
 package org.serieznyi.FightOfWizards.action;
 
-public interface Action {
-  Type getType();
+import org.serieznyi.FightOfWizards.character.Character;
 
-  enum Type {
-    DAMAGE,
-    HEALING,
-  }
+public interface Action {
+  Character getInitiator();
 }

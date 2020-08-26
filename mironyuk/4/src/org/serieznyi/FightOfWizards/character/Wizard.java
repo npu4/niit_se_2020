@@ -1,10 +1,16 @@
 package org.serieznyi.FightOfWizards.character;
 
 import org.serieznyi.FightOfWizards.Scene;
+import org.serieznyi.FightOfWizards.action.Action;
 import org.serieznyi.FightOfWizards.action.CausingDamageAction;
 import org.serieznyi.FightOfWizards.action.HealingAction;
+import org.serieznyi.FightOfWizards.action.SpellActionDecorator;
+import org.serieznyi.FightOfWizards.action.result.CausingDamageResult;
+import org.serieznyi.FightOfWizards.action.result.HealingResult;
+import org.serieznyi.FightOfWizards.action.result.Result;
 import org.serieznyi.FightOfWizards.character.wizard.Spell;
-import org.serieznyi.FightOfWizards.logging.Logger;
+import org.serieznyi.serialization.serializer.annotation.Serialize;
+import org.serieznyi.serialization.serializer.annotation.SerializeIgnoreField;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,12 +20,18 @@ import java.util.concurrent.ThreadLocalRandom;
  * - Может использовать заклинания
  * - Магический урон наносит только половину урона
  */
+@Serialize
 public final class Wizard extends Character {
-  static final Logger LOGGER = Logger.create();
 
+  @SerializeIgnoreField
   private static final int SPELLS_BAG_SIZE = 3;
 
-  private final List<Spell> spells;
+  @SerializeIgnoreField
+  private List<Spell> spells;
+
+  private Wizard() {
+    super();
+  }
 
   public Wizard(String name, int health, Spell[] spells) {
     super(Type.WIZARD, name, health);
@@ -38,24 +50,28 @@ public final class Wizard extends Character {
   }
 
   @Override
-  public void action(Scene scene) {
+  public Action produceAction(Scene scene) {
     Spell spell = takeSomeSpell();
 
-    LOGGER.readSpell(this, spell);
+    Action spellAction = spell.cast(this, scene);
 
-    spell.cast(this, scene);
+    return new SpellActionDecorator(spell, this, spellAction);
   }
 
   @Override
-  public boolean reactOnHealingAction(HealingAction action) {
+  public Result reactOnHealingAction(HealingAction action) {
     int oldHealth = getHealth();
     int newHealth = increaseHealth(action.getValue());
 
-    return newHealth != oldHealth;
+    return new HealingResult(
+            newHealth != oldHealth,
+            newHealth - oldHealth,
+            newHealth
+    );
   }
 
   @Override
-  public boolean reactOnCausingDamageAction(CausingDamageAction action) {
+  public Result reactOnCausingDamageAction(CausingDamageAction action) {
     int oldHealth = getHealth();
     int damage = action.getDamage();
 
@@ -66,6 +82,11 @@ public final class Wizard extends Character {
 
     int newHealth = decreaseHealth(damage);
 
-    return oldHealth != newHealth;
+    return new CausingDamageResult(
+            oldHealth != newHealth,
+            damage,
+            action.getDamage(),
+            newHealth
+    );
   }
 }

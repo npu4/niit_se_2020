@@ -1,187 +1,201 @@
 package org.serieznyi.FightOfWizards;
 
-import org.serieznyi.FightOfWizards.action.CausingDamageAction;
-import org.serieznyi.FightOfWizards.character.Character;
-import org.serieznyi.FightOfWizards.character.wizard.Spell;
-import org.serieznyi.FightOfWizards.character.wizard.spell.FireTouchSpell;
-import org.serieznyi.FightOfWizards.character.wizard.spell.HealingSpell;
-import org.serieznyi.FightOfWizards.character.wizard.spell.LightningSpell;
-import org.serieznyi.FightOfWizards.character.wizard.spell.UniversalSpell;
-import org.serieznyi.FightOfWizards.factory.NameFactory;
-import org.serieznyi.FightOfWizards.factory.SpellBagFactory;
-import org.serieznyi.FightOfWizards.factory.character.CharacterFactory;
-import org.serieznyi.FightOfWizards.factory.character.MonsterFactory;
-import org.serieznyi.FightOfWizards.factory.character.RandomCharacterFactory;
-import org.serieznyi.FightOfWizards.factory.character.WizardFactory;
-import org.serieznyi.FightOfWizards.factory.name.NameRule;
+import org.serieznyi.FightOfWizards.actionProducer.ObjectsProducer;
+import org.serieznyi.FightOfWizards.actionProducer.RandomGameObjectsProducer;
+import org.serieznyi.FightOfWizards.actionProducer.ReplayActionProducer;
 import org.serieznyi.FightOfWizards.logging.Logger;
 import org.serieznyi.FightOfWizards.logging.handler.OutputHandler;
+import org.serieznyi.serialization.XmlPrettyFormatter;
+import org.serieznyi.serialization.serializer.Serializer;
+import org.serieznyi.serialization.serializer.exception.FormatNotSupportedException;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Supplier;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Scanner;
 
 public class Main {
+  static final Serializer serializer = new Serializer();
   static final Logger LOGGER = Logger.create();
+  static SceneOptions sceneOptions;
 
-  public static void main(String[] args) {
-    SceneOptions sceneOptions = SceneOptions.fromDefault();
+  public static void main(String[] args) throws IOException, FormatNotSupportedException, XmlPrettyFormatter.FormattingException {
+    sceneOptions = getSceneOptions();
 
-    Scene scene = buildScene(sceneOptions);
+    GameMode gameMode = chooseGameMode();
+
+    if (gameMode == GameMode.EXIT) {
+      System.exit(0);
+    }
+
+    Scene scene = new Scene(sceneOptions.getSceneSize(), getProducer(gameMode));
 
     LOGGER.setHandler(new OutputHandler());
 
     scene.run();
+
+    if (isSaveReplay()) {
+      Path replayPath = getReplayPathForSave();
+
+      replayPath.getParent().toFile().mkdirs();
+
+      saveReplay(replayPath, new Snapshot(scene.getHistory(), scene.getCharacters()));
+    }
   }
 
-  private static Scene buildScene(SceneOptions sceneOptions) {
-    CharacterFactory characterFactory = Dependencies.getCharacterFactory();
-
-    Scene scene = new Scene(sceneOptions.getSceneSize());
-
-    for (int i = 0; i < sceneOptions.getCharacterCount(); i++) {
-      scene.appendCharacterToRandomPosition(characterFactory.create());
+  private static ObjectsProducer getProducer(GameMode gameMode) {
+    if (GameMode.REPLAY == gameMode) {
+      return makeReplayActionProducer();
+    } else {
+      return makeRandomGameObjectProducer();
     }
-
-    return scene;
   }
 
-  private static class Dependencies {
-    public static NameFactory getNamesFactory() {
+  private static GameMode chooseGameMode() {
+    Scanner scanner = new Scanner(System.in);
 
-      List<NameRule> nameRules = new ArrayList<>();
+    String message = Arrays
+            .stream(GameMode.values())
+            .sorted(Comparator.reverseOrder())
+            .map((m) -> " - " + m.toString() + "[" + m.ordinal() + "]")
+            .reduce("", (a, b) -> b + "\n" + a);
 
-      nameRules.add(
-          new NameRule(
-              Character.Type.MONSTER,
-              new String[] {"Сатана", "Кракен", "Голод", "Голум", "Харрун", "Ворон", "Зомби"},
-              new String[] {
-                "Мерзкий",
-                "Коварный",
-                "Подлый",
-                "Злобный",
-                "Отвратительный",
-                "Раздирающий",
-                "Кровавый"
-              }));
+    while (true) {
+      System.out.println(message);
 
-      nameRules.add(
-          new NameRule(
-              Character.Type.MONSTER,
-              new String[] {"Смерть", "Чума", "Крыса"},
-              new String[] {
-                "Мерзкая",
-                "Коварная",
-                "Подлая",
-                "Злобная",
-                "Отвратительная",
-                "Раздирающая",
-                "Кровавая"
-              }));
+      try {
+        String answer = scanner.next();
 
-      nameRules.add(
-          new NameRule(
-              Character.Type.WIZARD,
-              new String[] {
-                "Арарат", "Байтум", "Гендальф", "Гигабайтум", "Килабайтум", "Косинусин",
-                "Мегабайтум", "Мерлин", "Синусин", "Тангенсин", "Терабайтум", "Тирисиум"
-              },
-              new String[] {
-                "Светлый", "Темный", "Одинокий", "Лесной", "Синий", "Дряхлый", "Свирепый"
-              }));
+        int modeIndex = Integer.parseInt(answer);
 
-      return new NameFactory(nameRules);
+        GameMode[] modes = GameMode.values();
+
+        if (modeIndex <= modes.length) {
+          return modes[modeIndex];
+        }
+      } catch (NumberFormatException ignored) {
+        System.out.println("Неверный формат ответа или неверное значение. Попробуй-те еще раз");
+      }
+    }
+  }
+
+  private static ReplayActionProducer makeReplayActionProducer() {
+    return new ReplayActionProducer(getReplayPathForRestore());
+  }
+
+  private static RandomGameObjectsProducer makeRandomGameObjectProducer() {
+    return new RandomGameObjectsProducer(sceneOptions.getCharacterCount());
+  }
+
+  private static boolean isSaveReplay() {
+    Scanner scanner = new Scanner(System.in);
+
+    String answer;
+
+    while (true) {
+      System.out.println("\nХотите сохранить реплей? да(1)\\нет(2)\n");
+
+      answer = scanner.next().toLowerCase();
+
+      if (!Arrays.asList("да", "нет", "1", "2").contains(answer.toLowerCase())) {
+        System.out.println("Неверный формат ответа. Попробуй-те еще раз");
+        continue;
+      }
+
+      break;
     }
 
-    public static CharacterFactory getCharacterFactory() {
-      NameFactory nameFactory = getNamesFactory();
+    return answer.equals("да") || answer.equals("1");
+  }
 
-      return new RandomCharacterFactory(
-          new CharacterFactory[] {
-            new MonsterFactory(nameFactory), new WizardFactory(nameFactory, getSpellBagFactory())
-          });
+  private static Path getReplayPathForSave() {
+    Scanner scanner = new Scanner(System.in);
+
+    Path path;
+
+    while (true) {
+      System.out.println(
+              "\nУкажите путь к файлу в который будет сохранен replay. Имя файла должно заканчиваться на .xml\n"
+      );
+
+      path = Paths.get(scanner.next()).toAbsolutePath();
+
+      if (!path.toString().endsWith(".xml")) {
+        System.out.println("Неверное расширение файла. Попробуй-те еще раз");
+        continue;
+      }
+
+      break;
     }
 
-    public static SpellBagFactory getSpellBagFactory() {
-      ThreadLocalRandom random = ThreadLocalRandom.current();
+    return path;
+  }
 
-      final int MIN_HEALING = 25;
-      final int MAX_HEALING = 50;
-      final int MIN_SPELL_DAMAGE = 50;
-      final int MAX_SPELL_DAMAGE = 75;
+  private static Path getReplayPathForRestore() {
+    Scanner scanner = new Scanner(System.in);
 
-      Supplier<Integer> damageGenerator =
-          () -> random.nextInt(MIN_SPELL_DAMAGE, MAX_SPELL_DAMAGE + 1);
+    Path path;
 
-      Set<Spell> spells = new HashSet<>();
+    while (true) {
+      System.out.println(
+              "\nУкажите путь к XML файлу сохранения\n"
+      );
 
-      spells.add(new HealingSpell(random.nextInt(MIN_HEALING, MAX_HEALING + 1)));
+      path = Paths.get(scanner.next()).toAbsolutePath();
 
-      spells.add(new LightningSpell(damageGenerator.get()));
+      if (!path.toString().endsWith(".xml")) {
+        System.out.println("Неверное расширение файла. Попробуй-те еще раз");
+        continue;
+      }
 
-      spells.add(new FireTouchSpell(damageGenerator.get()));
+      if (!path.toFile().exists()) {
+        System.out.println("Файл не существует. Попробуй-те еще раз");
+        continue;
+      }
 
-      Spell chainLightingSpell =
-          UniversalSpell.builder()
-              .withName("Цепная молния")
-              .withDescription(
-                  "Наносит урон, всем персонажам на сцене, кроме мага, который произносит заклинание.")
-              .withTargetsFinder((c, s) -> s.getOpponentsFor(c))
-              .withValue(damageGenerator.get())
-              .withActionCreator(
-                  (character, value) -> CausingDamageAction.causeLightingDamage(value.intValue()))
-              .withSuccessfulCallback(
-                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
-              .build();
+      break;
+    }
 
-      spells.add(chainLightingSpell);
+    return path;
+  }
 
-      Spell banishingMonstersSpell =
-          UniversalSpell.builder()
-              .withName("Изгнание монстров")
-              .withDescription("Наносит урон всем монстрам")
-              .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
-              .withValue(damageGenerator.get())
-              .withActionCreator(
-                  (character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
-              .withSuccessfulCallback(
-                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
-              .build();
+  private static void saveReplay(Path replayPath, Snapshot snapshot)
+          throws FormatNotSupportedException, IOException, XmlPrettyFormatter.FormattingException {
+    System.out.println("Пытаюсь сохранить snapshot в " + replayPath);
 
-      spells.add(banishingMonstersSpell);
+    String xml = serializer.serialize(snapshot, Serializer.Format.XML);
 
-      Spell migraineSpell =
-          UniversalSpell.builder()
-              .withName("Мигрень")
-              .withDescription("Наносит урон всем магам")
-              .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.WIZARD))
-              .withValue(damageGenerator.get())
-              .withActionCreator(
-                  (character, value) -> CausingDamageAction.causeMagicalDamage(value.intValue()))
-              .withSuccessfulCallback(
-                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
-              .build();
+    XmlPrettyFormatter formatter = new XmlPrettyFormatter();
 
-      spells.add(migraineSpell);
+    try (Writer writer = new FileWriter(replayPath.toFile())) {
+      writer.write(formatter.toPrettyView(xml));
+    }
 
-      Spell wallOfFireSpell =
-          UniversalSpell.builder()
-              .withName("Стена огня")
-              .withDescription("Наносит урон всем персонажам на четных позициях")
-              .withTargetsFinder((c, s) -> s.getOpponentsFor(c, Character.Type.MONSTER))
-              .withValue(damageGenerator.get())
-              .withActionCreator(
-                  (character, value) -> CausingDamageAction.causeFireDamage(value.intValue()))
-              .withSuccessfulCallback(
-                  w -> s -> c -> v -> LOGGER.takeDamageTo(w, s, c, v.intValue()))
-              .build();
+    System.out.println("Snapshot сохранен: " + replayPath);
+  }
 
-      spells.add(wallOfFireSpell);
+  private static SceneOptions getSceneOptions() {
+    return SceneOptions.fromDefault();
+  }
 
-      return new SpellBagFactory(spells);
+  enum GameMode {
+    NEW,
+    REPLAY,
+    EXIT;
+
+    @Override
+    public String toString() {
+      if (this == NEW) {
+        return "Начать новую игру";
+      } if (this == REPLAY) {
+        return "Воспроизвести сохраненную игру";
+      } else {
+        return "Выход";
+      }
     }
   }
 }
