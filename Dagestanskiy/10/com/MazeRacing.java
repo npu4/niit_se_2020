@@ -1,44 +1,34 @@
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class MazeRacing {
-    public static void main(String[] args) throws InterruptedException {
-        boolean [][] maze;
-        maze = MazeRacing.getMaze();
-        int[] f = finishRandomPosition(maze);
-        Racer r1 = new Racer("Петя",maze,startRandomPosition(maze),f);
-        Racer r2 = new Racer("Гриша",maze,startRandomPosition(maze),f);
-        Racer r3 = new Racer("Саша",maze,startRandomPosition(maze),f);
-        Racer r4 = new Racer("Коля",maze,startRandomPosition(maze),f);
+    public static void main(String[] args) {
+        boolean [][] maze = MazeRacing.getMaze();
+        MazeStep f = finishRandomPosition(maze);
+        List<Racer> racerList = new ArrayList<>();
+        String [] racerName = new String[]{"Петя","Гриша","Саша","Коля"};
+        for (String s : racerName) racerList.add(new Racer(s, maze, startRandomPosition(maze), f));
+        racerList.forEach(racer -> {
+            Thread thread =new Thread(() -> raceRun(racer));
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
 
-        Thread t1 = new Thread(() -> raceRun(r1));
-        Thread t2 = new Thread(() -> raceRun(r2));
-        Thread t3 = new Thread(() -> raceRun(r3));
-        Thread t4 = new Thread(() -> raceRun(r4));
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
-        t1.join();
-        t2.join();
-        t3.join();
-        t4.join();
-        Racer bestRacer = r1;
-        if(r2.trackArray.size()<bestRacer.trackArray.size()) bestRacer= r2;
-        if(r3.trackArray.size()<bestRacer.trackArray.size()) bestRacer= r3;
-        if(r4.trackArray.size()<bestRacer.trackArray.size()) bestRacer= r4;
+        Racer bestRacer = Collections.min(racerList, (Comparator.comparingInt(o -> o.trackArray.size())));
         System.out.println("Победил гонщик "+bestRacer.name+" за "+bestRacer.trackArray.size()+" шагов.");
-
     }
 
     static void raceRun(Racer r){
         r.setNanoTimeStart(System.nanoTime());
-        System.out.println("Гонщик "+r.name+" стартовал с позиции x = "+r.currentPosition[0]+" y = "+r.currentPosition[1]);
+        System.out.println("Гонщик "+r.name+" стартовал с позиции x = "+r.currentPosition.getX()+" y = "+r.currentPosition.getY());
         while (!r.step()) ;
         r.setNanoTimeFinish(System.nanoTime());
-        System.out.println("Гонщик "+r.name+" финишировал на позиции x= "+r.currentPosition[0]+" y = "+r.currentPosition[1]+" за "+
+        System.out.println("Гонщик "+r.name+" финишировал на позиции x= "+r.currentPosition.getX()+" y = "+r.currentPosition.getY()+" за "+
                 (r.getNanoTimeFinish()-r.getNanoTimeStart())+" наносекунд и "+r.getTrack().size()+" шагов.");
 
     }
@@ -77,23 +67,19 @@ public class MazeRacing {
         return mazeLocalReturn;
     }
 
-    static int[] startRandomPosition(boolean[][] mazeLocal){
-        int[] a = new int[3];
-        a[1] = 1;//a[0] -координата x , a[1] -координата y
-        // a[2] азимут - направление движения по лабиринту 0 - вниз, 1 - направо, 2 - налево ; 3 - вверх
+    static MazeStep startRandomPosition(boolean[][] mazeLocal){
+        MazeStep a = new MazeStep(1, 1, Direction.SOUTH);
         do {
-            a[0] = rndI(1, mazeLocal[0].length - 2);//координата x
-        } while (!mazeLocal[a[0]][a[1]]);
+            a.setX(rndI(1, mazeLocal[0].length - 2));//координата x
+        } while (!mazeLocal[a.getX()][a.getY()]);
         return  a;
     }
 
-    static int[] finishRandomPosition(boolean[][] mazeLocal){
-        int[] a = new int[2];
-        a[1] = mazeLocal.length-1;
+    static MazeStep finishRandomPosition(boolean[][] mazeLocal){
+        MazeStep a = new MazeStep(1,mazeLocal.length-1,Direction.SOUTH);
         do {
-            a[0] = rndI(1, mazeLocal[0].length - 2);
-        } while (!mazeLocal[a[0]][a[1]-1]);
-
+            a.setX(rndI(1, mazeLocal[0].length - 2));
+        } while (!mazeLocal[a.getX()][a.getY()-1]);
         return  a;
     }
     public static int rndI(int min, int max) {
