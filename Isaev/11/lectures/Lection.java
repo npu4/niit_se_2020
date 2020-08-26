@@ -1,4 +1,4 @@
-package streamingLectures;
+package lectures;
 
 import java.time.LocalDate;
 import java.util.Random;

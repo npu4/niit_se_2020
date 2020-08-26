@@ -1,22 +1,22 @@
 package calculator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Calculator{
 
     static int numberOfOperation = 0;
-    static List<String> namesOfOperations = new ArrayList<>();
-    static List<Operation> operations = new ArrayList<>();
+    static Map<String,Operation> operationMap = new HashMap<>();
 
     void addOperation(String operationName,Operation implementation){
-        namesOfOperations.add(operationName);
-        operations.add(implementation);
+        operationMap.put(operationName,implementation);
         numberOfOperation++;
     }
 
     Double calculate(String operationName,Double numberOne,Double numberTwo){
-        Operation operation = operations.get(namesOfOperations.indexOf(operationName));
+        Operation operation = operationMap.get(operationName);
         return operation.doOperation(numberOne,numberTwo);
     }
 
