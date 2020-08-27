@@ -88,8 +88,6 @@ class Player
         if (!turnRightAndStepForward()) {
                 while (!stepForward()) {
                     turnLeft();
-
-//                    System.out.println(name + " : " + currentPosition);
                 }
             }
 

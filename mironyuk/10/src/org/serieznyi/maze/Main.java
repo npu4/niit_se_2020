@@ -1,59 +1,87 @@
 package org.serieznyi.maze;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.*;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
+    static ThreadLocalRandom random = ThreadLocalRandom.current();
 
     public static final int MIN_PLAYERS_COUNT = 3;
-    public static final int MAX_PLAYERS_COUNT = 10;
-    public static final int MAZE_SIZE = 10;
+    public static final int MAZE_SIZE = 30;
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         MazeGenerator generator = new MazeGenerator();
 
         Maze maze = generator.generate(MAZE_SIZE);
 
         drawMaze(maze);
 
+        System.out.print("\nФиниш находится в " + maze.getFinish() + "\n\n");
+
         List<Player> players = makePlayers(maze);
 
         for (Player player : players) {
-            System.out.println("Игрок " + player.getName() + " в позиции " + player.getPosition());
+            System.out.println(player.getName() + " в позиции " + player.getPosition());
         }
 
-        ExecutorService service = Executors.newFixedThreadPool(4);
+        System.out.println();
 
-        List<Future<Player>> results = new ArrayList<>();
+        ExecutorService service = Executors.newCachedThreadPool();
 
         for (Player player : players) {
-            final Future<Player> task = service.submit(() -> {
+            service.submit(() -> {
+                long start = System.currentTimeMillis();
+
                 while (!player.step()) {}
+
+                System.out.printf(
+                        "%s нашел выход из лабиринта за %s количество шагов и %s милисекунд\n",
+                        player.getName(),
+                        player.getPath().size(),
+                        System.currentTimeMillis() - start
+                );
 
                 return player;
             });
-
-            results.add(task);
-        }
-
-        for (Future<Player> result : results) {
-            Player player = result.get();
-
-            System.out.println(player.getName() + " нашел выход из лабиринта за " + player.getPath().size() + " количество шагов");
         }
 
         service.shutdown();
+
+        service.awaitTermination(3, TimeUnit.SECONDS);
+
+        service.shutdownNow();
+
+        Optional<Player> min = players.stream().min(Comparator.comparing(player -> player.getPath().size()));
+
+        System.out.println();
+
+        min.ifPresent(p -> System.out.printf("%s сделал меньше всех шагов: %s\n", p.getName(), p.getPath().size()));
     }
 
     private static List<Player> makePlayers(Maze maze) {
         List<Player> players = new ArrayList<>();
 
-        int count = ThreadLocalRandom.current().nextInt(MIN_PLAYERS_COUNT, MAX_PLAYERS_COUNT);
+        List<String> names = Arrays.asList(
+                "Красный",
+                "Синий",
+                "Черный",
+                "Голубой",
+                "Зеленый",
+                "Оранжевый",
+                "Фиолетовый",
+                "Коричневый",
+                "Белый",
+                "Пурпурный",
+                "Серый"
+        );
 
-        for (int i = 0; i < count; i++) {
+
+        for (String name : names.subList(0, random.nextInt(MIN_PLAYERS_COUNT, names.size()))) {
             Player player = new Player(
-            "Player " + (i + 1),
+                    name,
                     maze,
                     maze.randomPointAroundFinish(),
                     maze.getFinish()
