@@ -1,13 +1,11 @@
 package org.serieznyi.maze;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.ThreadLocalRandom;
 
 class Maze {
     private final int[][] schema;
     private Point finish;
-    private Point start;
+    ThreadLocalRandom random = ThreadLocalRandom.current();
 
     Maze(int[][] schema) {
 
@@ -20,25 +18,22 @@ class Maze {
         return schema;
     }
 
-    public Point getStart() {
-        return this.start;
-    }
-
     public Point getFinish() {
         return this.finish;
     }
 
     public void init() {
-        initStart();
-
         initFinish();
     }
 
+    /**
+     * Финиш всегда в правой нижней части лабиринта
+     */
     private void initFinish() {
-        for (int i = schema.length / 2; i < schema.length; i++) {
-            for (int i1 = schema[i].length / 2; i1 < schema[i].length; i1++) {
-                if (schema[i][i1] == 1) {
-                    finish = new Point(i, i1);
+        for (int x = schema.length / 2; x < schema.length; x++) {
+            for (int y = schema[x].length / 2; y < schema[x].length; y++) {
+                if (schema[x][y] == 1) {
+                    finish = new Point(x, y);
                     return;
                 }
             }
@@ -47,35 +42,31 @@ class Maze {
         throw new RuntimeException("Не смог выбрать старт лабиринта");
     }
 
-    private void initStart() {
-        for (int i = 0; i < schema.length / 2; i++) {
-            for (int i1 = 0; i1 < schema[i].length / 2; i1++) {
-                if (schema[i][i1] == 1) {
-                    start = new Point(i, i1);
-                    return;
-                }
-            }
-        }
-
-        throw new RuntimeException("Не смог выбрать финиш лабиринта");
-    }
-
     private boolean indexInBound(int x, int y){
         return schema != null && x >= 0 && x < schema.length && y >= 0 && y < schema[x].length;
     }
 
-    public boolean isPath(Point point) {
-        return indexInBound(point.x, point.y) && schema[point.x][point.x] == 1;
+    public boolean isFreeSpace(Point point) {
+        return indexInBound(point.x, point.y) && schema[point.x][point.y] == 1;
     }
 
-    public List<Point> getNeighborsFor(Point point) {
-        List<Point> neighbors = Arrays.asList(
-                new Point(point.x, point.y - 1),
-                new Point(point.x, point.y + 1),
-                new Point(point.x - 1, point.y),
-                new Point(point.x + 1, point.y)
-        );
+    public boolean isCorrectRandomPoint(Point point) {
+        int halfX = (schema.length - 1) / 2;
+        int halfY = (schema[halfX].length - 1) / 2;
 
-        return neighbors.stream().filter(p -> indexInBound(p.x, p.y)).collect(Collectors.toList());
+        return !(point.x > halfX && point.y > halfY) && isFreeSpace(point);
+    }
+
+    public Point randomPointAroundFinish() {
+        Point randomPoint;
+
+        do {
+            randomPoint = new Point(
+                    random.nextInt(0, schema.length),
+                    random.nextInt(0, schema[0].length)
+            );
+        } while (!isCorrectRandomPoint(randomPoint));
+
+        return randomPoint;
     }
 }

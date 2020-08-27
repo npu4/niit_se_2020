@@ -25,9 +25,9 @@ public class MazeGenerator {
     private int[][] addWallsAround(int[][] maze) {
         int[][] mazeWithWalls = new int[maze.length + 1][maze[0].length + 1];
 
-        for (int y = 0; y < mazeWithWalls.length; y++) {
-            for (int x = 0; x < mazeWithWalls[y].length; x++) {
-                if (x != 0 && y != 0 && x != mazeWithWalls.length - 1 && y != mazeWithWalls[y].length - 1) {
+        for (int x = 0; x < mazeWithWalls.length; x++) {
+            for (int y = 0; y < mazeWithWalls[x].length; y++) {
+                if (y != 0 && x != 0 && y != mazeWithWalls.length - 1 && x != mazeWithWalls[x].length - 1) {
                     mazeWithWalls[x][y] = maze[x - 1][y - 1];
                 }
             }
@@ -39,8 +39,8 @@ public class MazeGenerator {
     private int[][] mazeToIntArray(Node[][] maze) {
         int[][] intMaze = new int[maze.length * 2 - 1][maze[0].length * 2 - 1];
 
-        for (int y = 0; y < maze.length; y++) {
-            for (int x = 0; x < maze[y].length; x++) {
+        for (int x = 0; x < maze.length; x++) {
+            for (int y = 0; y < maze[x].length; y++) {
                 Node node = maze[x][y];
                 Node connected = maze[x][y].connect;
 
@@ -69,10 +69,10 @@ public class MazeGenerator {
     private Node[][] makeMaze(int width, int height) {
         Node[][] maze = new Node[width][height];
 
-        for (int y = 0; y < maze.length; y++) {
-            for (int x = 0; x < maze[y].length; x++) {
+        for (int x = 0; x < maze.length; x++) {
+            for (int y = 0; y < maze[x].length; y++) {
 
-                Node node = maze[x][y] = new Node(x, y);
+                Node node = maze[y][x] = new Node(x, y);
 
                 getAnyNeighbor(maze, node).ifPresent(n -> node.connect = n);
             }

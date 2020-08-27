@@ -6,8 +6,8 @@ import java.util.concurrent.*;
 
 public class Main {
 
-    public static final int MIN_PLAYERS_COUNT = 1;
-    public static final int MAX_PLAYERS_COUNT = 2;
+    public static final int MIN_PLAYERS_COUNT = 3;
+    public static final int MAX_PLAYERS_COUNT = 10;
     public static final int MAZE_SIZE = 10;
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
@@ -18,6 +18,10 @@ public class Main {
         drawMaze(maze);
 
         List<Player> players = makePlayers(maze);
+
+        for (Player player : players) {
+            System.out.println("Игрок " + player.getName() + " в позиции " + player.getPosition());
+        }
 
         ExecutorService service = Executors.newFixedThreadPool(4);
 
@@ -36,7 +40,7 @@ public class Main {
         for (Future<Player> result : results) {
             Player player = result.get();
 
-            System.out.println(player.getName() + " нашел выход из лабиринта");
+            System.out.println(player.getName() + " нашел выход из лабиринта за " + player.getPath().size() + " количество шагов");
         }
 
         service.shutdown();
@@ -51,7 +55,7 @@ public class Main {
             Player player = new Player(
             "Player " + (i + 1),
                     maze,
-                    maze.getStart(),
+                    maze.randomPointAroundFinish(),
                     maze.getFinish()
             );
 
