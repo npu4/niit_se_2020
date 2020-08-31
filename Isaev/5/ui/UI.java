@@ -4,6 +4,7 @@ import elements.Button;
 import elements.CheckMark;
 import elements.Rectangle;
 import elements.TextField;
+import exceptions.RectangleCrossingException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +16,17 @@ public class UI {
     int cooX;
     int cooY;
 
-    public static boolean elementCrossing(Rectangle r) throws RectangleCrossingException {
+    public static boolean elementNotCrossing(Rectangle r) throws RectangleCrossingException {
         boolean elementsNotCrossing = true;
 
-        for (Rectangle iterator : elements) {
-            if (iterator.getLeftCoornY() + iterator.getHeight() <= r.getLeftCoornY() ||
-                    iterator.getLeftCoornY() >= r.getLeftCoornY() + r.getHeight() ||
-                    iterator.getLeftCoornX() >= r.getLeftCoornX() + r.getLength() ||
-                    iterator.getLeftCoornX() + iterator.getLength() <= r.getLeftCoornX()) ;
+        for (Rectangle element : elements) {
+            if (element.getLeftCoornY() + element.getHeight() <= r.getLeftCoornY() ||
+                    element.getLeftCoornY() >= r.getLeftCoornY() + r.getHeight() ||
+                    element.getLeftCoornX() >= r.getLeftCoornX() + r.getLength() ||
+                    element.getLeftCoornX() + element.getLength() <= r.getLeftCoornX()) ;
             else {
-                System.out.printf(r.getName() + " пересекается с " + iterator.getName() + "\n");
+                System.out.printf(r.getName() + " пересекается с " + element.getName() + "\n");
                 elementsNotCrossing = false;
-                throw new RectangleCrossingException();
             }
         }
         return elementsNotCrossing;
@@ -40,7 +40,8 @@ public class UI {
         int switchElement = new Random().nextInt(3);
         switch (switchElement) {
             case 0:
-                Button newButton = new Button(x, y, "Кнопка", true);
+                Button newButton = new Button(x, y, String.format("Кнопка в <%d,%d>", x, y), true,
+                        () -> System.out.println(String.format("Нажата кнопка в <%d,%d>", x, y)));
                 this.addElement(newButton);
                 break;
             case 1:
@@ -56,13 +57,8 @@ public class UI {
     }
 
     public void addElement(Rectangle r) throws RectangleCrossingException {
-        if (elementCrossing(r)) {
+        if (elementNotCrossing(r)) {
             elements.add(r);
-        }
-    }
-
-    void newRandom() {
-        cooX = r.nextInt(100);
-        cooY = r.nextInt(100);
+        } else throw new RectangleCrossingException();
     }
 }

@@ -1,7 +1,9 @@
 package interfaces;
 
+import exceptions.ElementIsOffException;
+
 public interface Clickable {
 
-    void click();
+    void click() throws ElementIsOffException;
 
 }

@@ -1,5 +1,6 @@
 package elements;
 
+import exceptions.ElementIsOffException;
 import interfaces.Clickable;
 
 import java.util.Random;
@@ -23,13 +24,10 @@ public class CheckMark extends Rectangle implements Clickable {
     }
 
     @Override
-    public void click() {
-        if (isMarkCurrentState()) {
-            setMarkCurrentState(false);
+    public void click() throws ElementIsOffException {
+        if (!isTurnedON()) {
+            throw new ElementIsOffException(this);
         }
-        if (!isMarkCurrentState()) {
-            setMarkCurrentState(true);
-        }
-
+        markCurrentState = !markCurrentState;
     }
 }

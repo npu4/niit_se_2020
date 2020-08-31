@@ -4,22 +4,28 @@ import elements.Button;
 import elements.CheckMark;
 import elements.Rectangle;
 import elements.TextField;
+import exceptions.ElementIsOffException;
+import exceptions.RectangleCrossingException;
 
 public class uiMain {
 
-    public static void main(String[] args) throws RectangleCrossingException {
+    public static void main(String[] args) throws RectangleCrossingException, ElementIsOffException {
         UI ui = new UI();
-        Button button = new Button(25, 25, "Добавить элемент", true);
         TextField cooX = new TextField(1, 1, "Координата x для нового элемента", true);
         TextField cooY = new TextField(1, 1, "Координата y для нового элемента", true);
+        Button button = new Button(25, 25, "Добавить элемент", true,
+                () ->
+                {
+                    try {
+                        ui.addElement(cooX.getCoordinate(), cooY.getCoordinate());
+                    } catch (RectangleCrossingException e) {
+                        e.printStackTrace();
+                    }
+                    cooX.refreshField();
+                    cooY.refreshField();
+                });
         for (int i = 0; i < 10; i++) {
-            try {
-                ui.addElement(cooX.getCoordinate(), cooY.getCoordinate());
-                cooX.refreshField();
-                cooY.refreshField();
-            } catch (RectangleCrossingException e) {
-                e.printStackTrace();
-            }
+            button.click();
         }
         for (Rectangle element : ui.getElements()) {
             System.out.println(String.format("%s в координатах <%d,%d>, ширина <%d>, высота <%d>, название:<%s>",
@@ -30,18 +36,26 @@ public class uiMain {
                     element.getHeight(),
                     element.getName()));
             if (element instanceof Button) {
-                ((Button) element).click();
+                try {
+                    ((Button) element).click();
+                } catch (ElementIsOffException e) {
+                    e.printStackTrace();
+                }
             }
             if (element instanceof CheckMark) {
-                ((CheckMark) element).click();
-                ((CheckMark) element).isMarkCurrentState();
+                try {
+                    ((CheckMark) element).click();
+                    ((CheckMark) element).isMarkCurrentState();
+                } catch (ElementIsOffException e) {
+                    e.printStackTrace();
+                }
+
             }
             if (element instanceof TextField) {
                 ((TextField) element).getInputText();
             }
         }
+    }
 
 
     }
-
-}
