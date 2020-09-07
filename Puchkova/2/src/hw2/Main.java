@@ -16,7 +16,7 @@ public class Main {
 
         int[] arr100 = new int[100];
         for (int i = 0; i < arr100.length; i++){
-            arr100[i] = new Random().nextInt(200) - 100;
+            arr100[i] = new Random().nextInt(201) - 100;
             if (isMagicNumber(arr100[i])) {
                 System.out.println("Число " + arr100[i] + " - магическое!");
             }
