@@ -11,22 +11,17 @@ public class Serializer {
         StringBuilder serializeObject = new StringBuilder();
             for(Object obj : object){
                 XmlTypeName annotation = obj.getClass().getAnnotation(XmlTypeName.class);
-                String typeName = "";
-                if (annotation != null){
-                    typeName = annotation.typeName();
-                    serializeObject.append("<").append(typeName).append("> \n");
-                }
+                String typeName = annotation.typeName();
+                serializeObject.append("<").append(typeName).append("> \n");
                 for(Field field : obj.getClass().getFields()){
                     XmlName fieldAnnotation = field.getAnnotation(XmlName.class);
                     if(fieldAnnotation != null){
-                        serializeObject.append("<").append(fieldAnnotation.fieldName()).append(">")
+                        serializeObject.append("\t<").append(fieldAnnotation.fieldName()).append(">")
                                 .append(field.get(obj).toString())
                                 .append("</").append(fieldAnnotation.fieldName()).append(">\n");
                     }
                 }
-                if (annotation != null){
-                    serializeObject.append("</").append(typeName).append("> \n");
-                }
+                serializeObject.append("</").append(typeName).append("> \n");
             }
         return serializeObject.toString();
     }
