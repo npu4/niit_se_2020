@@ -32,11 +32,8 @@ public class Main {
         String serializeShopItems = serialize(shopItems);
         System.out.println(serializeShopItems);
 
-        String forDeserializeShopItem = "<shop_item> \n" +
-                "\t<title>Яблоко</title>\n" +
-                "\t<price>50</price>\n" +
-                "\t<available>true</available>\n" +
-                "</shop_item> ";
+        String forDeserializeShopItem = "<title>Яблоко</title>\n" +
+                "<price>50</price>";
         System.out.println(deserialize(forDeserializeShopItem, ShopItem.class));
         System.out.println(shopItem1);
     }

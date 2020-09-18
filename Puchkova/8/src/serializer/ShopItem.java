@@ -4,7 +4,6 @@ import serializer.annotations.XmlIgnore;
 import serializer.annotations.XmlName;
 import serializer.annotations.XmlTypeName;
 
-@XmlTypeName(typeName = "shop_item")
 public class ShopItem {
     @XmlName(fieldName = "title")
     public String productName;
@@ -12,7 +11,6 @@ public class ShopItem {
     @XmlName(fieldName = "price")
     public int price;
 
-    @XmlName(fieldName = "available")
     public boolean availability;
 
     @XmlIgnore
