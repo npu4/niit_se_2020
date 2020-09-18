@@ -12,7 +12,6 @@ public class ShopItem {
     @XmlName(fieldName = "price")
     public int price;
 
-    @XmlName(fieldName = "available")
     public boolean availability;
 
     @XmlIgnore
