@@ -9,7 +9,8 @@ import java.util.Random;
 public class Lightning extends Spell {
     public void cast(Magician mage, Character[] battlers){
         setNameOfSpell("Молния");
-        int amount = readingOfSpell(mage);
+        int amount = new Random().nextInt(10) + 1;
+        readingOfSpell(mage);
         int k;
         k = new Random().nextInt(10);
         while (battlers[k] == null)

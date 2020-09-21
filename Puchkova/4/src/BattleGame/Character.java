@@ -1,6 +1,6 @@
 package BattleGame;
 
-public class Character {
+public abstract class Character {
     private int position;   // Позиция персонажа на сцене
     private int health;     // Здоровье персонажа
     private String name;    // Имя персонажа
@@ -13,7 +13,7 @@ public class Character {
         this.type       =   type;
     }
 
-    void attack(Character[] battlers){}
+    abstract void attack(Character[] battlers);
 
 
     public void setPosition(int position) {

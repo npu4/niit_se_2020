@@ -17,7 +17,6 @@ public class Magician extends Character {
         System.arraycopy(spells, 0, bookOfSpells, 0, spells.length);
     }
 
-    @Override
     void attack(Character[] battlers){
         int numOfSpell = new Random().nextInt(bookOfSpells.length);
         bookOfSpells[numOfSpell].cast(this, battlers);

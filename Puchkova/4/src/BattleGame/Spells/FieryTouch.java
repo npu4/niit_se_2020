@@ -3,11 +3,14 @@ package BattleGame.Spells;
 import BattleGame.Character;
 import BattleGame.Magician;
 
+import java.util.Random;
+
 // Огненное касание - наносит урон персонажу, стоящему на соседней с магом позиции.
 public class FieryTouch extends Spell {
     public void cast(Magician mage, Character[] battlers){
         setNameOfSpell("Огненное касание");
-        int amount = readingOfSpell(mage);
+        int amount = new Random().nextInt(10) + 1;
+        readingOfSpell(mage);
         if(battlers[mage.getPosition()+1] == null) {
             if (battlers[mage.getPosition() - 1] == null) {
                 System.out.println("Никто урон не получил.");

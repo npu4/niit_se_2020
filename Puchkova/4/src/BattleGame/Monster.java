@@ -10,10 +10,8 @@ public class Monster extends Character {
         this.damage = damage;
     }
 
-    @Override
     void attack(Character[] battlers){
-        int k;
-        k = new Random().nextInt(10);
+        int k = new Random().nextInt(10);
         while (battlers[k] == null)
         {
             k = new Random().nextInt(10);
