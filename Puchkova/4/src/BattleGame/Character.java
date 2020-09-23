@@ -1,10 +1,25 @@
 package BattleGame;
 
+import BattleGame.annotations.EnclosingTag;
+import BattleGame.annotations.XmlName;
+import BattleGame.annotations.XmlTypeName;
+
+@EnclosingTag(tagName = "Персонажи")
+@XmlTypeName(typeName = "Персонаж")
 public abstract class Character {
-    private int position;   // Позиция персонажа на сцене
-    private int health;     // Здоровье персонажа
-    private String name;    // Имя персонажа
-    private String type;    // Тип персонажа
+    @XmlName(fieldName = "Позиция")
+    private int position;
+    @XmlName(fieldName = "Здоровье")
+    private int health;
+    @XmlName(fieldName = "Имя")
+    private String name;
+    @XmlName(fieldName = "Тип")
+    private String type;
+
+    Character[] target;
+
+    Character(){
+    }
 
     Character(int position, String name, String type, int health){
         this.position   =   position;
@@ -13,7 +28,7 @@ public abstract class Character {
         this.type       =   type;
     }
 
-    abstract void attack(Character[] battlers);
+    public abstract void attack(Character[] battlers, int damage);
 
 
     public void setPosition(int position) {
@@ -47,5 +62,11 @@ public abstract class Character {
 
     public boolean isDead(){
         return getHealth() <= 0;
+    }
+
+    public abstract Character clone();
+
+    public Character[] getTarget(){
+        return target;
     }
 }

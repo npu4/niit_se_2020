@@ -9,10 +9,10 @@ import java.util.Random;
 import static BattleGame.Spells.Spell.numOfSpells;
 
 public class Scene {
-    private final int MAX_NUM_OF_BATTLERS = 10;
+    public static final int MAX_NUM_OF_BATTLERS = 10;
     private final Character[] battlers = new Character[MAX_NUM_OF_BATTLERS];
 
-    Scene(Character[] realBattlers) {
+    public Scene(Character[] realBattlers) {
         try {
             if (realBattlers.length > MAX_NUM_OF_BATTLERS) {
                 throw new BattlersOutOfBounds();
@@ -27,11 +27,11 @@ public class Scene {
                 }
             }
         } catch (TwoCharactersOnOnePlace | BattlersOutOfBounds exception) {
-            exception.getMessage();
+            System.out.println(exception.getMessage());
         }
     }
 
-    Scene() {
+    public Scene() {
         randomFilling();
     }
 
@@ -39,7 +39,7 @@ public class Scene {
         return battlers;
     }
 
-    void introduceBattlers(){
+    public void introduceBattlers(){
         System.out.println("На сцене:");
         int position = 0;
         for (Character battler: battlers) {
@@ -47,33 +47,14 @@ public class Scene {
             if(battler == null){
                 continue;
             }
-            StringBuilder introduce = new StringBuilder();
-            introduce.append("На позиции ").append(position).append(" ").append(battler.getType()).append(" ").append(battler.getName())
-                    .append(" с количеством здоровья ").append(battler.getHealth());
+            String introduce = "На позиции " + position + " " + battler.getType() + " " + battler.getName() +
+                    " с количеством здоровья " + battler.getHealth();
             System.out.println(introduce);
         }
         System.out.println();
     }
 
-    public void moving() {
-        introduceBattlers();
-
-        int i = 0;
-        while (!isFinish()) {
-            if (battlers[i] != null) {
-                battlers[i].attack(battlers);
-                for (int j = 0; j < battlers.length; j++) {
-                    if (battlers[j] != null && battlers[j].isDead()) {
-                        System.out.println(battlers[j].getType() + " " + battlers[j].getName() + " убит.");
-                        battlers[j] = null;
-                    }
-                }
-            }
-            i = (i + 1) % 10;
-        }
-    }
-
-    boolean isFinish() {
+    public boolean notFinish() {
         Character aliveBattler = battlers[0];
         int numOfAliveCharacters = 0;
         for (Character battler : battlers) {
@@ -84,13 +65,15 @@ public class Scene {
         }
         switch (numOfAliveCharacters){
             case 0:
-                System.out.println("Все персонажи на поле умерли. Конец игры.");
-                return true;
-            case 1:
-                System.out.println(aliveBattler.getType() + " " + aliveBattler.getName() + " победил. Конец игры.");
-                return true;
-            default:
+                System.out.println("Все персонажи на поле умерли");
+                System.out.println("--------Конец игры--------");
                 return false;
+            case 1:
+                System.out.println(aliveBattler.getType() + " " + aliveBattler.getName() + " победил");
+                System.out.println("--------Конец игры--------");
+                return false;
+            default:
+                return true;
         }
     }
 
@@ -132,7 +115,7 @@ public class Scene {
 
     Monster randomMonster(int position, String name) {
         int health = new Random().nextInt(10) + 20;
-        int damage = new Random().nextInt(5) + 20;
+        int damage = new Random().nextInt(10) + 1;
         return new Monster(position, name, health, damage);
     }
 }

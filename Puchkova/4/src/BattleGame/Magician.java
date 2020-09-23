@@ -1,15 +1,26 @@
 package BattleGame;
 
 import BattleGame.Spells.Spell;
+import BattleGame.annotations.XmlName;
+import BattleGame.annotations.XmlTypeName;
 
 import java.util.Random;
 
+@XmlTypeName(typeName = "Маг")
 public class Magician extends Character {
+    private static final String type = "Маг";
     public static final int SPELL_BOOK_LENGTH = 3;
+
+    Spell spellUsed;
+
+    @XmlName(fieldName = "Книга_заклинаний")
     Spell[] bookOfSpells;
 
+    Magician(){
+    }
+
     Magician(int position, String name, int health, Spell[] spells){
-        super(position, name, "Маг", health);
+        super(position, name, type, health);
         if(spells.length > SPELL_BOOK_LENGTH) {
             System.out.println("У магов не может быть больше 3 заклинаний. Из предложенных заклинаний у мага " + getName() + " будут первые 3");
         }
@@ -17,8 +28,32 @@ public class Magician extends Character {
         System.arraycopy(spells, 0, bookOfSpells, 0, spells.length);
     }
 
-    void attack(Character[] battlers){
+    public Spell getSpellUsed() {
+        return spellUsed;
+    }
+
+    public Character[] getTarget() {
+        return target;
+    }
+
+    public void attack(Character[] battlers, int damage){
         int numOfSpell = new Random().nextInt(bookOfSpells.length);
-        bookOfSpells[numOfSpell].cast(this, battlers);
+        spellUsed = bookOfSpells[numOfSpell];
+        this.target = spellUsed.cast(this, battlers, damage);
+    }
+
+    public void attack(Character[] target, Spell spell, int damage){
+        spellUsed = spell;
+        spellUsed.castReplay(this, target, damage);
+    }
+
+    public Spell[] getBookOfSpells() {
+        return bookOfSpells;
+    }
+
+    public Magician clone() {
+        Magician magician = new Magician(this.getPosition(), this.getName(), this.getHealth(), this.getBookOfSpells());
+        magician.bookOfSpells = this.bookOfSpells.clone();
+        return magician;
     }
 }
