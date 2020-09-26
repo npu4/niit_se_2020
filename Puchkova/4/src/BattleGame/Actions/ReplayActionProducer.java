@@ -6,7 +6,15 @@ import BattleGame.Scene;
 import java.util.Collection;
 
 public class ReplayActionProducer implements ActionProducer {
-    public static void replay(Character[] battlers, Collection<? super Action> actions) {
+    Collection<? super Action> actions;
+    Character[] battlers;
+
+    public ReplayActionProducer(Character[] battlers, Collection<? super Action> actions) {
+        this.actions = actions;
+        this.battlers = battlers;
+    }
+
+    public void action() {
         Scene scene = new Scene(battlers);
         scene.introduceBattlers();
 

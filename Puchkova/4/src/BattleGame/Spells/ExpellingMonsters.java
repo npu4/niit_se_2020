@@ -10,7 +10,7 @@ import static BattleGame.Scene.MAX_NUM_OF_BATTLERS;
 // Изгнание монстров - наносит урон всем монстрам.
 public class ExpellingMonsters extends Spell {
     @XmlName(fieldName = "Название_заклинания")
-    private static final String nameOfSpell = "Цепная молния";
+    private static final String nameOfSpell = "Изгнание монстров";
 
     public ExpellingMonsters() {
         super(nameOfSpell);

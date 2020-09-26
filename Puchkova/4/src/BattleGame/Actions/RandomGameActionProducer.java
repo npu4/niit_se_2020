@@ -15,7 +15,6 @@ public class RandomGameActionProducer implements ActionProducer {
     Collection<? super Action> actions;
     Scene scene;
     Character[] battlers;
-    Character winner;
 
     public RandomGameActionProducer(){
         scene = new Scene();
@@ -43,7 +42,6 @@ public class RandomGameActionProducer implements ActionProducer {
 
     public void action(){
         actions = new ArrayList<>();
-        winner = null;
 
         int i = 0;
         while (scene.notFinish()) {

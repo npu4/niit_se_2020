@@ -4,6 +4,8 @@ import BattleGame.annotations.EnclosingTag;
 import BattleGame.annotations.XmlName;
 import BattleGame.annotations.XmlTypeName;
 
+import java.util.Arrays;
+
 @EnclosingTag(tagName = "Персонажи")
 @XmlTypeName(typeName = "Персонаж")
 public abstract class Character {
@@ -68,5 +70,16 @@ public abstract class Character {
 
     public Character[] getTarget(){
         return target;
+    }
+
+    @Override
+    public String toString() {
+        return "Character{" +
+                "position=" + position +
+                ", health=" + health +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", target=" + Arrays.toString(target) +
+                '}';
     }
 }

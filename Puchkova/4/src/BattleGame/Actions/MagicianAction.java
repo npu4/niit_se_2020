@@ -6,14 +6,16 @@ import BattleGame.Spells.Spell;
 import BattleGame.annotations.XmlName;
 import BattleGame.annotations.XmlTypeName;
 
+import java.util.Arrays;
+
 @XmlTypeName(typeName = "Ход_мага")
 public class MagicianAction extends Action{
-    @XmlName(fieldName = "Заклинание")
+    @XmlName(fieldName = "Заклинание_атаки")
     Spell spell;
-    @XmlName(fieldName = "Цель")
+    @XmlName(fieldName = "Цели")
     Character[] target;
 
-    MagicianAction(){}
+    public MagicianAction(){}
 
     public MagicianAction(Magician magician, Spell spell, int damage) {
         this.character = magician;
@@ -34,5 +36,15 @@ public class MagicianAction extends Action{
     Character[] replay(){
         ((Magician)character).attack(target, spell, damage);
         return target;
+    }
+
+    @Override
+    public String toString() {
+        return "MagicianAction{" +
+                "spell=" + spell +
+                ", target=" + Arrays.toString(target) +
+                ", character=" + character +
+                ", damage=" + damage +
+                '}';
     }
 }

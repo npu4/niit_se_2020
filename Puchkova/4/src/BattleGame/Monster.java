@@ -3,6 +3,7 @@ package BattleGame;
 import BattleGame.annotations.XmlName;
 import BattleGame.annotations.XmlTypeName;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import static BattleGame.Scene.MAX_NUM_OF_BATTLERS;
@@ -52,5 +53,17 @@ public class Monster extends Character {
 
     public Monster clone() {
         return new Monster(this.getPosition(), this.getName(), this.getHealth(), this.getDamage());
+    }
+
+    @Override
+    public String toString() {
+        return "Monster{" +
+                "position=" + getPosition() +
+                ", health=" + getHealth() +
+                ", name='" + getName() + '\'' +
+                ", type='" + type + '\'' +
+                "damage=" + damage +
+                ", target=" + Arrays.toString(target) +
+                '}';
     }
 }

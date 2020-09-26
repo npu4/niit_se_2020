@@ -1,22 +1,22 @@
 package BattleGame;
 
 import BattleGame.Spells.Spell;
-import BattleGame.annotations.XmlName;
+import BattleGame.annotations.XmlIgnore;
 import BattleGame.annotations.XmlTypeName;
 
+import java.util.Arrays;
 import java.util.Random;
 
 @XmlTypeName(typeName = "Маг")
 public class Magician extends Character {
     private static final String type = "Маг";
     public static final int SPELL_BOOK_LENGTH = 3;
-
+    @XmlIgnore
     Spell spellUsed;
-
-    @XmlName(fieldName = "Книга_заклинаний")
+    @XmlIgnore
     Spell[] bookOfSpells;
 
-    Magician(){
+    public Magician(){
     }
 
     Magician(int position, String name, int health, Spell[] spells){
@@ -55,5 +55,18 @@ public class Magician extends Character {
         Magician magician = new Magician(this.getPosition(), this.getName(), this.getHealth(), this.getBookOfSpells());
         magician.bookOfSpells = this.bookOfSpells.clone();
         return magician;
+    }
+
+    @Override
+    public String toString() {
+        return "Magician{" +
+                "position=" + getPosition() +
+                ", health=" + getHealth() +
+                ", name='" + getName() + '\'' +
+                ", type='" + type + '\'' +
+                "spellUsed=" + spellUsed +
+                ", bookOfSpells=" + Arrays.toString(bookOfSpells) +
+                ", target=" + Arrays.toString(target) +
+                '}';
     }
 }
